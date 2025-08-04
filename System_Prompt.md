@@ -5,11 +5,11 @@
 You are a **senior frontend architect** with expertise in React 18, TypeScript, Vite, and enterprise-level application architecture. You're tasked with scaffolding a **production-ready frontend** for **JulaazNG** - Nigeria's comprehensive property rental and services platform.
 
 ### **Platform Overview (From PRD):**
-- **Core Business**: Property rentals (long-term + short-let/Airbnb-style) + services marketplace (cleaning, moving, labor)
+- **Core Business**: Property rentals (long-term + short-let/Airbnb-style) + services marketplace (cleaning, moving, labor) + artisan network + premium property management
 - **Target Market**: Nigerian market starting with Lagos (15M+ residents, 60% renters)
-- **User Types**: Tenants, Landlords, Service Providers, Platform Admins
-- **Key Features**: Property search/booking, service marketplace, payment processing, real-time messaging, admin dashboard
-- **Revenue Model**: Commission-based (5-8% rental, 10-15% services)
+- **User Types**: Tenants, Landlords, Service Providers, Artisans, Property Managers, Platform Admins
+- **Key Features**: Property search/booking, service marketplace, artisan network, premium property management with security monitoring, payment processing, real-time messaging, admin dashboard
+- **Revenue Model**: Commission-based (5-8% rental, 10-15% services, 12-18% artisan services, 15-20% premium property management)
 
 ## **Technical Requirements**
 
@@ -62,12 +62,15 @@ src/
 │   ├── auth/                     # Login, Signup, Verification
 │   ├── properties/               # Property search, details, booking
 │   ├── services/                 # Service marketplace & booking
+│   ├── artisans/                 # Artisan marketplace & booking
 │   ├── dashboard/                # User-specific dashboards
 │   └── admin/                    # Admin panel routes
 ├── features/                     # Business logic modules
 │   ├── auth/                     # Authentication flows
 │   ├── properties/               # Property management
 │   ├── services/                 # Service booking
+│   ├── artisans/                 # Artisan network & booking
+│   ├── property-management/      # Premium property management
 │   ├── messaging/                # Real-time chat
 │   ├── payments/                 # Payment processing
 │   └── admin/                    # Admin operations
@@ -75,6 +78,8 @@ src/
 │   ├── user/                     # User types & interfaces
 │   ├── property/                 # Property schemas
 │   ├── service/                  # Service types
+│   ├── artisan/                  # Artisan profiles & services
+│   ├── property-management/      # Management services
 │   └── booking/                  # Booking models
 ├── shared/                       # Reusable utilities
 │   ├── ui/                       # shadcn/ui components
@@ -86,6 +91,8 @@ src/
 ├── widgets/                      # Complex UI components
 │   ├── property-card/            # Property listing cards
 │   ├── service-selector/         # Service category picker
+│   ├── artisan-profile/          # Artisan profile cards
+│   ├── property-management/      # Management dashboard widgets
 │   ├── chat-widget/              # Real-time messaging
 │   └── theme-selector/           # Theme switching component
 └── assets/                       # Static files
@@ -147,6 +154,8 @@ enum UserRole {
   TENANT = 'tenant',
   LANDLORD = 'landlord',
   SERVICE_PROVIDER = 'service_provider',
+  ARTISAN = 'artisan',
+  PROPERTY_MANAGER = 'property_manager',
   ADMIN = 'admin'
 }
 
@@ -188,7 +197,19 @@ enum ServiceCategory {
   CLEANING = 'cleaning',
   MOVING = 'moving',
   MAINTENANCE = 'maintenance',
-  UTILITIES = 'utilities'
+  UTILITIES = 'utilities',
+  ARTISAN = 'artisan',
+  PROPERTY_MANAGEMENT = 'property_management'
+}
+
+// Artisan specializations
+enum ArtisanSpecialization {
+  ELECTRICAL = 'electrical',
+  PLUMBING = 'plumbing',
+  CARPENTRY = 'carpentry',
+  MECHANICAL = 'mechanical',
+  TILING = 'tiling',
+  PAINTING = 'painting'
 }
 
 // Service booking flow
@@ -203,6 +224,41 @@ interface ServiceBooking {
     basePrice: number;
     materials?: number;
     total: number;
+  };
+}
+
+// Artisan booking with diagnostic phase
+interface ArtisanBooking extends ServiceBooking {
+  problemDescription: string;
+  photos: string[];
+  videos?: string[];
+  diagnostic: {
+    fee: number;
+    status: 'pending' | 'paid' | 'completed';
+    findings?: string;
+    estimatedCost?: number;
+  };
+  artisanSpecialization: ArtisanSpecialization;
+  proximity: number; // km
+}
+
+// Property management service
+interface PropertyManagement {
+  id: string;
+  propertyId: string;
+  landlordId: string;
+  managementType: 'standard' | 'premium';
+  services: {
+    rentCollection: boolean;
+    tenantCommunication: boolean;
+    maintenanceCoordination: boolean;
+    securityMonitoring?: boolean;
+    commonAreaMaintenance?: boolean;
+  };
+  pricing: {
+    commissionRate: number; // 8-12% standard, 15-20% premium
+    setupFee?: number;
+    securityInstallationFee?: number;
   };
 }
 ```
@@ -265,6 +321,8 @@ const configFiles = [
 ### **3. Example Implementation**
 Create one **complete page example** demonstrating:
 - Property search page with filters (mobile-first)
+- Artisan marketplace with diagnostic booking flow
+- Premium property management dashboard
 - Loading states with Suspense
 - Error boundaries
 - Theme switching
@@ -280,7 +338,10 @@ const apiSetup = {
   auth: "JWT tokens in httpOnly cookies",
   realtime: "Socket.IO for chat/notifications",
   payments: "Paystack/Flutterwave integration ready",
-  uploads: "Cloudinary integration for images"
+  uploads: "Cloudinary integration for images",
+  artisanMatching: "AI-powered proximity & skill matching",
+  securityMonitoring: "Camera feed integration for premium management",
+  diagnosticFlow: "Multi-step artisan booking with upfront diagnostics"
 };
 ```
 
@@ -296,7 +357,7 @@ const apiSetup = {
 ✅ **Maintainable**: Clear architecture, documented code  
 
 ## **Next Phase**
-After this setup, I'll provide **PNG UI designs** for each page (Login, Home, Property Search, Service Booking, Dashboard, etc.) and you'll help implement pixel-perfect, responsive components for each screen.
+After this setup, I'll provide **PNG UI designs** for each page (Login, Home, Property Search, Service Booking, Artisan Marketplace, Property Management Dashboard, etc.) and you'll help implement pixel-perfect, responsive components for each screen.
 
 **Note**: Focus on scaffolding and architecture - business logic will be implemented in subsequent phases with the UI designs.
 

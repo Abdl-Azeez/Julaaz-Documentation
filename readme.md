@@ -45,9 +45,10 @@ JulaazNG is a mobile-first web application that serves as Nigeria's premier prop
 ### 2.3 Product Pillars
 - **Rental Management**: Long-term and short-let property rentals
 - **Service Marketplace**: Cleaning, moving, and maintenance services
+- **Artisan Network**: On-demand skilled tradespeople and repair services
+- **Property Management Suite**: Comprehensive landlord tools with security monitoring
 - **Trust Framework**: Verification, reviews, and dispute resolution
 - **Payment Infrastructure**: Secure, integrated payment processing
-- **Property Management Suite**: Comprehensive landlord tools
 
 ### 2.4 User Personas
 
@@ -66,6 +67,11 @@ JulaazNG is a mobile-first web application that serves as Nigeria's premier prop
 - **Pain Points:** Customer acquisition, payment delays, booking management
 - **Needs:** Steady customer flow, secure payments, scheduling tools
 
+#### 2.4.4 Artisans & Skilled Tradespeople
+- **Demographics:** Carpenters, mechanics, plumbers, tilers, electricians, painters
+- **Pain Points:** Customer acquisition, trust issues, delayed payments, lack of proper tools for customer interaction
+- **Needs:** Consistent job flow, secure payment processing, professional credibility, diagnostic fee structure
+
 ---
 
 ## 3. Product Vision & Strategy
@@ -80,6 +86,8 @@ JulaazNG is a mobile-first web application that serves as Nigeria's premier prop
 ### 3.2 Product Pillars
 - **Rental Management:** Long-term and short-let property rentals
 - **Service Marketplace:** Cleaning, moving, and labor services
+- **Artisan Network:** On-demand skilled tradespeople and repair services
+- **Property Management Suite:** Comprehensive landlord tools with security monitoring
 - **Trust Framework:** Verification, reviews, and dispute resolution
 - **Payment Infrastructure:** Secure, integrated payment processing
 
@@ -93,6 +101,9 @@ JulaazNG is a mobile-first web application that serves as Nigeria's premier prop
 3. **Service Booking Fees:** 10-15% commission on service bookings
 4. **Premium Listings:** Enhanced visibility for properties (₦2,000-₦10,000/month)
 5. **Full-Service Management:** Optional property management (8-12% of rent)
+6. **Premium Property Management:** Enhanced building management with security monitoring (15-20% of rent)
+7. **Artisan Marketplace:** Commission on artisan services (12-18% of service fees)
+8. **Diagnostic Fees:** Fixed diagnostic fees for artisan consultations (₦2,000-₦5,000)
 
 ### 4.2 Pricing Strategy
 - **Tenant Registration:** Free
@@ -172,6 +183,38 @@ Annual Management Revenue: ₦600,000 per property
 - **JulaazNG Advantage**: Technology-driven efficiency at lower cost
 - **Optional Service**: Landlords can opt-out, but most prefer hassle-free management
 
+**5. Premium Property Management with Security (15-20% of monthly rent)**
+```
+Monthly Rent: ₦500,000
+Premium Management Fee at 18%: ₦90,000
+Security Camera Installation: ₦200,000-₦500,000 (one-time)
+Annual Premium Revenue: ₦1,080,000 per property
+```
+
+**Premium Features:**
+- **Comprehensive Management**: Rent collection, tenant relations, maintenance coordination
+- **Security Monitoring**: 3-5 security cameras in common areas
+- **Conflict Resolution**: Professional mediation and dispute handling
+- **Common Area Maintenance**: Regular cleaning and upkeep
+- **24/7 Monitoring**: Real-time property surveillance and incident response
+
+**6. Artisan Marketplace (12-18% of service fees + diagnostic fees)**
+```
+Diagnostic Fee: ₦3,000 (upfront)
+Service Fee: ₦50,000
+JulaazNG Commission at 15%: ₦7,500
+Total Platform Revenue: ₦10,500 per job
+Monthly Potential (100 jobs): ₦1,050,000
+```
+
+**Service Categories:**
+- **Electrical**: Wiring, repairs, installations
+- **Plumbing**: Pipe repairs, installations, drain cleaning
+- **Carpentry**: Furniture repair, custom builds, installations
+- **Mechanical**: HVAC, generator repairs, appliance fixing
+- **Tiling**: Floor and wall installations, repairs
+- **Painting**: Interior/exterior painting, decorative work
+
 #### **Revenue Projections**
 
 **Year 1 (Lagos Only)**
@@ -186,15 +229,26 @@ Average Service: ₦75,000
 Commission: 12%
 Service Revenue: 200 × ₦75,000 × 12% × 12 = ₦21,600,000
 
-Total Year 1 Revenue: ₦96,600,000 (~$207,000)
+Artisan Services: 300 jobs/month
+Average Job: ₦35,000 + ₦3,000 diagnostic
+Commission: 15%
+Artisan Revenue: 300 × (₦35,000 × 15% + ₦3,000) × 12 = ₦29,700,000
+
+Property Management: 50 properties (premium)
+Average Fee: 18% of ₦3,000,000/year
+Management Revenue: 50 × ₦3,000,000 × 18% = ₦27,000,000
+
+Total Year 1 Revenue: ₦153,300,000 (~$329,000)
 ```
 
 **Year 3 (Nationwide)**
 ```
 Properties: 3,000 listings
 Services: 1,000 bookings/month
+Artisan Services: 2,000 jobs/month
 Property Management: 40% adoption rate
-Projected Annual Revenue: ₦500,000,000+ (~$1.07M)
+Premium Management: 20% of managed properties
+Projected Annual Revenue: ₦800,000,000+ (~$1.71M)
 ```
 
 #### **Market Adaptation Strategy**
@@ -422,6 +476,110 @@ Projected Annual Revenue: ₦500,000,000+ (~$1.07M)
   - Loading/unloading
   - Furniture assembly
   - Temporary storage
+
+#### 5.3.3 Premium Property Management
+
+##### Standard Management (8-12% commission)
+- **Rent Collection**: Automated monthly collection with reminders
+- **Tenant Communication**: Direct liaison between landlord and tenants
+- **Maintenance Coordination**: Scheduling and overseeing repairs
+- **Financial Reporting**: Monthly income and expense reports
+
+##### Premium Management (15-20% commission)
+- **All Standard Features** plus:
+- **Security Camera Installation**: 3-5 cameras in common areas (lobbies, staircases, parking)
+- **24/7 Monitoring**: Real-time surveillance and incident response
+- **Common Area Maintenance**: Regular cleaning of shared spaces
+- **Professional Conflict Resolution**: Trained mediators for tenant disputes
+- **Emergency Response**: 24/7 emergency maintenance and security alerts
+- **Detailed Analytics**: Occupancy rates, maintenance trends, security incidents
+
+##### Security Features
+- **Camera Specifications**: 
+  - HD 1080p resolution with night vision
+  - Cloud storage for 30-day footage retention
+  - Mobile app access for landlords
+  - Motion detection and alerts
+- **Installation**: Professional setup within 7 days of subscription
+- **Maintenance**: Monthly camera maintenance and system updates
+
+#### 5.3.4 Artisan Marketplace
+
+##### Service Categories
+**Electrical Services**
+- Wiring and rewiring
+- Socket and switch installations
+- Electrical repairs and troubleshooting
+- Ceiling fan installations
+- Lighting installations
+
+**Plumbing Services**
+- Pipe repairs and installations
+- Drain cleaning and unblocking
+- Water heater repairs
+- Toilet and sink installations
+- Leak detection and fixing
+
+**Carpentry Services**
+- Furniture repairs and restoration
+- Custom furniture building
+- Door and window installations
+- Kitchen cabinet installations
+- Wooden floor installations
+
+**Mechanical Services**
+- Air conditioning repairs
+- Generator maintenance and repairs
+- Appliance repairs (washing machines, refrigerators)
+- Pump installations and repairs
+- Vehicle repairs (mobile mechanics)
+
+**Tiling Services**
+- Floor tile installations
+- Wall tile installations
+- Bathroom and kitchen tiling
+- Tile repairs and replacements
+- Grouting and sealing
+
+**Painting Services**
+- Interior wall painting
+- Exterior building painting
+- Decorative painting
+- Wall texturing
+- Color consultation
+
+##### Booking Process
+1. **Problem Description**: Customer describes the issue in detail
+2. **Photo/Video Upload**: Visual documentation of the problem
+3. **Diagnostic Payment**: Upfront payment of ₦2,000-₦5,000 for assessment
+4. **Artisan Matching**: AI-powered matching based on:
+   - Proximity (within 5-15km radius)
+   - Artisan ratings and reviews
+   - Specialization in the specific problem type
+   - Availability and schedule
+5. **Diagnostic Visit**: Artisan assesses the problem and provides quote
+6. **Service Quote**: Detailed breakdown of labor and material costs
+7. **Payment Authorization**: Customer approves and pays through the app
+8. **Service Execution**: Artisan completes the work with photo documentation
+9. **Quality Verification**: Customer confirms completion and quality
+10. **Review & Rating**: Bidirectional rating system
+
+##### Artisan Requirements
+- **Registration**: Valid ID, trade certification (if available)
+- **Background Check**: Criminal background verification
+- **Skill Assessment**: Practical tests for specific trades
+- **Insurance**: Professional liability coverage
+- **Tools**: Own basic tools and transportation
+- **Mobile App**: Android/iOS app for job management
+
+##### Payment Structure
+- **Diagnostic Fee**: ₦2,000-₦5,000 (paid upfront, non-refundable)
+- **Service Fee**: Variable based on job complexity and materials
+- **Platform Commission**: 12-18% of total service fee
+- **Payment Schedule**: 
+  - Diagnostic fee: Immediate upon booking
+  - Service fee: 50% upfront, 50% upon completion
+  - Platform commission: Deducted automatically
 
 ## 6. Localization & Accessibility
 
@@ -1108,7 +1266,9 @@ enum ServiceCategory {
   MOVING = 'moving',
   MAINTENANCE = 'maintenance',
   SECURITY = 'security',
-  UTILITIES = 'utilities'
+  UTILITIES = 'utilities',
+  ARTISAN = 'artisan',
+  PROPERTY_MANAGEMENT = 'property_management'
 }
 
 // Service Types
@@ -1186,6 +1346,246 @@ const MovingServices: ServiceType[] = [
     materials: []
   }
 ];
+
+// Artisan Services
+const ArtisanServices: ServiceType[] = [
+  {
+    id: 'electrical-repair',
+    category: ServiceCategory.ARTISAN,
+    name: 'Electrical Repair',
+    description: 'Electrical wiring, socket installation, repairs',
+    basePrice: 5000,
+    priceUnit: 'hour',
+    duration: 120,
+    requirements: ['Access to electrical panel', 'Basic materials'],
+    materials: ['cables', 'sockets', 'switches']
+  },
+  {
+    id: 'plumbing-service',
+    category: ServiceCategory.ARTISAN,
+    name: 'Plumbing Service',
+    description: 'Pipe repairs, drain cleaning, installations',
+    basePrice: 4000,
+    priceUnit: 'hour',
+    duration: 90,
+    requirements: ['Water access', 'Basic tools'],
+    materials: ['pipes', 'fittings', 'sealants']
+  },
+  {
+    id: 'carpentry-work',
+    category: ServiceCategory.ARTISAN,
+    name: 'Carpentry Work',
+    description: 'Furniture repair, custom builds, installations',
+    basePrice: 6000,
+    priceUnit: 'hour',
+    duration: 180,
+    requirements: ['Work space', 'Measurements'],
+    materials: ['wood', 'screws', 'nails', 'glue']
+  }
+];
+
+// Property Management Services
+const PropertyManagementServices: ServiceType[] = [
+  {
+    id: 'standard-management',
+    category: ServiceCategory.PROPERTY_MANAGEMENT,
+    name: 'Standard Property Management',
+    description: 'Basic property management with rent collection',
+    basePrice: 10,
+    priceUnit: 'fixed',
+    duration: 0,
+    requirements: ['Property ownership documents'],
+    materials: []
+  },
+  {
+    id: 'premium-management',
+    category: ServiceCategory.PROPERTY_MANAGEMENT,
+    name: 'Premium Property Management',
+    description: 'Full management with security monitoring',
+    basePrice: 18,
+    priceUnit: 'fixed',
+    duration: 0,
+    requirements: ['Property ownership documents', 'Common areas access'],
+    materials: ['security_cameras', 'monitoring_equipment']
+  }
+];
+```
+
+// Artisan Booking Interface
+interface ArtisanBooking {
+  id: string;
+  artisanId: string;
+  customerId: string;
+  serviceType: string;
+  
+  // Problem Details
+  problemDescription: string;
+  photos: string[];
+  videos?: string[];
+  urgency: 'low' | 'medium' | 'high' | 'emergency';
+  
+  // Diagnostic Phase
+  diagnostic: {
+    fee: number;
+    status: 'pending' | 'paid' | 'completed';
+    scheduledAt?: Date;
+    completedAt?: Date;
+    findings: string;
+    estimatedCost: number;
+    materialsList: ArtisanMaterial[];
+  };
+  
+  // Service Details
+  service: {
+    quote: ArtisanQuote;
+    scheduledAt?: Date;
+    startedAt?: Date;
+    completedAt?: Date;
+    beforePhotos: string[];
+    afterPhotos: string[];
+    workDescription: string;
+    materialsUsed: ArtisanMaterial[];
+  };
+  
+  // Location
+  location: {
+    address: string;
+    coordinates: { latitude: number; longitude: number };
+    accessInstructions: string;
+    contactPerson: string;
+    contactPhone: string;
+  };
+  
+  // Payment
+  payment: {
+    diagnosticFee: number;
+    serviceFee: number;
+    materialsCost: number;
+    totalAmount: number;
+    currency: string;
+    status: 'diagnostic_pending' | 'service_pending' | 'completed';
+    platformCommission: number;
+  };
+  
+  // Status
+  status: 'diagnostic_requested' | 'diagnostic_scheduled' | 'diagnostic_completed' | 
+          'quote_provided' | 'quote_accepted' | 'service_scheduled' | 
+          'service_in_progress' | 'service_completed' | 'payment_completed' | 
+          'cancelled' | 'disputed';
+  
+  // Reviews
+  customerReview?: ArtisanReview;
+  artisanReview?: CustomerReview;
+}
+
+// Property Management Interface
+interface PropertyManagement {
+  id: string;
+  propertyId: string;
+  landlordId: string;
+  managementType: 'standard' | 'premium';
+  
+  // Service Details
+  services: {
+    rentCollection: boolean;
+    tenantCommunication: boolean;
+    maintenanceCoordination: boolean;
+    financialReporting: boolean;
+    securityMonitoring?: boolean;
+    commonAreaMaintenance?: boolean;
+    conflictResolution?: boolean;
+  };
+  
+  // Security Features (Premium only)
+  security?: {
+    cameras: SecurityCamera[];
+    installationDate: Date;
+    monitoringPlan: '24/7' | 'business_hours';
+    incidentResponse: boolean;
+    cloudStorage: {
+      duration: number; // days
+      capacity: string; // GB
+    };
+  };
+  
+  // Financial
+  pricing: {
+    commissionRate: number; // percentage
+    monthlyFee: number;
+    setupFee?: number;
+    securityInstallationFee?: number;
+  };
+  
+  // Status
+  status: 'active' | 'suspended' | 'cancelled';
+  startDate: Date;
+  endDate?: Date;
+  
+  // Performance Metrics
+  metrics: {
+    rentCollectionRate: number;
+    averageResponseTime: number; // hours
+    tenantSatisfactionScore: number;
+    maintenanceRequestsHandled: number;
+    securityIncidents?: number;
+  };
+}
+
+// Artisan Profile Interface
+interface ArtisanProfile {
+  id: string;
+  personalInfo: {
+    firstName: string;
+    lastName: string;
+    email: string;
+    phone: string;
+    profileImage?: string;
+    dateOfBirth: Date;
+  };
+  
+  // Professional Info
+  professional: {
+    tradeName: string;
+    specializations: ArtisanSpecialization[];
+    experienceYears: number;
+    certifications: ArtisanCertification[];
+    workRadius: number; // km
+    availability: ArtisanAvailability;
+  };
+  
+  // Verification
+  verification: {
+    identityVerified: boolean;
+    skillsVerified: boolean;
+    backgroundCheckPassed: boolean;
+    insuranceVerified: boolean;
+    documentsSubmitted: VerificationDocument[];
+  };
+  
+  // Performance
+  performance: {
+    totalJobs: number;
+    completedJobs: number;
+    averageRating: number;
+    responseTime: number; // minutes
+    completionRate: number;
+    repeatCustomers: number;
+  };
+  
+  // Financial
+  financial: {
+    diagnosticFee: number;
+    hourlyRate: number;
+    minimumCharge: number;
+    acceptedPaymentMethods: PaymentMethod[];
+    earnings: {
+      totalEarnings: number;
+      thisMonth: number;
+      lastMonth: number;
+      pending: number;
+    };
+  };
+}
 ```
 
 #### 8.4.2 Service Booking System
@@ -1583,7 +1983,9 @@ Chatbot: OpenAI Assistants API LangChain (custom logic)
 
 ### 11.2 Phase 2: Enhanced Features (Months 4-6)
 **Additional Features:**
-- Service marketplace
+- Service marketplace (cleaning, moving)
+- Artisan marketplace (basic trades)
+- Standard property management
 - Advanced search filters
 - Review and rating system
 - Verification system
@@ -1594,19 +1996,32 @@ Chatbot: OpenAI Assistants API LangChain (custom logic)
 - 1,000+ registered users
 - 200+ property listings
 - 100+ service bookings
+- 50+ artisan services completed
+- 20+ properties under management
 - 4+ star average rating
 
 ### 11.3 Phase 3: Scale & Optimize (Months 7-12)
 **Focus Areas:**
+- Premium property management with security cameras
+- Advanced artisan matching algorithms
+- AI-powered property recommendations
 - Performance optimization
 - Advanced analytics
-- AI-powered recommendations
 - Automated workflows
 - Integration with premium APIs
 - Market expansion preparation
 
+**Additional Features:**
+- Security camera installation and monitoring
+- 24/7 property management services
+- Advanced artisan specializations
+- Conflict resolution systems
+- Predictive maintenance
+
 **Success Criteria:**
 - 10,000+ registered users
+- 500+ artisans registered
+- 100+ premium property management subscriptions
 - Positive unit economics
 - 95%+ uptime
 - Ready for Series A funding

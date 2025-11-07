@@ -58,7 +58,11 @@ const config: Config = {
           foreground: 'hsl(var(--card-foreground))'
         },
         surface: 'hsl(var(--surface))',
-        'icon-bg': 'hsl(var(--icon-bg))'
+        'icon-bg': 'hsl(var(--icon-bg))',
+        footer: {
+          DEFAULT: 'hsl(var(--footer-bg))',
+          foreground: 'hsl(var(--footer-foreground))'
+        }
       },
       borderRadius: {
         lg: 'var(--radius)',

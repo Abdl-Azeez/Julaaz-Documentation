@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { ArrowLeft, Save, Eye, EyeOff } from 'lucide-react'
+import { Save, Eye, EyeOff } from 'lucide-react'
 import { Button } from '@/shared/ui/button'
 import { Card } from '@/shared/ui/card'
 import { Input } from '@/shared/ui/input'
@@ -11,21 +11,31 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/shared/ui/select'
+import { Header } from '@/widgets/header'
+import { Sidebar } from '@/widgets/sidebar'
+import { AuthDrawer } from '@/widgets/auth-drawer'
 import { useNavigate } from 'react-router-dom'
-import LogoSvg from '@/assets/images/logo.svg?react'
+import { useAuthStore } from '@/shared/store/auth.store'
+import { useThemeStore, themes } from '@/shared/store/theme.store'
 import { ROUTES } from '@/shared/constants/routes'
 import { LogoLoader } from '@/widgets/logo-loader'
 import toast from 'react-hot-toast'
 
 export function SettingsPage() {
   const navigate = useNavigate()
+  const { isAuthenticated } = useAuthStore()
+  const { theme, setTheme: setThemeStore } = useThemeStore()
   const [isLoading, setIsLoading] = useState(false)
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false)
   
   // Language settings
   const [language, setLanguage] = useState('en')
   
-  // Theme settings
-  const [theme, setTheme] = useState('naija-fresh')
+  // Handle theme change
+  const handleThemeChange = (newTheme: string) => {
+    setThemeStore(newTheme as any)
+  }
   
   // Password change
   const [currentPassword, setCurrentPassword] = useState('')
@@ -49,14 +59,6 @@ export function SettingsPage() {
     { value: 'ig', label: 'Igbo' },
   ]
 
-  const themes = [
-    { value: 'naija-fresh', label: 'Naija Fresh' },
-    { value: 'eko-luxe', label: 'Eko Luxe' },
-    { value: 'arewa-calm', label: 'Arewa Calm' },
-    { value: 'ulo-oma', label: 'Ulo Oma' },
-    { value: 'rainy-9ja', label: 'Rainy 9ja' },
-    { value: 'ajebo-blend', label: 'Ajebo Blend' },
-  ]
 
   const validatePasswordChange = () => {
     const newErrors: typeof errors = {}
@@ -110,39 +112,56 @@ export function SettingsPage() {
         toast.success('Password changed successfully!')
       }
     } catch (error) {
-      toast.error('Failed to save settings')
+      toast.error(`Failed to save settings: ${error}`)
     } finally {
       setIsLoading(false)
     }
   }
 
+  const handleMenuClick = () => {
+    setIsSidebarOpen(true)
+  }
+
+  const handleProfileClick = () => {
+    if (isAuthenticated) {
+      navigate(ROUTES.PROFILE)
+    } else {
+      setIsDrawerOpen(true)
+    }
+  }
+
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="sticky top-0 z-50 w-full border-b bg-surface">
-        <div className="container mx-auto px-4 h-16 flex items-center justify-between">
+      <Header onMenuClick={handleMenuClick} onProfileClick={handleProfileClick} />
+      
+      {/* Settings Header */}
+      {/* <header className="sticky top-20 z-40 w-full border-b bg-surface/95 backdrop-blur-sm shadow-sm">
+        <div className="container mx-auto px-4 lg:px-6 xl:px-8 h-16 lg:h-20 flex items-center justify-between max-w-7xl">
+          <div className="flex items-center gap-3">
+            <Settings className="h-6 w-6 lg:h-7 lg:w-7 text-primary" />
+            <h1 className="text-xl lg:text-2xl font-bold text-foreground">Settings</h1>
+          </div>
           <Button
             variant="ghost"
             size="icon"
-            className="bg-icon-bg"
+            className="bg-icon-bg text-foreground hover:bg-primary/10 hover:text-primary transition-colors"
             onClick={() => navigate(ROUTES.PROFILE)}
-            aria-label="Go back"
+            aria-label="Back to Profile"
           >
-            <ArrowLeft className="h-6 w-6" />
+            <ArrowLeft className="h-5 w-5 lg:h-6 lg:w-6" />
           </Button>
-          <div className="flex-1 flex justify-center">
-            <LogoSvg className="h-8 w-auto text-primary" />
-          </div>
-          <div className="w-10" />
         </div>
-      </header>
+      </header> */}
 
-      <div className="container mx-auto px-4 py-6 space-y-6 pb-24">
-        <h1 className="text-2xl font-bold text-foreground">Settings</h1>
+      <div className="container mx-auto px-4 lg:px-6 xl:px-8 py-6 lg:py-12 space-y-6 lg:space-y-8 pb-24 lg:pb-12 max-w-4xl">
+        <div className="space-y-2">
+          <h1 className="text-2xl lg:text-3xl xl:text-4xl font-bold text-foreground">Settings</h1>
+          <p className="text-sm lg:text-base text-muted-foreground">Manage your account preferences and security</p>
+        </div>
 
         {/* Language Settings */}
-        <Card className="p-6 bg-surface border-0 space-y-4">
-          <h2 className="text-lg font-semibold text-foreground">Language</h2>
+        <Card className="p-6 lg:p-8 bg-surface border border-border/50 hover:shadow-lg transition-shadow space-y-4 lg:space-y-6">
+          <h2 className="text-lg lg:text-xl font-semibold text-foreground">Language</h2>
           <div className="space-y-2">
             <Label htmlFor="language" className="text-sm text-muted-foreground">
               Select your preferred language
@@ -163,30 +182,76 @@ export function SettingsPage() {
         </Card>
 
         {/* Theme Settings */}
-        <Card className="p-6 bg-surface border-0 space-y-4">
-          <h2 className="text-lg font-semibold text-foreground">Theme</h2>
-          <div className="space-y-2">
+        <Card className="p-6 lg:p-8 bg-surface border border-border/50 hover:shadow-lg transition-shadow space-y-4 lg:space-y-6">
+          <h2 className="text-lg lg:text-xl font-semibold text-foreground">Theme</h2>
+          <div className="space-y-4">
             <Label htmlFor="theme" className="text-sm text-muted-foreground">
               Choose your app theme
             </Label>
-            <Select value={theme} onValueChange={setTheme}>
+            <Select value={theme} onValueChange={handleThemeChange}>
               <SelectTrigger id="theme">
                 <SelectValue placeholder="Select theme" />
               </SelectTrigger>
               <SelectContent>
                 {themes.map((th) => (
-                  <SelectItem key={th.value} value={th.value}>
-                    {th.label}
+                  <SelectItem key={th.id} value={th.id}>
+                    <span className="flex items-center gap-2">
+                      <span>{th.emoji}</span>
+                      <span>{th.displayName}</span>
+                    </span>
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
+            
+            {/* Theme Preview Grid */}
+            <div className="grid grid-cols-3 gap-3 mt-4">
+              {themes.map((th) => {
+                const isActive = theme === th.id
+                const themeColors = {
+                  'naija-fresh': 'bg-gradient-to-br from-green-500 to-green-600',
+                  'eko-luxe': 'bg-gradient-to-br from-emerald-700 to-teal-800',
+                  'arewa-calm': 'bg-gradient-to-br from-amber-600 to-yellow-700',
+                  'ulo-oma': 'bg-gradient-to-br from-red-500 to-red-600',
+                  'rainy-9ja': 'bg-gradient-to-br from-blue-500 to-sky-600',
+                  'ajebo-blend': 'bg-gradient-to-br from-purple-500 to-violet-600',
+                }
+                
+                return (
+                  <button
+                    key={th.id}
+                    onClick={() => handleThemeChange(th.id)}
+                    className={`
+                      relative p-3 rounded-lg border-2 transition-all
+                      ${isActive 
+                        ? 'border-primary shadow-md scale-105' 
+                        : 'border-border hover:border-primary/50'
+                      }
+                    `}
+                    aria-label={`Select ${th.displayName} theme`}
+                  >
+                    <div className={`w-full h-16 rounded-md mb-2 ${themeColors[th.id] || 'bg-gray-300'}`} />
+                    <div className="flex flex-col items-center gap-1">
+                      <span className="text-lg">{th.emoji}</span>
+                      <span className={`text-xs font-medium ${isActive ? 'text-primary' : 'text-muted-foreground'}`}>
+                        {th.displayName}
+                      </span>
+                    </div>
+                    {isActive && (
+                      <div className="absolute top-1 right-1 w-4 h-4 bg-primary rounded-full flex items-center justify-center">
+                        <span className="text-white text-[10px]">✓</span>
+                      </div>
+                    )}
+                  </button>
+                )
+              })}
+            </div>
           </div>
         </Card>
 
         {/* Change Password */}
-        <Card className="p-6 bg-surface border-0 space-y-4">
-          <h2 className="text-lg font-semibold text-foreground">Change Password</h2>
+        <Card className="p-6 lg:p-8 bg-surface border border-border/50 hover:shadow-lg transition-shadow space-y-4 lg:space-y-6">
+          <h2 className="text-lg lg:text-xl font-semibold text-foreground">Change Password</h2>
           
           {/* Current Password */}
           <div className="space-y-2">
@@ -315,10 +380,10 @@ export function SettingsPage() {
         </Card>
       </div>
 
-      {/* Fixed Save Button */}
-      <div className="fixed bottom-0 left-0 right-0 p-4 bg-surface border-t">
+      {/* Fixed Save Button - Mobile Only */}
+      <div className="fixed bottom-0 left-0 right-0 p-4 bg-surface/95 backdrop-blur-sm border-t lg:hidden z-50">
         <Button
-          className="w-full h-12 bg-primary hover:bg-primary/90 text-primary-foreground"
+          className="w-full max-w-2xl mx-auto h-12 bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl"
           onClick={handleSave}
           disabled={isLoading}
         >
@@ -330,6 +395,26 @@ export function SettingsPage() {
           {isLoading ? 'Saving...' : 'Save Changes'}
         </Button>
       </div>
+
+      {/* Desktop Save Button */}
+      <div className="hidden lg:flex justify-end max-w-4xl mx-auto px-4 lg:px-6 xl:px-8 pb-8">
+        <Button
+          size="lg"
+          className="h-12 px-8 bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl"
+          onClick={handleSave}
+          disabled={isLoading}
+        >
+          {isLoading ? (
+            <LogoLoader size="sm" variant="foreground" className="mr-2" />
+          ) : (
+            <Save className="h-4 w-4 mr-2" />
+          )}
+          {isLoading ? 'Saving...' : 'Save Changes'}
+        </Button>
+      </div>
+      
+      <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
+      <AuthDrawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen} />
     </div>
   )
 }

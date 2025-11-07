@@ -30,7 +30,7 @@ export function PropertyCard({ property, onChat, onShare, layout = 'grid' }: Pro
   const hasMultipleImages = images.length > 1
 
   return (
-    <Card className="overflow-hidden bg-surface hover:shadow-lg transition-shadow border-0 shadow-sm rounded-[20px]">
+    <Card className="overflow-hidden bg-surface hover:shadow-xl transition-all duration-300 border-0 shadow-sm rounded-[20px] lg:rounded-2xl hover:-translate-y-1">
       <div className={`
         relative overflow-hidden group
         ${isRowLayout 
@@ -161,7 +161,7 @@ export function PropertyCard({ property, onChat, onShare, layout = 'grid' }: Pro
             variant="ghost"
             size="icon"
             className={`
-              bg-icon-bg shrink-0 rounded-[10px]
+              bg-icon-bg text-foreground hover:bg-primary/10 hover:text-primary shrink-0 rounded-[10px] transition-colors
               ${isRowLayout ? 'h-10 w-10' : 'h-9 w-9'}
             `}
             onClick={() => onShare?.(property.id)}

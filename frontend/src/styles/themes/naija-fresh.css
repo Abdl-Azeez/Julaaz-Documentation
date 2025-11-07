@@ -43,6 +43,10 @@
   /* Icon Background */
   --icon-bg: 0 0% 100%; /* White */
   
+  /* Footer Colors */
+  --footer-bg: 0 0% 10%; /* Dark footer */
+  --footer-foreground: 0 0% 100%; /* Light footer text */
+  
   /* Overlay */
   --overlay: 0 0% 0%; /* Black for overlays */
 }

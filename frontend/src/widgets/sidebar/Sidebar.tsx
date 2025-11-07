@@ -1,5 +1,5 @@
 import { X, Home, Building2, MessageCircle, Bell, Calendar, User, LogOut, Settings, Heart, FileText, Briefcase, Wrench, Zap, Droplet, Sparkles, Paintbrush, Clock } from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { useAuthStore } from '@/shared/store/auth.store'
 import { ROUTES } from '@/shared/constants/routes'
 import { cn } from '@/shared/lib/utils/cn'
@@ -21,7 +21,15 @@ interface MenuItem {
 
 export function Sidebar({ isOpen, onClose }: SidebarProps) {
   const navigate = useNavigate()
+  const location = useLocation()
   const { isAuthenticated, user } = useAuthStore()
+
+  const isActive = (path: string) => {
+    if (path === ROUTES.HOME) {
+      return location.pathname === path
+    }
+    return location.pathname.startsWith(path)
+  }
 
   const publicMenuItems: MenuItem[] = [
     { icon: Home, label: 'Home', path: ROUTES.HOME },
@@ -32,8 +40,8 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
   const authenticatedMenuItems: MenuItem[] = [
     { icon: MessageCircle, label: 'Messages', path: ROUTES.MESSAGING, requiresAuth: true },
     { icon: Bell, label: 'Notifications', path: ROUTES.NOTIFICATIONS, requiresAuth: true },
-    { icon: Calendar, label: 'Events', path: '/events', requiresAuth: true },
-    { icon: Heart, label: 'Favorites', path: '/favorites', requiresAuth: true },
+    { icon: Calendar, label: 'Events', path: ROUTES.EVENTS, requiresAuth: true },
+    { icon: Heart, label: 'Favorites', path: ROUTES.FAVOURITES, requiresAuth: true },
   ]
 
   const tenantMenuItems: MenuItem[] = [
@@ -162,17 +170,20 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
           {/* Public Menu Items */}
           <div className="sidebar__section">
             <h3 className="sidebar__section-title">Explore</h3>
-            {publicMenuItems.map((item) => (
-              <button
-                key={item.path}
-                onClick={() => handleNavigation(item.path)}
-                className="sidebar__item"
-              >
-                <item.icon className="sidebar__item-icon" />
-                <span className="sidebar__item-label">{item.label}</span>
-                <div className="sidebar__item-shine" />
-              </button>
-            ))}
+            {publicMenuItems.map((item) => {
+              const active = isActive(item.path)
+              return (
+                <button
+                  key={item.path}
+                  onClick={() => handleNavigation(item.path)}
+                  className={cn('sidebar__item', active && 'sidebar__item--active')}
+                >
+                  <item.icon className="sidebar__item-icon" />
+                  <span className="sidebar__item-label">{item.label}</span>
+                  <div className="sidebar__item-shine" />
+                </button>
+              )
+            })}
           </div>
 
           {/* Quick Services Chips */}
@@ -213,51 +224,60 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
             <>
               <div className="sidebar__section">
                 <h3 className="sidebar__section-title">Activity</h3>
-                {authenticatedMenuItems.filter(shouldShowItem).map((item) => (
-                  <button
-                    key={item.path}
-                    onClick={() => handleNavigation(item.path)}
-                    className="sidebar__item"
-                  >
-                    <item.icon className="sidebar__item-icon" />
-                    <span className="sidebar__item-label">{item.label}</span>
-                    <div className="sidebar__item-shine" />
-                  </button>
-                ))}
+                {authenticatedMenuItems.filter(shouldShowItem).map((item) => {
+                  const active = isActive(item.path)
+                  return (
+                    <button
+                      key={item.path}
+                      onClick={() => handleNavigation(item.path)}
+                      className={cn('sidebar__item', active && 'sidebar__item--active')}
+                    >
+                      <item.icon className="sidebar__item-icon" />
+                      <span className="sidebar__item-label">{item.label}</span>
+                      <div className="sidebar__item-shine" />
+                    </button>
+                  )
+                })}
               </div>
 
               {/* Role-specific Items */}
               {user?.role === 'tenant' && tenantMenuItems.some(shouldShowItem) && (
                 <div className="sidebar__section">
                   <h3 className="sidebar__section-title">Tenant</h3>
-                  {tenantMenuItems.filter(shouldShowItem).map((item) => (
-                    <button
-                      key={item.path}
-                      onClick={() => handleNavigation(item.path)}
-                      className="sidebar__item"
-                    >
-                      <item.icon className="sidebar__item-icon" />
-                      <span className="sidebar__item-label">{item.label}</span>
-                      <div className="sidebar__item-shine" />
-                    </button>
-                  ))}
+                  {tenantMenuItems.filter(shouldShowItem).map((item) => {
+                    const active = isActive(item.path)
+                    return (
+                      <button
+                        key={item.path}
+                        onClick={() => handleNavigation(item.path)}
+                        className={cn('sidebar__item', active && 'sidebar__item--active')}
+                      >
+                        <item.icon className="sidebar__item-icon" />
+                        <span className="sidebar__item-label">{item.label}</span>
+                        <div className="sidebar__item-shine" />
+                      </button>
+                    )
+                  })}
                 </div>
               )}
 
               {user?.role === 'landlord' && landlordMenuItems.some(shouldShowItem) && (
                 <div className="sidebar__section">
                   <h3 className="sidebar__section-title">Landlord</h3>
-                  {landlordMenuItems.filter(shouldShowItem).map((item) => (
-                    <button
-                      key={item.path}
-                      onClick={() => handleNavigation(item.path)}
-                      className="sidebar__item"
-                    >
-                      <item.icon className="sidebar__item-icon" />
-                      <span className="sidebar__item-label">{item.label}</span>
-                      <div className="sidebar__item-shine" />
-                    </button>
-                  ))}
+                  {landlordMenuItems.filter(shouldShowItem).map((item) => {
+                    const active = isActive(item.path)
+                    return (
+                      <button
+                        key={item.path}
+                        onClick={() => handleNavigation(item.path)}
+                        className={cn('sidebar__item', active && 'sidebar__item--active')}
+                      >
+                        <item.icon className="sidebar__item-icon" />
+                        <span className="sidebar__item-label">{item.label}</span>
+                        <div className="sidebar__item-shine" />
+                      </button>
+                    )
+                  })}
                 </div>
               )}
             </>
@@ -267,17 +287,20 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
           {isAuthenticated && (
             <div className="sidebar__section sidebar__section--bottom">
               <h3 className="sidebar__section-title">Account</h3>
-              {bottomMenuItems.filter(shouldShowItem).map((item) => (
-                <button
-                  key={item.path}
-                  onClick={() => handleNavigation(item.path)}
-                  className="sidebar__item"
-                >
-                  <item.icon className="sidebar__item-icon" />
-                  <span className="sidebar__item-label">{item.label}</span>
-                  <div className="sidebar__item-shine" />
-                </button>
-              ))}
+              {bottomMenuItems.filter(shouldShowItem).map((item) => {
+                const active = isActive(item.path)
+                return (
+                  <button
+                    key={item.path}
+                    onClick={() => handleNavigation(item.path)}
+                    className={cn('sidebar__item', active && 'sidebar__item--active')}
+                  >
+                    <item.icon className="sidebar__item-icon" />
+                    <span className="sidebar__item-label">{item.label}</span>
+                    <div className="sidebar__item-shine" />
+                  </button>
+                )
+              })}
               <button
                 onClick={handleLogout}
                 className="sidebar__item sidebar__item--danger"

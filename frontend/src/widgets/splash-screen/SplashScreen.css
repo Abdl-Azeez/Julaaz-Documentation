@@ -60,6 +60,7 @@
   stroke-dashoffset: 1000;
   animation: strokeDraw 1.2s ease-out forwards;
   animation-delay: 0.2s;
+  stroke: hsl(var(--primary));
 }
 
 .splash-screen__icon svg path[stroke],
@@ -68,14 +69,29 @@
   stroke-dashoffset: 1000;
   animation: strokeDraw 1.2s ease-out forwards;
   animation-delay: 0.2s;
+  stroke: hsl(var(--primary));
 }
 
-/* Fill fade animation for windows */
+/* Fill fade animation for windows - ensure theme primary color */
+/* Target all rect elements regardless of nesting - use universal approach */
+.splash-screen__icon * rect,
 .splash-screen__icon svg rect,
+.splash-screen__icon svg > g rect,
+.splash-screen__icon svg g[filter] rect,
+.splash-screen__icon svg g rect,
 .splash-screen__icon rect {
-  opacity: 0;
-  animation: fillFade 0.8s ease-out forwards;
-  animation-delay: 1.2s;
+  fill: hsl(var(--primary)) !important;
+  opacity: 0 !important;
+  animation: windowFadeIn 0.8s ease-out forwards !important;
+  animation-delay: 1.2s !important;
+}
+
+/* Override any inline fill attributes - target all possible scenarios */
+.splash-screen__icon * rect[fill],
+.splash-screen__icon svg rect[fill],
+.splash-screen__icon svg g rect[fill],
+.splash-screen__icon svg > g rect[fill] {
+  fill: hsl(var(--primary)) !important;
 }
 
 /* Fill fade animation for text */
@@ -96,6 +112,17 @@
   from {
     opacity: 0;
     transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes windowFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
   }
   to {
     opacity: 1;

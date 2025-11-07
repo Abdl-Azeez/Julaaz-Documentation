@@ -1,0 +1,52 @@
+/* Ụlọ Oma Theme - Igbo Heritage Red/Traditional */
+[data-theme='ulo-oma'] {
+  /* Base Colors */
+  --background: 33 38% 97%; /* #fef9f4 - Warm white */
+  --foreground: 0 0% 10%; /* #1a1a1a - Near black */
+  
+  /* Brand Colors */
+  --primary: 0 68% 51%; /* #d42f2f - Red */
+  --primary-foreground: 0 0% 100%; /* White */
+  
+  /* Accent Colors */
+  --accent: 158 98% 30%; /* #019863 - Green accent */
+  --accent-foreground: 0 0% 100%; /* White */
+  
+  /* Muted/Secondary */
+  --muted: 34 27% 94%; /* #f6f1e9 - Warm light */
+  --muted-foreground: 0 0% 40%; /* #666 - Gray */
+  
+  --secondary: 34 26% 85%; /* #e3d8c9 - Warm beige */
+  --secondary-foreground: 0 0% 10%; /* #1a1a1a - Near black */
+  
+  /* Surface & Card */
+  --surface: 34 27% 94%; /* Matches muted */
+  --card: 33 38% 97%; /* Matches background */
+  --card-foreground: 0 0% 10%; /* Near black */
+  
+  /* Borders & Inputs */
+  --border: 34 25% 82%; /* #dfd6c3 - Light tan border */
+  --input: 34 26% 87%; /* #e8dfd1 - Light tan input */
+  --ring: 0 68% 51%; /* Matches primary */
+  
+  /* Status Colors */
+  --destructive: 0 72% 41%; /* #b91c1c - Error Red */
+  --destructive-foreground: 0 0% 100%; /* White */
+  
+  --success: 142 71% 45%; /* #16a34a - Success Green */
+  --success-foreground: 0 0% 100%; /* White */
+  
+  --warning: 48 96% 53%; /* #eab308 - Warning Yellow */
+  --warning-foreground: 0 0% 100%; /* White */
+  
+  /* Icon Background */
+  --icon-bg: 0 0% 100%; /* White */
+  
+  /* Footer Colors */
+  --footer-bg: 0 0% 10%; /* Dark footer */
+  --footer-foreground: 0 0% 100%; /* Light footer text */
+  
+  /* Overlay */
+  --overlay: 0 0% 0%; /* Black for overlays */
+}
+

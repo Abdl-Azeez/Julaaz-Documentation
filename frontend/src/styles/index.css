@@ -1,5 +1,10 @@
 @import './tailwind.css';
 @import './themes/naija-fresh.css';
+@import './themes/eko-luxe.css';
+@import './themes/arewa-calm.css';
+@import './themes/ulo-oma.css';
+@import './themes/rainy-9ja.css';
+@import './themes/ajebo-blend.css';
 @import './fonts.css';
 
 * {

@@ -10,73 +10,70 @@ interface FooterProps {
 
 export function Footer({ className }: FooterProps) {
     return (
-        <footer className={cn('bg-foreground text-background mt-16', className)}>
-            <div className="container mx-auto px-4 pb-12 space-y-8">
+        <footer className={cn('bg-footer text-footer-foreground mt-16 lg:mt-24', className)}>
+            <div className="container mx-auto px-4 lg:px-6 xl:px-8 pb-12 lg:pb-16 pt-8 lg:pt-12 space-y-8 lg:space-y-12 max-w-7xl">
                 {/* Top Section: Logo and Newsletter */}
-                <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
+                <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-8 lg:gap-12">
                     {/* Logo and Tagline - Left */}
-                    <div className="flex flex-col space-y-2 relative w-full">
+                    <div className="flex flex-col space-y-3 lg:space-y-4">
                         <div className="text-primary">
-                            <LogoSvg className="h-40 w-auto" />
+                            <LogoSvg className="h-24 lg:h-32 xl:h-36 w-auto" />
                         </div>
-                        <p className="text-sm text-background/70 absolute bottom-10 left-0">Find Your Next Space Fast</p>
+                        <p className="text-sm lg:text-base text-footer-foreground/70">Find Your Next Space Fast</p>
                     </div>
 
                     {/* Newsletter Subscription - Center */}
-                    <div className="flex-1 max-w-lg w-full px-3 mx-auto md:mx-0 space-y-1 text-center">
-                        <h3 className="font-semibold text-lg text-primary">Stay In The Loop</h3>
-                        <p className="text-sm text-background/70 font-semibold">Get alerts on new apartments and shortlets.</p>
+                    <div className="flex-1 max-w-xl lg:max-w-2xl w-full space-y-3 lg:space-y-4">
+                        <div className="text-center lg:text-left">
+                            <h3 className="font-semibold text-lg lg:text-xl text-primary mb-2">Stay In The Loop</h3>
+                            <p className="text-sm lg:text-base text-footer-foreground/70 font-medium">Get alerts on new apartments and shortlets.</p>
+                        </div>
 
-
-
-                        <div className="flex items-center bg-background border border-foreground/20 rounded-[10px] h-12 px-2">
+                        <div className="flex items-center bg-background/10 border border-footer-foreground/20 rounded-xl lg:rounded-2xl h-12 lg:h-14 px-3 lg:px-4 shadow-lg">
                             <Input
                                 type="email"
                                 placeholder="Your email address"
-                                className="flex-1 bg-transparent text-primary placeholder:text-foreground outline-none px-3"
+                                className="flex-1 bg-transparent text-footer-foreground placeholder:text-footer-foreground/60 outline-none px-3 lg:px-4 text-sm lg:text-base border-0 focus-visible:ring-0"
                             />
-                            <Button className="bg-primary hover:bg-primary/90 text-primary-foreground text-sm rounded-[10px] px-4 py-1.5">
+                            <Button className="bg-primary hover:bg-primary/90 text-primary-foreground text-sm lg:text-base rounded-lg lg:rounded-xl px-4 lg:px-6 py-2 lg:py-2.5 h-auto">
                                 Subscribe
                             </Button>
                         </div>
-
-
                     </div>
-
                 </div>
 
                 {/* Horizontal Separator */}
-                <div className="border-t border-background"></div>
+                <div className="border-t border-footer-foreground/30"></div>
 
                 {/* Quick Links - Three Columns */}
-                <div className="grid grid-cols-3 gap-8 text-center">
+                <div className="grid grid-cols-3 gap-4 lg:gap-12 text-center lg:text-left">
                     {/* Contact */}
                     <div className="space-y-3">
                         <h4 className="font-bold text-primary">Contact</h4>
-                        <div className="space-y-2 text-sm text-background/70">
+                        <div className="space-y-2 text-sm text-footer-foreground/70">
                             <p className="font-semibold">+601139631049</p>
                             <p className="font-semibold">julazng@gmail.com</p>
                             <div className="flex items-center gap-2 pt-2">
                                 <a
                                     href="#"
                                     aria-label="Instagram"
-                                    className="text-primary hover:text-primary/80 transition-colors"
+                                    className="text-primary hover:text-primary/95 transition-colors p-2 rounded-lg hover:bg-footer-foreground/10"
                                 >
-                                    <Instagram className="h-5 w-5" />
+                                    <Instagram className="h-5 w-5 lg:h-6 lg:w-6" />
                                 </a>
                                 <a
                                     href="#"
                                     aria-label="LinkedIn"
-                                    className="text-primary hover:text-primary/80 transition-colors"
+                                    className="text-primary hover:text-primary/95 transition-colors p-2 rounded-lg hover:bg-footer-foreground/10"
                                 >
-                                    <Linkedin className="h-5 w-5" />
+                                    <Linkedin className="h-5 w-5 lg:h-6 lg:w-6" />
                                 </a>
                                 <a
                                     href="#"
                                     aria-label="Twitter"
-                                    className="text-primary hover:text-primary/80 transition-colors"
+                                    className="text-primary hover:text-primary/95 transition-colors p-2 rounded-lg hover:bg-footer-foreground/10"
                                 >
-                                    <Twitter className="h-5 w-5" />
+                                    <Twitter className="h-5 w-5 lg:h-6 lg:w-6" />
                                 </a>
                             </div>
                         </div>
@@ -85,24 +82,24 @@ export function Footer({ className }: FooterProps) {
                     {/* Quick Links */}
                     <div className="space-y-3">
                         <h4 className="font-bold text-primary">Quick Links</h4>
-                        <ul className="space-y-2 text-sm text-background/70">
+                        <ul className="space-y-2 text-sm text-footer-foreground/70">
                             <li>
-                                <a href="#" className="hover:text-primary transition-colors font-semibold">
+                                <a href="#" className="hover:text-primary/95 transition-colors font-semibold">
                                     About Us
                                 </a>
                             </li>
                             <li>
-                                <a href="#" className="hover:text-primary transition-colors font-semibold">
+                                <a href="#" className="hover:text-primary/95 transition-colors font-semibold">
                                     Landlord FAQ
                                 </a>
                             </li>
                             <li>
-                                <a href="#" className="hover:text-primary transition-colors font-semibold">
+                                <a href="#" className="hover:text-primary/95 transition-colors font-semibold">
                                     Sitemap
                                 </a>
                             </li>
                             <li>
-                                <a href="#" className="hover:text-primary transition-colors font-semibold">
+                                <a href="#" className="hover:text-primary/95 transition-colors font-semibold">
                                     Buildings
                                 </a>
                             </li>
@@ -112,19 +109,19 @@ export function Footer({ className }: FooterProps) {
                     {/* Legal & Policies */}
                     <div className="space-y-3">
                         <h4 className="font-bold text-primary">Legal & Policies</h4>
-                        <ul className="space-y-2 text-sm text-background/70">
+                        <ul className="space-y-2 text-sm text-footer-foreground/70">
                             <li>
-                                <a href="#" className="hover:text-primary transition-colors font-semibold">
+                                <a href="#" className="hover:text-primary/95 transition-colors font-semibold">
                                     Terms & Conditions
                                 </a>
                             </li>
                             <li>
-                                <a href="#" className="hover:text-primary transition-colors font-semibold">
+                                <a href="#" className="hover:text-primary/95 transition-colors font-semibold">
                                     Cookie Policy
                                 </a>
                             </li>
                             <li>
-                                <a href="#" className="hover:text-primary transition-colors font-semibold">
+                                <a href="#" className="hover:text-primary/95 transition-colors font-semibold">
                                     Disclaimer
                                 </a>
                             </li>
@@ -133,10 +130,10 @@ export function Footer({ className }: FooterProps) {
                 </div>
 
                 {/* Horizontal Separator */}
-                <div className="border-t border-background"></div>
+                <div className="border-t border-footer-foreground/30"></div>
 
                 {/* Copyright */}
-                <div className="text-center text-sm text-primary">
+                <div className="text-center text-sm lg:text-base text-primary/90">
                     <p>© 2025 Julaaz, all rights reserved</p>
                 </div>
             </div>

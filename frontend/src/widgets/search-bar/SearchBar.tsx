@@ -17,17 +17,17 @@ export function SearchBar({ onSearch, onFilterClick, className }: SearchBarProps
         <Button
           variant="ghost"
           size="icon"
-          className="h-12 w-12 shrink-0 text-muted-foreground hover:text-foreground bg-surface"
+          className="h-12 w-12 shrink-0 text-foreground hover:text-primary bg-surface hover:bg-primary/10 transition-colors"
           onClick={onFilterClick}
           aria-label="Filter options"
         >
-          <FilterIcon className="h-5 w-5" />
+          <FilterIcon className="h-5 w-5 text-foreground" />
         </Button>
         <div className="relative flex-1">
           <Input
             type="search"
             placeholder="Search properties, locations..."
-            className="pl-12 pr-4 h-[41px] rounded-[10px] border-0 shadow-sm focus:shadow-sm transition-shadow bg-surface"
+            className="pl-12 pr-4 h-[41px] rounded-[10px] border border-border shadow-sm focus:shadow-md focus:border-primary/50 transition-shadow bg-surface text-foreground"
             onKeyDown={(e) => {
               if (e.key === 'Enter') {
                 onSearch?.(e.currentTarget.value)

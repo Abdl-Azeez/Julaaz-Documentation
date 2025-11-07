@@ -1,0 +1,52 @@
+/* Eko Luxe Theme - Lagos Premium Dark Gold */
+[data-theme='eko-luxe'] {
+  /* Base Colors */
+  --background: 164 56% 16%; /* #0F3D34 - Dominant Dark Green */
+  --foreground: 0 0% 100%; /* White */
+  
+  /* Brand Colors */
+  --primary: 158 84% 39%; /* #10B981 - CTA Green */
+  --primary-foreground: 0 0% 100%; /* White */
+  
+  /* Accent Colors */
+  --accent: 158 84% 39%; /* Same as primary for consistency */
+  --accent-foreground: 0 0% 100%; /* White */
+  
+  /* Muted/Secondary */
+  --muted: 162 33% 35%; /* #27665B - Background shade */
+  --muted-foreground: 169 24% 60%; /* #80B3A9 - Placeholder text */
+  
+  --secondary: 161 40% 38%; /* #2C7A6A - Secondary Green */
+  --secondary-foreground: 165 40% 75%; /* #A7E0CF - Text on Green */
+  
+  /* Surface & Card */
+  --surface: 162 33% 35%; /* Matches muted */
+  --card: 164 56% 16%; /* Matches background */
+  --card-foreground: 0 0% 100%; /* White */
+  
+  /* Borders & Inputs */
+  --border: 163 32% 43%; /* #33776A - Border */
+  --input: 161 40% 38%; /* Matches secondary */
+  --ring: 158 84% 39%; /* Matches primary */
+  
+  /* Status Colors */
+  --destructive: 0 84% 60%; /* Error Red */
+  --destructive-foreground: 0 0% 100%; /* White */
+  
+  --success: 142 76% 55%; /* #4ADE80 - Success Green */
+  --success-foreground: 0 0% 100%; /* White */
+  
+  --warning: 43 96% 56%; /* #FBBF24 - Warning Orange */
+  --warning-foreground: 0 0% 100%; /* White */
+  
+  /* Icon Background */
+  --icon-bg: 161 40% 38%; /* Secondary green */
+  
+  /* Footer Colors */
+  --footer-bg: 164 56% 12%; /* Darker green footer */
+  --footer-foreground: 0 0% 100%; /* Light footer text */
+  
+  /* Overlay */
+  --overlay: 0 0% 0%; /* Black for overlays */
+}
+

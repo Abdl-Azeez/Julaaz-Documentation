@@ -118,13 +118,13 @@ export function ServicesPage() {
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      <Header onMenuClick={handleMenuClick} onProfileClick={handleProfileClick} />
+      <Header onMenuClick={handleMenuClick} onProfileClick={handleProfileClick} className="lg:shadow-sm" />
       
       <div className="flex-1 text-foreground">
       {/* Hero */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-primary/5 to-transparent" />
-        <div className="container mx-auto px-4 pt-16 pb-14 relative z-10">
+        <div className="container mx-auto px-4 lg:px-6 xl:px-8 pt-12 md:pt-16 lg:pt-20 pb-12 md:pb-14 lg:pb-20 relative z-10 max-w-7xl">
           <div className="flex flex-col gap-10 lg:flex-row lg:items-center">
             <div className="flex-1 space-y-6">
               <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-2 text-sm font-medium text-primary">
@@ -221,7 +221,7 @@ export function ServicesPage() {
       </section>
 
       {/* Category Explorer */}
-      <section className="container mx-auto px-4 py-12 space-y-8">
+      <section className="container mx-auto px-4 lg:px-6 xl:px-8 py-12 lg:py-16 space-y-8 max-w-7xl">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
             <h2 className="text-2xl md:text-3xl font-bold">What do you need help with today?</h2>
@@ -281,7 +281,7 @@ export function ServicesPage() {
               </div>
             </div>
 
-            <div className="grid gap-4 md:grid-cols-2">
+            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
               {selectedCategory.services.map((service) => (
                 <motion.div
                   key={service.id}
@@ -369,7 +369,7 @@ export function ServicesPage() {
       {/* CTA */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-primary/15 via-background to-background" />
-        <div className="container mx-auto px-4 py-16 relative z-10">
+        <div className="container mx-auto px-4 lg:px-6 xl:px-8 py-12 md:py-16 lg:py-20 relative z-10 max-w-7xl">
           <div className="rounded-[32px] border border-primary/20 bg-background/80 backdrop-blur-xl p-10 shadow-2xl">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-10">
               <div className="max-w-3xl space-y-4">

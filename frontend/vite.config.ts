@@ -11,6 +11,14 @@ export default defineConfig({
     svgr({
       svgrOptions: {
         icon: true,
+        svgProps: {
+          preserveAspectRatio: 'xMidYMid meet',
+        },
+        // Preserve fill and stroke attributes
+        replaceAttrValues: {
+          '#F1F5F3': '#00A754', // Replace any remaining light fills with green
+          '#141B34': 'currentColor', // Replace hardcoded stroke colors with currentColor for theme support
+        },
       },
     }),
     VitePWA({

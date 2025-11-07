@@ -53,9 +53,14 @@ export const ROUTES = {
   ADMIN_PROPERTIES: '/admin/properties',
   ADMIN_ANALYTICS: '/admin/analytics',
   
-  // Other routes
+  // Activity routes
   MESSAGING: '/messaging',
+  MESSAGING_CHAT: (id: string) => `/messaging/${id}`,
   NOTIFICATIONS: '/notifications',
+  EVENTS: '/events',
+  FAVOURITES: '/favourites',
+  
+  // Profile routes
   PROFILE: '/profile',
   SETTINGS: '/profile/settings',
 } as const

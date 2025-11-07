@@ -1,0 +1,52 @@
+/* Rainy 9ja Theme - Lagos Rainy Season Blue/Cool Dark */
+[data-theme='rainy-9ja'] {
+  /* Base Colors */
+  --background: 222 47% 11%; /* #0f172a - Dark blue */
+  --foreground: 210 40% 98%; /* #e2e8f0 - Light blue-gray */
+  
+  /* Brand Colors */
+  --primary: 199 89% 48%; /* #0284c7 - Sky blue */
+  --primary-foreground: 0 0% 100%; /* White */
+  
+  /* Accent Colors */
+  --accent: 158 100% 30%; /* #00a754 - Green accent */
+  --accent-foreground: 0 0% 100%; /* White */
+  
+  /* Muted/Secondary */
+  --muted: 217 33% 17%; /* #334155 - Dark blue-gray */
+  --muted-foreground: 215 20% 65%; /* #94a3b8 - Light blue-gray */
+  
+  --secondary: 217 33% 17%; /* #1e293b - Dark slate */
+  --secondary-foreground: 213 27% 84%; /* #cbd5e1 - Light slate */
+  
+  /* Surface & Card */
+  --surface: 217 33% 17%; /* Matches muted */
+  --card: 222 47% 11%; /* Matches background */
+  --card-foreground: 210 40% 98%; /* Light blue-gray */
+  
+  /* Borders & Inputs */
+  --border: 217 33% 17%; /* #1e293b - Dark slate */
+  --input: 217 33% 17%; /* #1e293b - Dark slate */
+  --ring: 199 89% 48%; /* Matches primary */
+  
+  /* Status Colors */
+  --destructive: 0 84% 60%; /* #ef4444 - Error Red */
+  --destructive-foreground: 0 0% 100%; /* White */
+  
+  --success: 142 76% 36%; /* #10b981 - Success Green */
+  --success-foreground: 0 0% 100%; /* White */
+  
+  --warning: 48 96% 53%; /* #facc15 - Warning Yellow */
+  --warning-foreground: 0 0% 100%; /* White */
+  
+  /* Icon Background */
+  --icon-bg: 217 33% 25%; /* Lighter slate for icons */
+  
+  /* Footer Colors */
+  --footer-bg: 222 47% 8%; /* Very dark blue footer */
+  --footer-foreground: 210 40% 98%; /* Light footer text */
+  
+  /* Overlay */
+  --overlay: 0 0% 0%; /* Black for overlays */
+}
+

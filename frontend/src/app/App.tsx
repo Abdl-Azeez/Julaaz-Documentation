@@ -12,7 +12,12 @@ import { LoginPage } from '@/pages/auth/login'
 import { PasswordPage } from '@/pages/auth/password'
 import { SignupPage } from '@/pages/auth/signup'
 import { VerifyOtpPage } from '@/pages/auth/verify-otp'
+import { MessagingPage } from '@/pages/messaging'
+import { NotificationsPage } from '@/pages/notifications'
+import { EventsPage } from '@/pages/events'
+import { FavouritesPage } from '@/pages/favourites'
 import { ROUTES } from '@/shared/constants/routes'
+import { useThemeStore } from '@/shared/store/theme.store'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -27,6 +32,37 @@ const queryClient = new QueryClient({
 function App() {
   const [showSplash, setShowSplash] = useState(true)
   const [isMobile, setIsMobile] = useState(false)
+  const { theme } = useThemeStore()
+
+  // Initialize theme on mount
+  useEffect(() => {
+    // Get theme from store (will use persisted value or default)
+    const currentTheme = useThemeStore.getState().theme
+    // Apply theme to document immediately
+    document.documentElement.setAttribute('data-theme', currentTheme)
+    const selectedTheme = useThemeStore.getState().getTheme()
+    if (selectedTheme) {
+      if (selectedTheme.type === 'dark') {
+        document.documentElement.classList.add('dark')
+      } else {
+        document.documentElement.classList.remove('dark')
+      }
+    }
+  }, [])
+
+  // Update theme when it changes
+  useEffect(() => {
+    // Apply theme to document
+    document.documentElement.setAttribute('data-theme', theme)
+    const selectedTheme = useThemeStore.getState().getTheme()
+    if (selectedTheme) {
+      if (selectedTheme.type === 'dark') {
+        document.documentElement.classList.add('dark')
+      } else {
+        document.documentElement.classList.remove('dark')
+      }
+    }
+  }, [theme])
 
   useEffect(() => {
     // Check if device is mobile
@@ -65,6 +101,11 @@ function App() {
             <Route path={ROUTES.PROFILE} element={<ProfilePage />} />
             <Route path={ROUTES.SETTINGS} element={<SettingsPage />} />
             <Route path={ROUTES.SERVICES} element={<ServicesPage />} />
+            <Route path={ROUTES.MESSAGING} element={<MessagingPage />} />
+            <Route path="/messaging/:conversationId" element={<MessagingPage />} />
+            <Route path={ROUTES.NOTIFICATIONS} element={<NotificationsPage />} />
+            <Route path={ROUTES.EVENTS} element={<EventsPage />} />
+            <Route path={ROUTES.FAVOURITES} element={<FavouritesPage />} />
             <Route path="*" element={<Navigate to={ROUTES.HOME} replace />} />
           </Routes>
         )}

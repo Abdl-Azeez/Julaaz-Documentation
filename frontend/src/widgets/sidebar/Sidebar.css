@@ -207,6 +207,25 @@
   transition: height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+.sidebar__item--active {
+  background: hsl(var(--primary) / 0.1);
+  color: hsl(var(--primary));
+  font-weight: 600;
+}
+
+.sidebar__item--active::before {
+  height: 70%;
+}
+
+.sidebar__item--active .sidebar__item-icon {
+  color: hsl(var(--primary));
+  transform: scale(1.1);
+}
+
+.sidebar__item--active:hover {
+  background: hsl(var(--primary) / 0.15);
+}
+
 .sidebar__item:hover {
   background: hsl(var(--muted));
   transform: translateX(4px);

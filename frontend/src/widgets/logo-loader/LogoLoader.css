@@ -29,6 +29,21 @@
   fill: hsl(var(--primary)) !important;
 }
 
+.logo-loader--primary .logo-loader__svg * rect,
+.logo-loader--primary .logo-loader__svg svg rect,
+.logo-loader--primary .logo-loader__svg svg > g rect,
+.logo-loader--primary .logo-loader__svg svg g rect,
+.logo-loader--primary .logo-loader__svg rect {
+  fill: hsl(var(--primary)) !important;
+}
+
+.logo-loader--primary .logo-loader__svg * rect[fill],
+.logo-loader--primary .logo-loader__svg svg rect[fill],
+.logo-loader--primary .logo-loader__svg svg g rect[fill],
+.logo-loader--primary .logo-loader__svg svg > g rect[fill] {
+  fill: hsl(var(--primary)) !important;
+}
+
 .logo-loader--primary .logo-loader__svg svg path[stroke],
 .logo-loader--primary .logo-loader__svg path[stroke],
 .logo-loader--primary .logo-loader__svg svg line,
@@ -39,6 +54,21 @@
 .logo-loader--white .logo-loader__svg svg path[fill],
 .logo-loader--white .logo-loader__svg path[fill],
 .logo-loader--white .logo-loader__svg svg path[fill]:not([fill="none"]) {
+  fill: white !important;
+}
+
+.logo-loader--white .logo-loader__svg * rect,
+.logo-loader--white .logo-loader__svg svg rect,
+.logo-loader--white .logo-loader__svg svg > g rect,
+.logo-loader--white .logo-loader__svg svg g rect,
+.logo-loader--white .logo-loader__svg rect {
+  fill: white !important;
+}
+
+.logo-loader--white .logo-loader__svg * rect[fill],
+.logo-loader--white .logo-loader__svg svg rect[fill],
+.logo-loader--white .logo-loader__svg svg g rect[fill],
+.logo-loader--white .logo-loader__svg svg > g rect[fill] {
   fill: white !important;
 }
 
@@ -53,6 +83,21 @@
 .logo-loader--foreground .logo-loader__svg svg path[fill],
 .logo-loader--foreground .logo-loader__svg path[fill],
 .logo-loader--foreground .logo-loader__svg svg path[fill]:not([fill="none"]) {
+  fill: hsl(var(--primary-foreground)) !important;
+}
+
+.logo-loader--foreground .logo-loader__svg * rect,
+.logo-loader--foreground .logo-loader__svg svg rect,
+.logo-loader--foreground .logo-loader__svg svg > g rect,
+.logo-loader--foreground .logo-loader__svg svg g rect,
+.logo-loader--foreground .logo-loader__svg rect {
+  fill: hsl(var(--primary-foreground)) !important;
+}
+
+.logo-loader--foreground .logo-loader__svg * rect[fill],
+.logo-loader--foreground .logo-loader__svg svg rect[fill],
+.logo-loader--foreground .logo-loader__svg svg g rect[fill],
+.logo-loader--foreground .logo-loader__svg svg > g rect[fill] {
   fill: hsl(var(--primary-foreground)) !important;
 }
 
@@ -79,36 +124,62 @@
   animation: strokeDraw 1.5s ease-out forwards;
 }
 
-/* Staggered window fade-in animation - using a different approach */
+/* Staggered window fade-in animation - default (no variant specified) */
+/* Target all rect elements regardless of nesting - use universal approach */
+.logo-loader__svg * rect,
 .logo-loader__svg svg rect,
+.logo-loader__svg svg > g rect,
+.logo-loader__svg svg g[filter] rect,
+.logo-loader__svg svg g rect,
 .logo-loader__svg rect {
-  opacity: 0;
-  animation: windowFadeIn 0.4s ease-out forwards;
+  fill: hsl(var(--primary)) !important;
+  opacity: 0 !important;
+  animation: windowFadeIn 0.4s ease-out forwards !important;
+}
+
+/* Override any inline fill attributes - target all possible scenarios */
+.logo-loader__svg * rect[fill],
+.logo-loader__svg svg rect[fill],
+.logo-loader__svg svg g rect[fill],
+.logo-loader__svg svg > g rect[fill] {
+  fill: hsl(var(--primary)) !important;
 }
 
 /* Stagger animation delays for windows - using animation-delay with CSS custom properties */
-.logo-loader__svg rect:nth-of-type(1),
-.logo-loader__svg rect:nth-of-type(2),
-.logo-loader__svg rect:nth-of-type(3) {
-  animation-delay: 1.2s;
+.logo-loader__svg svg rect:nth-of-type(1),
+.logo-loader__svg svg rect:nth-of-type(2),
+.logo-loader__svg svg rect:nth-of-type(3),
+.logo-loader__svg svg g rect:nth-of-type(1),
+.logo-loader__svg svg g rect:nth-of-type(2),
+.logo-loader__svg svg g rect:nth-of-type(3) {
+  animation-delay: 1.2s !important;
 }
 
-.logo-loader__svg rect:nth-of-type(4),
-.logo-loader__svg rect:nth-of-type(5),
-.logo-loader__svg rect:nth-of-type(6) {
-  animation-delay: 1.35s;
+.logo-loader__svg svg rect:nth-of-type(4),
+.logo-loader__svg svg rect:nth-of-type(5),
+.logo-loader__svg svg rect:nth-of-type(6),
+.logo-loader__svg svg g rect:nth-of-type(4),
+.logo-loader__svg svg g rect:nth-of-type(5),
+.logo-loader__svg svg g rect:nth-of-type(6) {
+  animation-delay: 1.35s !important;
 }
 
-.logo-loader__svg rect:nth-of-type(7),
-.logo-loader__svg rect:nth-of-type(8),
-.logo-loader__svg rect:nth-of-type(9) {
-  animation-delay: 1.5s;
+.logo-loader__svg svg rect:nth-of-type(7),
+.logo-loader__svg svg rect:nth-of-type(8),
+.logo-loader__svg svg rect:nth-of-type(9),
+.logo-loader__svg svg g rect:nth-of-type(7),
+.logo-loader__svg svg g rect:nth-of-type(8),
+.logo-loader__svg svg g rect:nth-of-type(9) {
+  animation-delay: 1.5s !important;
 }
 
-.logo-loader__svg rect:nth-of-type(10),
-.logo-loader__svg rect:nth-of-type(11),
-.logo-loader__svg rect:nth-of-type(12) {
-  animation-delay: 1.65s;
+.logo-loader__svg svg rect:nth-of-type(10),
+.logo-loader__svg svg rect:nth-of-type(11),
+.logo-loader__svg svg rect:nth-of-type(12),
+.logo-loader__svg svg g rect:nth-of-type(10),
+.logo-loader__svg svg g rect:nth-of-type(11),
+.logo-loader__svg svg g rect:nth-of-type(12) {
+  animation-delay: 1.65s !important;
 }
 
 /* Text fade-in */

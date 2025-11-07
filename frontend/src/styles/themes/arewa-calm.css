@@ -1,0 +1,52 @@
+/* Arewa Calm Theme - Northern Nigeria Earth Tones */
+[data-theme='arewa-calm'] {
+  /* Base Colors */
+  --background: 48 31% 93%; /* #f8f4e5 - Warm beige */
+  --foreground: 36 18% 23%; /* #3f3a2d - Dark brown */
+  
+  /* Brand Colors */
+  --primary: 43 100% 33%; /* #a77e00 - Gold */
+  --primary-foreground: 0 0% 100%; /* White */
+  
+  /* Accent Colors */
+  --accent: 158 100% 30%; /* #00a754 - Green accent */
+  --accent-foreground: 0 0% 100%; /* White */
+  
+  /* Muted/Secondary */
+  --muted: 44 25% 89%; /* #ece5d4 - Light beige */
+  --muted-foreground: 0 0% 35%; /* #595959 - Gray */
+  
+  --secondary: 46 29% 79%; /* #d3c8ae - Tan */
+  --secondary-foreground: 36 18% 23%; /* #3f3a2d - Dark brown */
+  
+  /* Surface & Card */
+  --surface: 44 25% 89%; /* Matches muted */
+  --card: 48 31% 93%; /* Matches background */
+  --card-foreground: 36 18% 23%; /* Dark brown */
+  
+  /* Borders & Inputs */
+  --border: 45 26% 76%; /* #d1c7a8 - Light tan border */
+  --input: 45 28% 83%; /* #e7e0c3 - Light tan input */
+  --ring: 43 100% 33%; /* Matches primary */
+  
+  /* Status Colors */
+  --destructive: 0 72% 41%; /* #b91c1c - Error Red */
+  --destructive-foreground: 0 0% 100%; /* White */
+  
+  --success: 142 76% 36%; /* #15803d - Success Green */
+  --success-foreground: 0 0% 100%; /* White */
+  
+  --warning: 38 92% 50%; /* #f59e0b - Warning Orange */
+  --warning-foreground: 0 0% 100%; /* White */
+  
+  /* Icon Background */
+  --icon-bg: 0 0% 100%; /* White */
+  
+  /* Footer Colors */
+  --footer-bg: 36 18% 15%; /* Dark brown footer */
+  --footer-foreground: 0 0% 100%; /* Light footer text */
+  
+  /* Overlay */
+  --overlay: 0 0% 0%; /* Black for overlays */
+}
+

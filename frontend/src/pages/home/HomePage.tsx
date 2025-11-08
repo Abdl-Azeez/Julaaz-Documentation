@@ -185,7 +185,7 @@ export function HomePage() {
                       <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/30 to-transparent" />
                       
                       {/* Button Content */}
-                      <span className="relative flex items-center justify-center gap-2 text-base font-bold text-white">
+                      <span className="relative flex items-center justify-center gap-2 text-base font-bold text-primary-foreground">
                         <span>Browse homes</span>
                         <span className="group-hover:translate-x-1 transition-transform duration-300">→</span>
                       </span>

@@ -230,7 +230,7 @@ export function SettingsPage() {
                     `}
                     aria-label={`Select ${th.displayName} theme`}
                   >
-                    <div className={`w-full h-16 rounded-md mb-2 ${themeColors[th.id] || 'bg-gray-300'}`} />
+                    <div className={`w-full h-16 rounded-md mb-2 ${themeColors[th.id] || 'bg-muted'}`} />
                     <div className="flex flex-col items-center gap-1">
                       <span className="text-lg">{th.emoji}</span>
                       <span className={`text-xs font-medium ${isActive ? 'text-primary' : 'text-muted-foreground'}`}>
@@ -239,7 +239,7 @@ export function SettingsPage() {
                     </div>
                     {isActive && (
                       <div className="absolute top-1 right-1 w-4 h-4 bg-primary rounded-full flex items-center justify-center">
-                        <span className="text-white text-[10px]">✓</span>
+                        <span className="text-primary-foreground text-[10px]">✓</span>
                       </div>
                     )}
                   </button>

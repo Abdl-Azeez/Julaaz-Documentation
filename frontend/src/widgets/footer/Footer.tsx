@@ -1,16 +1,22 @@
-import { Instagram, Linkedin, Twitter } from 'lucide-react'
+import { Instagram, Linkedin, Twitter, Sparkles } from 'lucide-react'
 import { Button } from '@/shared/ui/button'
 import { Input } from '@/shared/ui/input'
 import LogoSvg from '@/assets/images/logo.svg?react'
 import { cn } from '@/shared/lib/utils/cn'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { ROUTES } from '@/shared/constants/routes'
+import { useAuthStore } from '@/shared/store/auth.store'
 
 interface FooterProps {
     className?: string
 }
 
 export function Footer({ className }: FooterProps) {
+    const location = useLocation()
+    const { user } = useAuthStore()
+    const isLandlord = user?.role === 'landlord' || location.pathname.startsWith('/landlord')
+
+    const isActiveLink = (path: string) => location.pathname === path
     return (
         <footer className={cn('bg-footer text-footer-foreground mt-16 lg:mt-24', className)}>
             <div className="container mx-auto px-4 lg:px-6 xl:px-8 pb-12 lg:pb-16 pt-8 lg:pt-12 space-y-8 lg:space-y-12 max-w-7xl">
@@ -53,12 +59,16 @@ export function Footer({ className }: FooterProps) {
                     <div className="space-y-3">
                         <h4 className="font-bold text-primary">Stay Connected</h4>
                         <div className="space-y-4 text-sm text-footer-foreground/70">
-                            <p className="font-semibold">Let’s craft your next rental experience.</p>
+                            <p className="font-semibold hidden lg:block">Let's craft your next rental experience.</p>
                             <Button
                                 asChild
-                                className="w-full rounded-xl bg-primary text-primary-foreground shadow-lg hover:shadow-xl"
+                                className="group relative w-full overflow-hidden rounded-xl lg:rounded-2xl bg-primary text-primary-foreground shadow-lg hover:shadow-xl transition-all duration-300 h-10 lg:h-12 text-xs lg:text-sm"
                             >
-                                <Link to={ROUTES.CONTACT}>Contact Support</Link>
+                                <Link to={ROUTES.CONTACT} className="flex items-center justify-center gap-1.5 lg:gap-2">
+                                    <Sparkles className="h-3.5 w-3.5 lg:h-4 lg:w-4 group-hover:rotate-12 transition-transform" />
+                                    <span className="font-semibold">Contact</span>
+                                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+                                </Link>
                             </Button>
                             <div className="flex items-center justify-center lg:justify-start gap-2">
                                 <a
@@ -91,22 +101,48 @@ export function Footer({ className }: FooterProps) {
                         <h4 className="font-bold text-primary">Quick Links</h4>
                         <ul className="space-y-2 text-sm text-footer-foreground/70">
                             <li>
-                                <Link to={ROUTES.ABOUT} className="hover:text-primary/95 transition-colors font-semibold">
+                                <Link
+                                    to={ROUTES.ABOUT}
+                                    className={cn(
+                                        'hover:text-primary/95 transition-colors font-semibold',
+                                        isActiveLink(ROUTES.ABOUT) && 'text-primary'
+                                    )}
+                                >
                                     About Us
                                 </Link>
                             </li>
+                            {isLandlord && (
+                                <li>
+                                    <Link
+                                        to={ROUTES.LANDLORD_FAQ}
+                                        className={cn(
+                                            'hover:text-primary/95 transition-colors font-semibold',
+                                            isActiveLink(ROUTES.LANDLORD_FAQ) && 'text-primary'
+                                        )}
+                                    >
+                                        Landlord FAQ
+                                    </Link>
+                                </li>
+                            )}
                             <li>
-                                <Link to={ROUTES.LANDLORD_FAQ} className="hover:text-primary/95 transition-colors font-semibold">
-                                    Landlord FAQ
-                                </Link>
-                            </li>
-                            <li>
-                                <Link to={ROUTES.SITEMAP} className="hover:text-primary/95 transition-colors font-semibold">
+                                <Link
+                                    to={ROUTES.SITEMAP}
+                                    className={cn(
+                                        'hover:text-primary/95 transition-colors font-semibold',
+                                        isActiveLink(ROUTES.SITEMAP) && 'text-primary'
+                                    )}
+                                >
                                     Sitemap
                                 </Link>
                             </li>
                             <li>
-                                <Link to={ROUTES.BUILDINGS} className="hover:text-primary/95 transition-colors font-semibold">
+                                <Link
+                                    to={ROUTES.BUILDINGS}
+                                    className={cn(
+                                        'hover:text-primary/95 transition-colors font-semibold',
+                                        isActiveLink(ROUTES.BUILDINGS) && 'text-primary'
+                                    )}
+                                >
                                     Buildings
                                 </Link>
                             </li>
@@ -118,17 +154,35 @@ export function Footer({ className }: FooterProps) {
                         <h4 className="font-bold text-primary">Legal & Policies</h4>
                         <ul className="space-y-2 text-sm text-footer-foreground/70">
                             <li>
-                                <Link to={ROUTES.TERMS} className="hover:text-primary/95 transition-colors font-semibold">
+                                <Link
+                                    to={ROUTES.TERMS}
+                                    className={cn(
+                                        'hover:text-primary/95 transition-colors font-semibold',
+                                        isActiveLink(ROUTES.TERMS) && 'text-primary'
+                                    )}
+                                >
                                     Terms & Conditions
                                 </Link>
                             </li>
                             <li>
-                                <Link to={ROUTES.COOKIES} className="hover:text-primary/95 transition-colors font-semibold">
+                                <Link
+                                    to={ROUTES.COOKIES}
+                                    className={cn(
+                                        'hover:text-primary/95 transition-colors font-semibold',
+                                        isActiveLink(ROUTES.COOKIES) && 'text-primary'
+                                    )}
+                                >
                                     Cookie Policy
                                 </Link>
                             </li>
                             <li>
-                                <Link to={ROUTES.DISCLAIMER} className="hover:text-primary/95 transition-colors font-semibold">
+                                <Link
+                                    to={ROUTES.DISCLAIMER}
+                                    className={cn(
+                                        'hover:text-primary/95 transition-colors font-semibold',
+                                        isActiveLink(ROUTES.DISCLAIMER) && 'text-primary'
+                                    )}
+                                >
                                     Disclaimer
                                 </Link>
                             </li>

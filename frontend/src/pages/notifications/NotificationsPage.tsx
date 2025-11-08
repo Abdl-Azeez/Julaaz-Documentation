@@ -58,7 +58,7 @@ const getNotificationColor = (type: Notification['type']) => {
     case 'viewing_scheduled':
       return 'bg-blue-100 text-blue-600'
     case 'payment_received':
-      return 'bg-green-100 text-green-600'
+      return 'bg-primary/10 text-primary'
     case 'payment_reminder':
     case 'rent_due':
       return 'bg-orange-100 text-orange-600'
@@ -72,11 +72,11 @@ const getNotificationColor = (type: Notification['type']) => {
     case 'review_request':
       return 'bg-yellow-100 text-yellow-600'
     case 'document_approved':
-      return 'bg-green-100 text-green-600'
+      return 'bg-primary/10 text-primary'
     case 'document_rejected':
       return 'bg-red-100 text-red-600'
     default:
-      return 'bg-gray-100 text-gray-600'
+      return 'bg-muted/50 text-muted-foreground'
   }
 }
 

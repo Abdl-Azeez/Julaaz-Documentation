@@ -28,9 +28,12 @@ JulaazNG is a mobile-first web application that serves as Nigeria's premier prop
 - **Tenant Frontend Experience:** Complete end-to-end UI/UX for tenants across splash, onboarding, authentication (login/signup/OTP), home, properties, property details, viewing scheduler, favourites, messaging, notifications, calendar, profile, settings, agreements, and payments.
 - **Booking & Services Dashboards:** My Bookings and My Services pages deliver status-driven timelines, provider/landlord contact actions, and modal details for rental and service engagements.
 - **Shortlet & Viewing Enhancements:** Property cards highlight annual vs. shortlet offerings; viewing flow captures move-in, budget, tenancy duration, and seeds messaging threads.
-- **Themes & Responsiveness:** Six Nigerian-inspired themes with improved icon/footer visibility, desktop layouts, hover states, loaders, and tooltips for an elevated experience.
-- **Documentation:** Booking management and service management flows captured in Sections 8.3.5 & 8.3.6 alongside updated PRD descriptions, ensuring stakeholder alignment.
-- **Next Milestone:** Landlord workspace (property publishing, approvals, earnings, tenant screening) scheduled for the upcoming sprint.
+- **Landlord Workspace:** Complete dashboard with My Properties (occupancy tracking, dropdown actions), Applications (approval/rejection, filters), Earnings (monthly/shortlet breakdown, timeline, reminders), Property Details (slider, analytics), Property Upload Wizard (5-step process with media, amenities, shortlet toggle), Property Insights, and Management Tools.
+- **Themes & Responsiveness:** Six Nigerian-inspired themes (Naija Fresh, Eko Luxe, Arewa Calm, Ụlọ Oma, Rainy 9ja, Ajébo Blend) with improved icon/footer visibility, desktop layouts, hover states, loaders, and tooltips for an elevated experience. All colors use theme variables for flexibility.
+- **Info Pages & Footer:** Eight static content pages (About, Landlord FAQ, Sitemap, Buildings, Terms, Cookies, Disclaimer, Contact) with Framer Motion animations, role-based visibility (Landlord FAQ hidden for non-landlords), active link tracking, and creative Contact Support button with shimmer effects.
+- **Background Check & Verification:** Profile page includes detailed background check form with pre-filled personal info, financial/occupation questions, document upload, and admin verification flow with "verified" badge.
+- **Documentation:** Booking management, service management, landlord flows, background check, and shortlet support captured in PRD with updated sections ensuring stakeholder alignment.
+- **Next Milestone:** Backend API development (authentication, property CRUD, booking management, payment processing, messaging, notifications, admin workflows).
 
 ---
 

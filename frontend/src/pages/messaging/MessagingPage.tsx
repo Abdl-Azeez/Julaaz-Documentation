@@ -185,7 +185,7 @@ export function MessagingPage() {
                         <AvatarFallback>{participant?.name?.[0] || 'U'}</AvatarFallback>
                       </Avatar>
                       {participant?.isOnline && (
-                        <div className="absolute bottom-0 right-0 h-4 w-4 bg-green-500 rounded-full border-2 border-background" />
+                        <div className="absolute bottom-0 right-0 h-4 w-4 bg-primary rounded-full border-2 border-background" />
                       )}
                     </div>
                     
@@ -296,7 +296,7 @@ export function MessagingPage() {
                         <AvatarFallback>{participant?.name?.[0] || 'U'}</AvatarFallback>
                       </Avatar>
                       {participant?.isOnline && (
-                        <div className="absolute bottom-0 right-0 h-4 w-4 bg-green-500 rounded-full border-2 border-background" />
+                        <div className="absolute bottom-0 right-0 h-4 w-4 bg-primary rounded-full border-2 border-background" />
                       )}
                     </div>
                     
@@ -366,7 +366,7 @@ export function MessagingPage() {
                     </AvatarFallback>
                   </Avatar>
                   {selectedConversation.participantDetails[0].isOnline && (
-                    <div className="absolute bottom-0 right-0 h-3 w-3 bg-green-500 rounded-full border-2 border-background" />
+                    <div className="absolute bottom-0 right-0 h-3 w-3 bg-primary rounded-full border-2 border-background" />
                   )}
                 </div>
                 <div className="flex-1">

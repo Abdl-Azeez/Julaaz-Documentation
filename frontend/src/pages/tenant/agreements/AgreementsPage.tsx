@@ -316,7 +316,7 @@ export function AgreementsPage() {
       {/* Agreement Detail Modal */}
       {selectedAgreement && (
         <div
-          className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-end lg:items-center justify-center p-0 lg:p-4"
+          className="fixed inset-0 bg-background/60 backdrop-blur-sm z-50 flex items-end lg:items-center justify-center p-0 lg:p-4"
           onClick={handleCloseModal}
         >
           <div

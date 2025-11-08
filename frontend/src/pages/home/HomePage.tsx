@@ -27,25 +27,21 @@ export function HomePage() {
     navigate(`${ROUTES.PROPERTY_SEARCH}?q=${encodeURIComponent(query)}`)
   }
 
-  const handleChat = (_propertyId: string) => {
-    // Navigate to chat/messaging
-    navigate(ROUTES.MESSAGING)
-  }
-
   const handleShare = (propertyId: string) => {
-    // Share functionality
+    const shareUrl = `${window.location.origin}${ROUTES.PROPERTY_DETAILS(propertyId)}`
     if (navigator.share) {
       navigator.share({
         title: 'Check out this property on JulaazNG',
         text: 'I found this amazing property!',
-        url: `${window.location.origin}${ROUTES.PROPERTY_DETAILS(propertyId)}`,
+        url: shareUrl,
       })
     } else {
-      // Fallback: copy to clipboard
-      navigator.clipboard.writeText(
-        `${window.location.origin}${ROUTES.PROPERTY_DETAILS(propertyId)}`
-      )
+      navigator.clipboard.writeText(shareUrl)
     }
+  }
+
+  const handleViewDetails = (propertyId: string) => {
+    navigate(ROUTES.PROPERTY_DETAILS(propertyId))
   }
 
   const handleMenuClick = () => {
@@ -60,6 +56,10 @@ export function HomePage() {
       // Open drawer if not logged in
       setIsDrawerOpen(true)
     }
+  }
+
+  const handleRequestViewing = (propertyId: string) => {
+    navigate(ROUTES.PROPERTY_BOOKING(propertyId))
   }
 
   return (
@@ -212,8 +212,9 @@ export function HomePage() {
               <PropertyCard
                 key={property.id}
                 property={property}
-                onChat={handleChat}
+                onRequestViewing={handleRequestViewing}
                 onShare={handleShare}
+                onSelect={handleViewDetails}
                 layout={layout}
               />
             ))}
@@ -225,8 +226,9 @@ export function HomePage() {
               <PropertyCard
                 key={property.id}
                 property={property}
-                onChat={handleChat}
+                onRequestViewing={handleRequestViewing}
                 onShare={handleShare}
+                onSelect={handleViewDetails}
                 layout="grid"
               />
             ))}

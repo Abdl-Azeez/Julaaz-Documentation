@@ -27,22 +27,25 @@ export function PropertiesPage() {
     navigate(`${ROUTES.PROPERTY_SEARCH}?q=${encodeURIComponent(query)}`)
   }
 
-  const handleChat = (_propertyId: string) => {
-    navigate(ROUTES.MESSAGING)
-  }
-
   const handleShare = (propertyId: string) => {
+    const shareUrl = `${window.location.origin}${ROUTES.PROPERTY_DETAILS(propertyId)}`
     if (navigator.share) {
       navigator.share({
         title: 'Check out this property on JulaazNG',
         text: 'I found this amazing property!',
-        url: `${window.location.origin}${ROUTES.PROPERTY_DETAILS(propertyId)}`,
+        url: shareUrl,
       })
     } else {
-      navigator.clipboard.writeText(
-        `${window.location.origin}${ROUTES.PROPERTY_DETAILS(propertyId)}`
-      )
+      navigator.clipboard.writeText(shareUrl)
     }
+  }
+
+  const handleRequestViewing = (propertyId: string) => {
+    navigate(ROUTES.PROPERTY_BOOKING(propertyId))
+  }
+
+  const handleViewDetails = (propertyId: string) => {
+    navigate(ROUTES.PROPERTY_DETAILS(propertyId))
   }
 
   const handleMenuClick = () => {
@@ -277,8 +280,9 @@ export function PropertiesPage() {
               <PropertyCard
                 key={property.id}
                 property={property}
-                onChat={handleChat}
+                onRequestViewing={handleRequestViewing}
                 onShare={handleShare}
+                onSelect={handleViewDetails}
                 layout={layout}
               />
             ))}
@@ -290,8 +294,9 @@ export function PropertiesPage() {
                 <PropertyCard
                   key={property.id}
                   property={property}
-                  onChat={handleChat}
+                  onRequestViewing={handleRequestViewing}
                   onShare={handleShare}
+                  onSelect={handleViewDetails}
                   layout="grid"
               />
             ))}

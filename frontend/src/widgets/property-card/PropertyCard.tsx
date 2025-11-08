@@ -5,7 +5,7 @@ import { Button } from '@/shared/ui/button'
 import type { PropertyCardProps } from '@/entities/property/model/types'
 import HouseIcon from '@/assets/icons/house.svg?react'
 
-export function PropertyCard({ property, onChat, onShare, layout = 'grid' }: PropertyCardProps) {
+export function PropertyCard({ property, onRequestViewing, onShare, onSelect, layout = 'grid' }: PropertyCardProps) {
   const images = property.images || [property.image]
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
   
@@ -30,7 +30,19 @@ export function PropertyCard({ property, onChat, onShare, layout = 'grid' }: Pro
   const hasMultipleImages = images.length > 1
 
   return (
-    <Card className="overflow-hidden bg-surface hover:shadow-xl transition-all duration-300 border-0 shadow-sm rounded-[20px] lg:rounded-2xl hover:-translate-y-1">
+    <Card
+      className="overflow-hidden bg-surface hover:shadow-xl transition-all duration-300 border-0 shadow-sm rounded-[20px] lg:rounded-2xl hover:-translate-y-1 cursor-pointer focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:outline-none"
+      onClick={() => onSelect?.(property.id)}
+      onKeyDown={(event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault()
+          onSelect?.(property.id)
+        }
+      }}
+      role="button"
+      tabIndex={0}
+      aria-label={`View details for ${property.name}`}
+    >
       <div className={`
         relative overflow-hidden group
         ${isRowLayout 
@@ -164,20 +176,26 @@ export function PropertyCard({ property, onChat, onShare, layout = 'grid' }: Pro
               bg-icon-bg text-foreground hover:bg-primary/10 hover:text-primary shrink-0 rounded-[10px] transition-colors
               ${isRowLayout ? 'h-10 w-10' : 'h-9 w-9'}
             `}
-            onClick={() => onShare?.(property.id)}
+            onClick={(event) => {
+              event.stopPropagation()
+              onShare?.(property.id)
+            }}
             aria-label="Share property"
           >
             <Share2 className="h-4 w-4" />
           </Button>
           <Button
-            onClick={() => onChat?.(property.id)}
+            onClick={(event) => {
+              event.stopPropagation()
+              onRequestViewing?.(property.id)
+            }}
             className={`
               rounded-[10px] flex-1
               ${isRowLayout ? 'h-10 px-8 text-sm' : 'h-9 px-2 text-xs'}
             `}
             size="sm"
           >
-            {isRowLayout ? 'Chat with owner' : 'Chat'}
+            Request Viewing
           </Button>
         </div>
       </div>

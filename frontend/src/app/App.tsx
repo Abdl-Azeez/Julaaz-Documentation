@@ -5,6 +5,7 @@ import { Toaster } from 'react-hot-toast'
 import { SplashScreen } from '@/widgets/splash-screen'
 import { HomePage } from '@/pages/home'
 import { PropertiesPage } from '@/pages/properties'
+import { PropertyDetailsPage, PropertyViewingPage } from '@/pages/property-details'
 import { ProfilePage } from '@/pages/profile'
 import { SettingsPage } from '@/pages/settings'
 import { ServicesPage } from '@/pages/services'
@@ -94,6 +95,8 @@ function App() {
           <Routes>
             <Route path={ROUTES.HOME} element={<HomePage />} />
             <Route path={ROUTES.PROPERTIES} element={<PropertiesPage />} />
+            <Route path="/properties/:id" element={<PropertyDetailsPage />} />
+            <Route path="/properties/:id/booking" element={<PropertyViewingPage />} />
             <Route path={ROUTES.LOGIN} element={<LoginPage />} />
             <Route path={ROUTES.LOGIN_PASSWORD} element={<PasswordPage />} />
             <Route path={ROUTES.SIGNUP} element={<SignupPage />} />

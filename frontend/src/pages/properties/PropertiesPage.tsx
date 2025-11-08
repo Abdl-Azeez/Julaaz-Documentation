@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { LayoutGrid, List, MapPin, SlidersHorizontal } from 'lucide-react'
 import { Header } from '@/widgets/header'
 import { Footer } from '@/widgets/footer'
@@ -12,6 +12,7 @@ import { sampleProperties } from '@/pages/home/data/sample-properties'
 import { ROUTES } from '@/shared/constants/routes'
 import { useNavigate } from 'react-router-dom'
 import { useAuthStore } from '@/shared/store/auth.store'
+import { cn } from '@/shared/lib/utils/cn'
 
 type LayoutType = 'grid' | 'row'
 
@@ -22,6 +23,20 @@ export function PropertiesPage() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
   const [layout, setLayout] = useState<LayoutType>('grid')
   const [showFilters, setShowFilters] = useState(false)
+  const [rentalFilter, setRentalFilter] = useState<'all' | 'long_term' | 'shortlet'>('all')
+
+  const filteredProperties = useMemo(() => {
+    return sampleProperties.filter((property) => {
+      if (rentalFilter === 'all') return true
+      return property.rentalCategories.includes(rentalFilter === 'long_term' ? 'long_term' : 'shortlet')
+    })
+  }, [rentalFilter])
+
+  const rentalFilterOptions: Array<{ label: string; value: typeof rentalFilter }> = [
+    { label: 'All stays', value: 'all' },
+    { label: 'Annual lease', value: 'long_term' },
+    { label: 'Shortlet ready', value: 'shortlet' },
+  ]
 
   const handleSearch = (query: string) => {
     navigate(`${ROUTES.PROPERTY_SEARCH}?q=${encodeURIComponent(query)}`)
@@ -152,12 +167,47 @@ export function PropertiesPage() {
             </div>
           </div>
 
-            {/* Search Bar - Mobile and Tablet */}
-            <div className="lg:hidden mb-6">
-            <SearchBar 
-              onSearch={handleSearch} 
-              onFilterClick={() => setShowFilters(!showFilters)} 
-            />
+          <div className="flex flex-col gap-3">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div className="inline-flex rounded-full border border-border bg-background p-1">
+                {rentalFilterOptions.map((option) => (
+                  <button
+                    key={option.value}
+                    type="button"
+                    onClick={() => setRentalFilter(option.value)}
+                    className={cn(
+                      'px-3 py-1.5 text-xs font-semibold rounded-full transition-colors',
+                      rentalFilter === option.value
+                        ? option.value === 'shortlet'
+                          ? 'bg-emerald-500 text-emerald-50 shadow-sm'
+                          : 'bg-primary text-primary-foreground shadow-sm'
+                        : 'text-muted-foreground hover:text-primary'
+                    )}
+                  >
+                    {option.label}
+                  </button>
+                ))}
+              </div>
+              <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                <MapPin className="h-3.5 w-3.5" />
+                <span>
+                  Showing {filteredProperties.length} property{filteredProperties.length !== 1 ? 'ies' : ''}
+                  {rentalFilter === 'shortlet'
+                    ? ' with shortlet availability'
+                    : rentalFilter === 'long_term'
+                    ? ' for annual lease'
+                    : ''}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Search Bar - Mobile and Tablet */}
+          <div className="lg:hidden mb-6">
+          <SearchBar 
+            onSearch={handleSearch} 
+            onFilterClick={() => setShowFilters(!showFilters)} 
+          />
             
               {/* Mobile Filter Panel */}
             {showFilters && (
@@ -241,7 +291,7 @@ export function PropertiesPage() {
             <div className="flex items-center gap-2">
               <MapPin className="h-5 w-5 text-muted-foreground" />
                 <h2 className="text-xl md:text-2xl lg:text-3xl font-bold text-foreground">
-                {sampleProperties.length} Properties Found
+                {filteredProperties.length} Property{filteredProperties.length !== 1 ? 'ies' : ''} Found
               </h2>
             </div>
             
@@ -268,39 +318,50 @@ export function PropertiesPage() {
             </div>
           </div>
           
-            {/* Mobile Grid */}
-          <div className={`
-            ${layout === 'grid' 
-              ? 'grid grid-cols-2 gap-4' 
-              : 'flex flex-col gap-4'
-            } 
-              lg:hidden
-          `}>
-            {sampleProperties.map((property) => (
-              <PropertyCard
-                key={property.id}
-                property={property}
-                onRequestViewing={handleRequestViewing}
-                onShare={handleShare}
-                onSelect={handleViewDetails}
-                layout={layout}
-              />
-            ))}
-          </div>
+          {filteredProperties.length === 0 ? (
+            <Card className="p-10 rounded-3xl border border-border bg-surface text-center">
+              <h3 className="text-lg font-semibold text-foreground mb-2">No properties match your filters yet</h3>
+              <p className="text-sm text-muted-foreground">
+                Try switching your rental preference or resetting filters to discover more options.
+              </p>
+            </Card>
+          ) : (
+            <>
+              {/* Mobile Grid */}
+              <div className={`
+                ${layout === 'grid' 
+                  ? 'grid grid-cols-2 gap-4' 
+                  : 'flex flex-col gap-4'
+                } 
+                  lg:hidden
+              `}>
+                {filteredProperties.map((property) => (
+                  <PropertyCard
+                    key={property.id}
+                    property={property}
+                    onRequestViewing={handleRequestViewing}
+                    onShare={handleShare}
+                    onSelect={handleViewDetails}
+                    layout={layout}
+                  />
+                ))}
+              </div>
 
-            {/* Desktop Grid - 3 columns on large screens, 4 on xl */}
-            <div className="hidden lg:grid lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8">
-              {sampleProperties.map((property) => (
-                <PropertyCard
-                  key={property.id}
-                  property={property}
-                  onRequestViewing={handleRequestViewing}
-                  onShare={handleShare}
-                  onSelect={handleViewDetails}
-                  layout="grid"
-              />
-            ))}
-          </div>
+              {/* Desktop Grid - 3 columns on large screens, 4 on xl */}
+              <div className="hidden lg:grid lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8">
+                {filteredProperties.map((property) => (
+                  <PropertyCard
+                    key={property.id}
+                    property={property}
+                    onRequestViewing={handleRequestViewing}
+                    onShare={handleShare}
+                    onSelect={handleViewDetails}
+                    layout="grid"
+                />
+              ))}
+            </div>
+          </>
+          )}
         </section>
       </main>
       </div>

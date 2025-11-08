@@ -26,6 +26,7 @@ export const ROUTES = {
   SERVICES: '/services',
   SERVICE_PROVIDERS: (id: string) => `/services/providers/${id}`,
   SERVICE_BOOKINGS: '/services/bookings',
+  MY_SERVICES: '/my-services',
   
   // Artisan routes
   ARTISANS: '/artisans',

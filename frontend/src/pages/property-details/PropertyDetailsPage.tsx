@@ -35,12 +35,6 @@ const formatCurrency = (value: number) =>
     maximumFractionDigits: 0
   }).format(value)}`
 
-const formatHashCurrency = (value: number) =>
-  `#${new Intl.NumberFormat('en-NG', {
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0
-  }).format(value)}`
-
 const totalMoveIn = (items: MoveInItem[]) =>
   items.reduce((sum, item) => sum + item.amount, 0)
 
@@ -270,7 +264,13 @@ export function PropertyDetailsPage() {
     )
   }
 
-  const moveInTotal = totalMoveIn(property.moveInBreakdown)
+  const rentalCategories = property.rentalCategories ?? []
+  const hasLongTerm = rentalCategories.includes('long_term')
+  const hasShortlet = rentalCategories.includes('shortlet')
+  const longTermOffering = property.longTermOffering
+  const shortletOffering = property.shortletOffering
+  const moveInTotal = hasLongTerm ? totalMoveIn(property.moveInBreakdown) : 0
+
   const handleRequestViewing = () => {
     navigate(ROUTES.PROPERTY_BOOKING(property.id))
   }
@@ -456,15 +456,34 @@ export function PropertyDetailsPage() {
               </div>
 
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 flex-wrap">
                   <Badge className="rounded-full bg-primary/10 text-primary px-3 py-1 text-xs">
                     {property.propertyType}
                   </Badge>
                   <Badge className="rounded-full bg-surface/70 text-foreground px-3 py-1 text-xs">
                     {property.neighbourhood}, {property.city}
                   </Badge>
+                  {hasShortlet && (
+                    <Badge className="rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-300 px-3 py-1 text-xs">
+                      Shortlet Ready
+                    </Badge>
+                  )}
                 </div>
-                <p className="text-2xl font-bold text-primary">{formatHashCurrency(property.price)}</p>
+                <div className="flex flex-col items-start sm:items-end">
+                  {hasLongTerm && longTermOffering && (
+                    <div className="flex items-baseline gap-2">
+                      <p className="text-2xl font-bold text-primary">{formatCurrency(longTermOffering.annualRent)}</p>
+                      <span className="text-sm text-muted-foreground">per year</span>
+                    </div>
+                  )}
+                  {shortletOffering && (
+                    <p className="text-sm font-semibold text-emerald-600 dark:text-emerald-300">
+                      {hasLongTerm ? 'Shortlet from ' : 'From '}
+                      {formatCurrency(shortletOffering.nightlyRate)}
+                      <span className="text-muted-foreground"> / night</span>
+                    </p>
+                  )}
+                </div>
               </div>
             </div>
 
@@ -479,71 +498,230 @@ export function PropertyDetailsPage() {
           </div>
 
           {/* Quick Actions */}
-          <div className="mt-8 grid gap-4">
+          <div className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+            {hasLongTerm && longTermOffering && (
+              <Card className="p-4 rounded-2xl border border-border bg-surface">
+                <div className="flex items-center justify-between gap-3">
+                  <div>
+                    <p className="text-sm text-muted-foreground">Move-In Breakdown</p>
+                    <p className="text-lg font-semibold text-foreground">{formatCurrency(moveInTotal)}</p>
+                  </div>
+                  <Button
+                    variant="ghost"
+                    className="rounded-xl text-sm font-medium text-primary hover:bg-primary/10"
+                    onClick={() =>
+                      document
+                        .getElementById('property-movein')
+                        ?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    }
+                  >
+                    View Details
+                  </Button>
+                </div>
+              </Card>
+            )}
+
+            {hasShortlet && shortletOffering && (
+              <Card className="p-4 rounded-2xl border border-border bg-surface">
+                <div className="flex items-center justify-between gap-3">
+                  <div>
+                    <p className="text-sm text-muted-foreground">Shortlet Summary</p>
+                    <p className="text-lg font-semibold text-emerald-600 dark:text-emerald-300">
+                      {formatCurrency(shortletOffering.nightlyRate)} / night
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      Min {shortletOffering.minimumStayNights} nights • Max {shortletOffering.maxGuests ?? 4} guests
+                    </p>
+                  </div>
+                  <Button
+                    variant="ghost"
+                    className="rounded-xl text-sm font-medium text-emerald-600 dark:text-emerald-300 hover:bg-emerald-500/10"
+                    onClick={() =>
+                      document
+                        .getElementById('property-shortlet-details')
+                        ?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    }
+                  >
+                    Explore
+                  </Button>
+                </div>
+              </Card>
+            )}
+
             <Card className="p-4 rounded-2xl border border-border bg-surface">
               <div className="flex items-center justify-between gap-3">
                 <div>
-                  <p className="text-sm text-muted-foreground">Move-In Breakdown</p>
-                  <p className="text-lg font-semibold text-foreground">{formatCurrency(moveInTotal)}</p>
+                  <p className="text-sm text-muted-foreground">Amenities</p>
+                  <div className="flex items-center gap-2 text-sm font-medium text-foreground">
+                    <span className="flex items-center gap-1 text-primary">
+                      <span className="h-2 w-2 rounded-full bg-primary" />
+                      {property.furnishingNotes ?? (property.isFurnished ? 'Fully Furnished' : 'Unfurnished')}
+                    </span>
+                  </div>
                 </div>
                 <Button
                   variant="ghost"
                   className="rounded-xl text-sm font-medium text-primary hover:bg-primary/10"
-                  onClick={() => window.scrollTo({ top: window.innerHeight, behavior: 'smooth' })}
+                  onClick={() =>
+                    document
+                      .getElementById('property-amenities')
+                      ?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+                  }
                 >
-                  View Details
+                  Explore
                 </Button>
               </div>
             </Card>
 
-          <Card className="p-4 rounded-2xl border border-border bg-surface">
-            <div className="flex items-center justify-between gap-3">
-              <div>
-                <p className="text-sm text-muted-foreground">Amenities</p>
-                <div className="flex items-center gap-2 text-sm font-medium text-foreground">
-                  <span className="flex items-center gap-1 text-primary">
-                    <span className="h-2 w-2 rounded-full bg-primary" />
-                    {property.furnishingNotes ?? (property.isFurnished ? 'Fully Furnished' : 'Unfurnished')}
-                  </span>
+            <Card className="p-4 rounded-2xl border border-border bg-surface">
+              <div className="flex items-center justify-between gap-3">
+                <div>
+                  <p className="text-sm text-muted-foreground">Location</p>
+                  <p className="text-sm font-medium text-foreground flex items-center gap-1">
+                    <MapPin className="h-4 w-4 text-primary" />
+                    {property.address}
+                  </p>
                 </div>
+                <Button
+                  variant="ghost"
+                  className="rounded-xl text-sm font-medium text-primary hover:bg-primary/10"
+                  onClick={() =>
+                    document
+                      .getElementById('property-location')
+                      ?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+                  }
+                >
+                  View Map
+                </Button>
               </div>
-              <Button
-                variant="ghost"
-                className="rounded-xl text-sm font-medium text-primary hover:bg-primary/10"
-                onClick={() =>
-                  document
-                    .getElementById('property-amenities')
-                    ?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-                }
-              >
-                Explore
-              </Button>
-            </div>
-          </Card>
+            </Card>
+          </div>
 
-          <Card className="p-4 rounded-2xl border border-border bg-surface">
-            <div className="flex items-center justify-between gap-3">
-              <div>
-                <p className="text-sm text-muted-foreground">Location</p>
-                <p className="text-sm font-medium text-foreground flex items-center gap-1">
-                  <MapPin className="h-4 w-4 text-primary" />
-                  {property.address}
+          {(hasLongTerm && longTermOffering) || (hasShortlet && shortletOffering) ? (
+            <section id="property-rental-options" className="mt-10 space-y-6">
+              <div className="flex flex-col gap-2">
+                <h2 className="text-xl lg:text-2xl font-semibold text-foreground">Rental options</h2>
+                <p className="text-sm text-muted-foreground">
+                  Choose the plan that suits your stay. We support flexible short-term bookings alongside traditional annual leases where available.
                 </p>
               </div>
-              <Button
-                variant="ghost"
-                className="rounded-xl text-sm font-medium text-primary hover:bg-primary/10"
-                onClick={() =>
-                  document
-                    .getElementById('property-location')
-                    ?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-                }
-              >
-                View Map
-              </Button>
-            </div>
-          </Card>
-        </div>
+              <div className="grid gap-4 lg:grid-cols-2">
+                {hasLongTerm && longTermOffering && (
+                  <Card className="p-5 lg:p-6 rounded-2xl border border-border bg-surface space-y-4">
+                    <div className="space-y-1">
+                      <p className="text-xs uppercase tracking-wide font-semibold text-primary">Annual lease</p>
+                      <h3 className="text-lg font-semibold text-foreground">
+                        {formatCurrency(longTermOffering.annualRent)} per year
+                      </h3>
+                      <p className="text-sm text-muted-foreground">
+                        Approx. {formatCurrency(longTermOffering.monthlyRent ?? Math.round(longTermOffering.annualRent / 12))} per month • Minimum stay {longTermOffering.minimumTermMonths}+ months
+                      </p>
+                    </div>
+                    <div className="grid gap-4 sm:grid-cols-2">
+                      <div>
+                        <h4 className="text-sm font-semibold text-foreground mb-2">Payment plan</h4>
+                        <ul className="space-y-1 text-sm text-muted-foreground">
+                          {(longTermOffering.paymentPlan ?? []).map((plan) => (
+                            <li key={plan} className="flex items-start gap-2">
+                              <span className="mt-1 h-1.5 w-1.5 rounded-full bg-primary/70" />
+                              <span>{plan}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                      <div>
+                        <h4 className="text-sm font-semibold text-foreground mb-2">Utilities included</h4>
+                        <div className="flex flex-wrap gap-2">
+                          {(longTermOffering.utilitiesIncluded ?? []).map((utility) => (
+                            <span key={utility} className="px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-medium">
+                              {utility}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                    {longTermOffering.notes && (
+                      <div className="rounded-xl bg-primary/5 border border-primary/10 p-3 text-xs text-primary/80">
+                        {longTermOffering.notes}
+                      </div>
+                    )}
+                  </Card>
+                )}
+
+                {hasShortlet && shortletOffering && (
+                  <Card id="property-shortlet-details" className="p-5 lg:p-6 rounded-2xl border border-border bg-surface space-y-4">
+                    <div className="space-y-1">
+                      <p className="text-xs uppercase tracking-wide font-semibold text-emerald-600 dark:text-emerald-300">Shortlet stay</p>
+                      <h3 className="text-lg font-semibold text-foreground">{shortletOffering.headline}</h3>
+                      <p className="text-sm text-muted-foreground">
+                        From {formatCurrency(shortletOffering.nightlyRate)} per night • Minimum stay {shortletOffering.minimumStayNights} night{shortletOffering.minimumStayNights > 1 ? 's' : ''} • Max {shortletOffering.maxGuests ?? 4} guests
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        Check-in {shortletOffering.checkInWindow} • Check-out {shortletOffering.checkOutTime}
+                      </p>
+                    </div>
+                    <div className="grid gap-4 sm:grid-cols-2">
+                      <div>
+                        <h4 className="text-sm font-semibold text-foreground mb-2">Services included</h4>
+                        <ul className="space-y-1 text-sm text-muted-foreground">
+                          {(shortletOffering.servicesIncluded ?? []).slice(0, 5).map((service) => (
+                            <li key={service} className="flex items-start gap-2">
+                              <span className="mt-1 h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                              <span>{service}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                      <div>
+                        <h4 className="text-sm font-semibold text-foreground mb-2">Facilities</h4>
+                        <ul className="space-y-1 text-sm text-muted-foreground">
+                          {(shortletOffering.facilities ?? []).slice(0, 5).map((facility) => (
+                            <li key={facility} className="flex items-start gap-2">
+                              <span className="mt-1 h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                              <span>{facility}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-semibold text-foreground mb-2">House rules</h4>
+                      <ul className="grid gap-2 sm:grid-cols-2 text-xs text-muted-foreground">
+                        {(shortletOffering.houseRules ?? []).slice(0, 6).map((rule) => (
+                          <li key={rule} className="flex items-start gap-2">
+                            <span className="mt-1 h-1 w-1 rounded-full bg-emerald-500" />
+                            <span>{rule}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div className="flex flex-wrap gap-3 text-xs text-muted-foreground">
+                      {shortletOffering.cleaningFee && (
+                        <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-300 px-3 py-1">
+                          Cleaning fee {formatCurrency(shortletOffering.cleaningFee)}
+                        </span>
+                      )}
+                      {shortletOffering.securityDeposit && (
+                        <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-300 px-3 py-1">
+                          Security deposit {formatCurrency(shortletOffering.securityDeposit)}
+                        </span>
+                      )}
+                      {shortletOffering.weeklyRate && (
+                        <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-300 px-3 py-1">
+                          Weekly {formatCurrency(shortletOffering.weeklyRate)}
+                        </span>
+                      )}
+                      {shortletOffering.monthlyRate && (
+                        <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-300 px-3 py-1">
+                          Monthly {formatCurrency(shortletOffering.monthlyRate)}
+                        </span>
+                      )}
+                    </div>
+                  </Card>
+                )}
+              </div>
+            </section>
+          ) : null}
 
           {/* Owner Section */}
           <section className="mt-8">
@@ -607,17 +785,19 @@ export function PropertyDetailsPage() {
               </div>
             </Card>
 
-            <Card className="p-5 rounded-2xl border border-border bg-surface">
-              <h2 className="text-lg font-semibold text-foreground mb-3">Move-In Breakdown</h2>
-              <div className="space-y-3">
-                {property.moveInBreakdown.map((item) => (
-                  <div key={item.label} className="flex items-center justify-between text-sm">
-                    <span className="text-foreground">{item.label}</span>
-                    <span className="font-semibold text-foreground">{formatCurrency(item.amount)}</span>
-                  </div>
-                ))}
-              </div>
-            </Card>
+            {hasLongTerm && (
+              <Card id="property-movein" className="p-5 rounded-2xl border border-border bg-surface">
+                <h2 className="text-lg font-semibold text-foreground mb-3">Move-In Breakdown</h2>
+                <div className="space-y-3">
+                  {property.moveInBreakdown.map((item) => (
+                    <div key={item.label} className="flex items-center justify-between text-sm">
+                      <span className="text-foreground">{item.label}</span>
+                      <span className="font-semibold text-foreground">{formatCurrency(item.amount)}</span>
+                    </div>
+                  ))}
+                </div>
+              </Card>
+            )}
 
             <Card id="property-location" className="p-5 rounded-2xl border border-border bg-surface space-y-3">
               <div className="flex items-center gap-2">

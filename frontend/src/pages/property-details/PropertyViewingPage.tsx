@@ -8,6 +8,15 @@ import { AuthDrawer } from '@/widgets/auth-drawer'
 import { useAuthStore } from '@/shared/store/auth.store'
 import { Button } from '@/shared/ui/button'
 import { Card } from '@/shared/ui/card'
+import { Input } from '@/shared/ui/input'
+import { Label } from '@/shared/ui/label'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from '@/shared/ui/select'
 import { samplePropertyDetails } from './data/sample-property-details'
 import {
   addDays,
@@ -43,6 +52,8 @@ const TIME_OPTIONS = [
   '06:00 PM'
 ]
 
+const TENANCY_DURATION_OPTIONS = ['6 months', '12 months', '18 months', '24 months', 'Flexible']
+
 const MAX_PREFERRED_SLOTS = 3
 const MIN_LEAD_HOURS = 24
 
@@ -74,10 +85,23 @@ export function PropertyViewingPage() {
   const [preferredSlots, setPreferredSlots] = useState<PreferredSlot[]>([])
   const [slotError, setSlotError] = useState<string | null>(null)
   const [note, setNote] = useState<string>('')
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [moveInDate, setMoveInDate] = useState<string>('')
+  const [tenancyDuration, setTenancyDuration] = useState<string>(TENANCY_DURATION_OPTIONS[1])
+  const [minimumBudget, setMinimumBudget] = useState<string>('')
 
   const property = id ? samplePropertyDetails[id] : undefined
 
+  const [rentalPreference, setRentalPreference] = useState<'long_term' | 'shortlet'>(() => {
+    if (property?.rentalCategories.includes('long_term')) {
+      return 'long_term'
+    }
+    if (property?.rentalCategories.includes('shortlet')) {
+      return 'shortlet'
+    }
+    return 'long_term'
+  })
+  const [shortletStayNights, setShortletStayNights] = useState<string>('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const earliestSelectableDay = startOfDay(addDays(new Date(), 1))
 
   const calendarDays = useMemo(() => {
@@ -117,6 +141,11 @@ export function PropertyViewingPage() {
       </div>
     )
   }
+
+  const hasLongTermOption = property.rentalCategories.includes('long_term')
+  const hasShortletOption = property.rentalCategories.includes('shortlet')
+  const isShortletPreference = rentalPreference === 'shortlet'
+  const shortletOffering = property.shortletOffering
 
   const handleMonthNavigation = (direction: 'prev' | 'next') => {
     setCurrentMonth((prev) => addMonths(prev, direction === 'prev' ? -1 : 1))
@@ -201,6 +230,39 @@ export function PropertyViewingPage() {
       return
     }
 
+    if (!moveInDate) {
+      toast.error(isShortletPreference ? 'Select your preferred check-in date' : 'Select your preferred move-in date')
+      return
+    }
+
+    if (isShortletPreference) {
+      const stayLength = Number(shortletStayNights)
+      if (!shortletStayNights || Number.isNaN(stayLength) || stayLength <= 0) {
+        toast.error('Tell us how many nights you would like to stay')
+        return
+      }
+    } else if (!tenancyDuration) {
+      toast.error('Select how long you plan to stay')
+      return
+    }
+
+    const parsedBudget = Number(minimumBudget.replace(/,/g, ''))
+    if (!minimumBudget || Number.isNaN(parsedBudget) || parsedBudget <= 0) {
+      toast.error(
+        isShortletPreference
+          ? 'Enter the nightly budget you are comfortable paying'
+          : 'Enter the minimum monthly budget you are comfortable paying'
+      )
+      return
+    }
+
+    const stayLengthNights = isShortletPreference ? Number(shortletStayNights) : undefined
+    const tenancySummary = isShortletPreference
+      ? stayLengthNights
+        ? `${stayLengthNights} night stay`
+        : 'Shortlet stay'
+      : tenancyDuration
+
     setIsSubmitting(true)
     try {
       const { conversationId } = createViewingConversation({
@@ -216,6 +278,11 @@ export function PropertyViewingPage() {
           phone: user?.phone,
           email: user?.email,
         },
+        moveInDate,
+        tenancyDuration: tenancySummary,
+        minimumBudget: parsedBudget,
+        rentalPreference,
+        shortletStayLengthNights: stayLengthNights,
         note: note.trim() ? note.trim() : undefined,
       })
 
@@ -278,6 +345,131 @@ export function PropertyViewingPage() {
           </Card>
 
           <form onSubmit={handleSubmit} className="space-y-6">
+            <Card className="p-5 rounded-2xl border border-border bg-surface space-y-6">
+              {hasLongTermOption && hasShortletOption && (
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                  <p className="text-sm font-semibold text-foreground">Select your rental preference</p>
+                  <div className="inline-flex rounded-full border border-border bg-background p-1">
+                    <button
+                      type="button"
+                      onClick={() => setRentalPreference('long_term')}
+                      className={cn(
+                        'px-3 py-1.5 text-xs font-medium rounded-full transition-colors',
+                        rentalPreference === 'long_term'
+                          ? 'bg-primary text-primary-foreground shadow-sm'
+                          : 'text-muted-foreground hover:text-primary'
+                      )}
+                    >
+                      Annual lease
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setRentalPreference('shortlet')}
+                      className={cn(
+                        'px-3 py-1.5 text-xs font-medium rounded-full transition-colors',
+                        rentalPreference === 'shortlet'
+                          ? 'bg-emerald-500 text-emerald-50 shadow-sm'
+                          : 'text-muted-foreground hover:text-emerald-600'
+                      )}
+                    >
+                      Serviced shortlet
+                    </button>
+                  </div>
+                </div>
+              )}
+              <div className="flex flex-col gap-1">
+                <h2 className="text-lg font-semibold text-foreground">
+                  {isShortletPreference ? 'Stay preferences' : 'Move-in preferences'}
+                </h2>
+                <p className="text-sm text-muted-foreground">
+                  {isShortletPreference
+                    ? 'Share your ideal short-stay schedule so we can confirm availability quickly.'
+                    : 'Share your expected move-in timeline so the landlord can prepare the apartment for you.'}
+                </p>
+              </div>
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div className="space-y-1.5">
+                  <Label htmlFor="move-in-date" className="text-sm text-foreground">
+                    {isShortletPreference ? 'Preferred check-in date' : 'Preferred move-in date'}
+                  </Label>
+                  <Input
+                    id="move-in-date"
+                    type="date"
+                    min={startOfDay(new Date()).toISOString().split('T')[0]}
+                    value={moveInDate}
+                    onChange={(event) => setMoveInDate(event.target.value)}
+                    className="h-11 rounded-xl"
+                    required
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  {isShortletPreference ? (
+                    <>
+                      <Label htmlFor="stay-length" className="text-sm text-foreground">
+                        Planned stay length (nights)
+                      </Label>
+                      <Input
+                        id="stay-length"
+                        type="number"
+                        min={shortletOffering?.minimumStayNights ?? 1}
+                        max={shortletOffering?.maximumStayNights}
+                        value={shortletStayNights}
+                        onChange={(event) => setShortletStayNights(event.target.value)}
+                        placeholder={`${shortletOffering?.minimumStayNights ?? 2}`}
+                        className="h-11 rounded-xl"
+                      />
+                      <p className="text-xs text-muted-foreground">
+                        {shortletOffering?.minimumStayNights
+                          ? `Minimum stay is ${shortletOffering.minimumStayNights} night${shortletOffering.minimumStayNights > 1 ? 's' : ''}.`
+                          : 'Let us know how many nights you plan to stay.'}
+                      </p>
+                    </>
+                  ) : (
+                    <>
+                      <Label htmlFor="tenancy-duration" className="text-sm text-foreground">
+                        Tenancy duration
+                      </Label>
+                      <Select value={tenancyDuration} onValueChange={setTenancyDuration}>
+                        <SelectTrigger id="tenancy-duration" className="h-11 rounded-xl">
+                          <SelectValue placeholder="Select duration" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {TENANCY_DURATION_OPTIONS.map((option) => (
+                            <SelectItem key={option} value={option}>
+                              {option}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </>
+                  )}
+                </div>
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="minimum-budget" className="text-sm text-foreground">
+                  {isShortletPreference ? 'Budget per night (₦)' : 'Minimum monthly budget (₦)'}
+                </Label>
+                <Input
+                  id="minimum-budget"
+                  type="number"
+                  min={isShortletPreference ? 10000 : 50000}
+                  step={isShortletPreference ? 5000 : 50000}
+                  value={minimumBudget}
+                  onChange={(event) => setMinimumBudget(event.target.value)}
+                  placeholder={
+                    isShortletPreference
+                      ? `${shortletOffering?.nightlyRate ?? 85000}`
+                      : `${property.longTermOffering?.monthlyRent ?? 450000}`
+                  }
+                  className="h-11 rounded-xl"
+                  required
+                />
+                <p className="text-xs text-muted-foreground">
+                  Budget reflects what you are comfortable paying {isShortletPreference ? 'per night' : 'each month'}, subject to landlord approval.
+                </p>
+              </div>
+            </Card>
+
             <Card className="p-5 rounded-2xl border border-border bg-surface space-y-6">
               <div className="flex flex-col gap-1">
                 <h2 className="text-lg font-semibold text-foreground">Select preferred viewing slots</h2>

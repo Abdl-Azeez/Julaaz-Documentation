@@ -2,6 +2,7 @@ import { create } from 'zustand'
 import { Conversation, Message } from '@/shared/types/activity.types'
 import { sampleConversations, sampleMessages } from '@/pages/messaging/data/sample-conversations'
 import { format } from 'date-fns'
+import type { RentalCategory } from '@/entities/property/model/types'
 
 type ViewingSlotPayload = {
   date: Date
@@ -22,6 +23,11 @@ type ViewingConversationPayload = {
     email?: string
   }
   slots: ViewingSlotPayload[]
+  moveInDate: string
+  tenancyDuration: string
+  minimumBudget: number
+  rentalPreference: RentalCategory
+  shortletStayLengthNights?: number
   note?: string
 }
 
@@ -99,6 +105,11 @@ export const useMessagingStore = create<MessagingState>((set, get) => ({
     ownerId,
     tenant,
     slots,
+    moveInDate,
+    tenancyDuration,
+    minimumBudget,
+    rentalPreference,
+    shortletStayLengthNights,
     note
   }) => {
     const conversationId = generateId('conv')
@@ -126,6 +137,37 @@ export const useMessagingStore = create<MessagingState>((set, get) => ({
 
     if (ownerPhone) {
       messageLines.push(`Owner Contact: ${ownerPhone}`)
+    }
+
+    const formattedMoveInDate = moveInDate ? format(new Date(moveInDate), 'MMMM dd, yyyy') : null
+    const formattedBudget = new Intl.NumberFormat('en-NG', {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0
+    }).format(minimumBudget)
+
+    messageLines.push(
+      '',
+      `Rental preference: ${rentalPreference === 'shortlet' ? 'Serviced shortlet stay' : 'Annual lease'}`
+    )
+
+    if (rentalPreference === 'shortlet') {
+      messageLines.push(
+        '',
+        'Stay details:',
+        formattedMoveInDate ? `• Preferred check-in date: ${formattedMoveInDate}` : '• Check-in date: Flexible',
+        shortletStayLengthNights
+          ? `• Stay length: ${shortletStayLengthNights} night${shortletStayLengthNights > 1 ? 's' : ''}`
+          : '• Stay length: Not specified',
+        `• Budget: ₦${formattedBudget} per night`
+      )
+    } else {
+      messageLines.push(
+        '',
+        'Move-in preferences:',
+        formattedMoveInDate ? `• Move-in date: ${formattedMoveInDate}` : '• Move-in date: Not specified',
+        `• Tenancy duration: ${tenancyDuration}`,
+        `• Budget: ₦${formattedBudget} per month`
+      )
     }
 
     messageLines.push('', 'Preferred slots:', slotSummary)

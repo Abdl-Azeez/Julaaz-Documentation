@@ -1,5 +1,6 @@
-import { useState, useRef } from 'react'
-import { Check, Home, MessageCircle, MapPin, LogOut, Settings, Camera, X, Save } from 'lucide-react'
+import { useState, useRef, useEffect, ChangeEvent, FormEvent } from 'react'
+import { Check, Home, MessageCircle, MapPin, LogOut, Settings, Camera, X, Save, Upload, Trash2, AlertCircle, FileText } from 'lucide-react'
+import BackgroundCheckIcon from '@/assets/icons/background_check.svg?react'
 import { Button } from '@/shared/ui/button'
 import { Card } from '@/shared/ui/card'
 import { Input } from '@/shared/ui/input'
@@ -39,11 +40,30 @@ export function ProfilePage() {
     dateOfBirth: '2001-07-14',
     gender: 'male',
     nationality: 'Nigerian',
-    isVerified: user?.isVerified || true,
+    isVerified: user?.isVerified ?? false,
     profileImage: null as string | null,
   })
 
   const [editData, setEditData] = useState({ ...profileData })
+
+  const [backgroundStatus, setBackgroundStatus] = useState<'not_started' | 'submitted' | 'verified'>(
+    profileData.isVerified ? 'verified' : 'not_started'
+  )
+  const [backgroundForm, setBackgroundForm] = useState({
+    monthlyIncome: '',
+    occupation: '',
+    employer: '',
+    employmentLength: '',
+    financialCommitments: '',
+  })
+  const [documentFiles, setDocumentFiles] = useState<File[]>([])
+  const [isSubmittingBackground, setIsSubmittingBackground] = useState(false)
+
+  useEffect(() => {
+    if (profileData.isVerified) {
+      setBackgroundStatus('verified')
+    }
+  }, [profileData.isVerified])
 
   const handleLogout = async () => {
     setIsLoading(true)
@@ -99,6 +119,94 @@ export function ProfilePage() {
   const handleCancel = () => {
     setEditData({ ...profileData })
     setIsEditing(false)
+  }
+
+  const handleBackgroundInputChange = (
+    field: keyof typeof backgroundForm,
+    value: string
+  ) => {
+    setBackgroundForm((prev) => ({
+      ...prev,
+      [field]: value,
+    }))
+  }
+
+  const handleDocumentUpload = (event: ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(event.target.files ?? [])
+    if (!files.length) return
+
+    const validFiles = files.filter((file) => {
+      if (file.size > 10 * 1024 * 1024) {
+        toast.error(`${file.name} exceeds 10MB limit`)
+        return false
+      }
+      return true
+    })
+
+    if (!validFiles.length) {
+      event.target.value = ''
+      return
+    }
+
+    setDocumentFiles((prev) => [...prev, ...validFiles])
+    toast.success(`${validFiles.length} document${validFiles.length !== 1 ? 's' : ''} added`)
+    event.target.value = ''
+  }
+
+  const handleRemoveDocument = (index: number) => {
+    setDocumentFiles((prev) => prev.filter((_, itemIndex) => itemIndex !== index))
+  }
+
+  const handleBackgroundSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+
+    if (!backgroundForm.monthlyIncome || Number(backgroundForm.monthlyIncome) <= 0) {
+      toast.error('Enter your estimated monthly income')
+      return
+    }
+
+    if (!backgroundForm.occupation) {
+      toast.error('Tell us about your occupation')
+      return
+    }
+
+    if (!backgroundForm.employer) {
+      toast.error('Share your employer or business name')
+      return
+    }
+
+    if (!backgroundForm.employmentLength) {
+      toast.error('Let us know how long you have been employed')
+      return
+    }
+
+    if (documentFiles.length === 0) {
+      toast.error('Upload supporting documents for verification')
+      return
+    }
+
+    setIsSubmittingBackground(true)
+    try {
+      setBackgroundStatus('submitted')
+      toast.success('Background check details submitted. We will verify shortly.')
+
+      await new Promise((resolve) => setTimeout(resolve, 2500))
+
+      setBackgroundStatus('verified')
+      setProfileData((prev) => ({ ...prev, isVerified: true }))
+      setEditData((prev) => ({ ...prev, isVerified: true }))
+      setDocumentFiles([])
+      setBackgroundForm({
+        monthlyIncome: '',
+        occupation: '',
+        employer: '',
+        employmentLength: '',
+        financialCommitments: '',
+      })
+      toast.success('Background check verified!')
+    } finally {
+      setIsSubmittingBackground(false)
+    }
   }
 
   const getInitials = (name: string) => {
@@ -357,36 +465,249 @@ export function ProfilePage() {
               </div>
             </div>
 
-            {/* Get Verified Card */}
-            <Card className="p-6 lg:p-8 bg-gradient-to-br from-primary/5 via-surface to-surface border border-primary/20 hover:shadow-lg transition-shadow">
-              <div className="flex flex-col lg:flex-row lg:items-center lg:text-left text-center space-y-4 lg:space-y-0 lg:space-x-6">
-                <div className="flex-shrink-0 flex justify-center lg:justify-start">
-                  <div className="w-16 h-16 lg:w-20 lg:h-20 rounded-full bg-primary flex items-center justify-center shadow-lg">
-                    <Check className="h-8 w-8 lg:h-10 lg:w-10 text-primary-foreground" />
+            {/* Background Check Workflow */}
+            <Card className="p-6 lg:p-8 bg-surface border border-border/60 rounded-2xl space-y-6">
+              {backgroundStatus === 'verified' ? (
+                <div className="flex flex-col lg:flex-row lg:items-center gap-5 text-center lg:text-left">
+                  <div className="mx-auto lg:mx-0 flex h-32 w-32 items-center justify-center rounded-full bg-primary/10">
+                    <BackgroundCheckIcon className="h-40 w-40 text-primary" />
+                  </div>
+                  <div className="flex-1 space-y-3">
+                    <div className="flex items-center justify-center lg:justify-start gap-2">
+                      <span className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-sm font-medium text-primary">
+                        <Check className="h-4 w-4" />
+                        Verified
+                      </span>
+                    </div>
+                    <h3 className="text-lg lg:text-xl font-semibold text-foreground">Background check completed</h3>
+                    <p className="text-sm text-muted-foreground">
+                      Your profile is now verified. Landlords will see your trusted status when reviewing applications.
+                    </p>
+                    <ul className="space-y-2 text-sm text-muted-foreground">
+                      <li className="flex items-start gap-2">
+                        <FileText className="mt-0.5 h-4 w-4 text-primary" />
+                        <span>Identity and employment documents securely stored.</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <Check className="mt-0.5 h-4 w-4 text-primary" />
+                        <span>Financial information reviewed by Julaaz compliance team.</span>
+                      </li>
+                    </ul>
                   </div>
                 </div>
-                <div className="flex-1">
-                  <h3 className="text-lg lg:text-xl font-bold text-foreground mb-2">Get Verified</h3>
-                  <p className="text-sm lg:text-base text-muted-foreground mb-4">
-                    Complete the following steps to check eligibility and boost your credibility
-                  </p>
-                  <ul className="space-y-2 lg:space-y-3 mb-6 lg:mb-0">
-                    <li className="flex items-center gap-3 text-sm lg:text-base text-foreground">
-                      <div className="w-2 h-2 rounded-full bg-primary flex-shrink-0"></div>
-                      <span>Credit Check</span>
-                    </li>
-                    <li className="flex items-center gap-3 text-sm lg:text-base text-foreground">
-                      <div className="w-2 h-2 rounded-full bg-primary flex-shrink-0"></div>
-                      <span>Upload Document</span>
-                    </li>
-                  </ul>
-                </div>
-                <div className="lg:flex-shrink-0">
-                  <Button className="w-full lg:w-auto lg:px-8 h-12 bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl">
-                    Perform background check
-                  </Button>
-                </div>
-              </div>
+              ) : (
+                <form onSubmit={handleBackgroundSubmit} className="space-y-6">
+                  <div className="flex flex-col lg:flex-row lg:items-start gap-4 lg:gap-6">
+                    <div className="mx-auto lg:mx-0 flex h-28 w-28 items-center justify-center rounded-2xl bg-primary/10">
+                      <BackgroundCheckIcon className="h-32 w-32 text-primary" />
+                    </div>
+                    <div className="flex-1 space-y-2 text-center lg:text-left">
+                      <h3 className="text-lg lg:text-xl font-semibold text-foreground">Perform background check</h3>
+                      <p className="text-sm text-muted-foreground">
+                        Provide a few extra details so we can confirm your identity and tenancy eligibility. We’ll only use this information for verification.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <h4 className="text-sm font-semibold text-foreground uppercase tracking-wide">Personal information</h4>
+                    <div className="grid gap-4 sm:grid-cols-2">
+                      <div className="space-y-1.5">
+                        <Label htmlFor="bc-full-name" className="text-sm text-muted-foreground">
+                          Full name
+                        </Label>
+                        <Input
+                          id="bc-full-name"
+                          value={profileData.name}
+                          disabled
+                          className="h-11 rounded-xl bg-muted/60 text-foreground"
+                        />
+                      </div>
+                      <div className="space-y-1.5">
+                        <Label htmlFor="bc-email" className="text-sm text-muted-foreground">
+                          Email address
+                        </Label>
+                        <Input
+                          id="bc-email"
+                          value={profileData.email}
+                          disabled
+                          className="h-11 rounded-xl bg-muted/60 text-foreground"
+                        />
+                      </div>
+                      <div className="space-y-1.5">
+                        <Label htmlFor="bc-phone" className="text-sm text-muted-foreground">
+                          Phone number
+                        </Label>
+                        <Input
+                          id="bc-phone"
+                          value={profileData.phone}
+                          disabled
+                          className="h-11 rounded-xl bg-muted/60 text-foreground"
+                        />
+                      </div>
+                      <div className="space-y-1.5">
+                        <Label htmlFor="bc-nationality" className="text-sm text-muted-foreground">
+                          Nationality
+                        </Label>
+                        <Input
+                          id="bc-nationality"
+                          value={profileData.nationality}
+                          disabled
+                          className="h-11 rounded-xl bg-muted/60 text-foreground"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <h4 className="text-sm font-semibold text-foreground uppercase tracking-wide">Employment information</h4>
+                    <div className="grid gap-4 sm:grid-cols-2">
+                      <div className="space-y-1.5">
+                        <Label htmlFor="bc-income" className="text-sm text-foreground">
+                          Monthly income (₦)
+                        </Label>
+                        <Input
+                          id="bc-income"
+                          type="number"
+                          min={50000}
+                          step={5000}
+                          value={backgroundForm.monthlyIncome}
+                          onChange={(event) => handleBackgroundInputChange('monthlyIncome', event.target.value)}
+                          placeholder="450000"
+                          className="h-11 rounded-xl"
+                        />
+                      </div>
+                      <div className="space-y-1.5">
+                        <Label htmlFor="bc-occupation" className="text-sm text-foreground">
+                          Occupation / role
+                        </Label>
+                        <Input
+                          id="bc-occupation"
+                          value={backgroundForm.occupation}
+                          onChange={(event) => handleBackgroundInputChange('occupation', event.target.value)}
+                          placeholder="Product Designer"
+                          className="h-11 rounded-xl"
+                        />
+                      </div>
+                      <div className="space-y-1.5">
+                        <Label htmlFor="bc-employer" className="text-sm text-foreground">
+                          Employer / business name
+                        </Label>
+                        <Input
+                          id="bc-employer"
+                          value={backgroundForm.employer}
+                          onChange={(event) => handleBackgroundInputChange('employer', event.target.value)}
+                          placeholder="Julaaz NG"
+                          className="h-11 rounded-xl"
+                        />
+                      </div>
+                      <div className="space-y-1.5">
+                        <Label htmlFor="bc-employment-length" className="text-sm text-foreground">
+                          Length of employment
+                        </Label>
+                        <Input
+                          id="bc-employment-length"
+                          value={backgroundForm.employmentLength}
+                          onChange={(event) => handleBackgroundInputChange('employmentLength', event.target.value)}
+                          placeholder="2 years"
+                          className="h-11 rounded-xl"
+                        />
+                      </div>
+                    </div>
+                    <div className="space-y-1.5">
+                      <Label htmlFor="bc-finances" className="text-sm text-foreground">
+                        Financial commitments or notes
+                      </Label>
+                      <textarea
+                        id="bc-finances"
+                        value={backgroundForm.financialCommitments}
+                        onChange={(event) => handleBackgroundInputChange('financialCommitments', event.target.value)}
+                        rows={3}
+                        className="w-full rounded-xl border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/20"
+                        placeholder="Tell us about any loans, dependents, or other commitments"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-3">
+                    <h4 className="text-sm font-semibold text-foreground uppercase tracking-wide">Required documents</h4>
+                    <p className="text-xs text-muted-foreground">
+                      Valid ID (Driver's License, National ID, or Passport) • Proof of Income • Employment letter or contract. Upload PDF, JPG, or PNG files up to 10MB each.
+                    </p>
+                    <div className="rounded-2xl border-2 border-dashed border-border bg-background/60 p-6 text-center">
+                      <div className="flex flex-col items-center gap-3">
+                        <Upload className="h-6 w-6 text-primary" />
+                        <p className="text-sm text-foreground">Drag & drop files here or click to upload</p>
+                        <label
+                          htmlFor="bc-documents"
+                          className="inline-flex items-center justify-center rounded-full border border-primary/40 px-4 py-2 text-sm font-medium text-primary hover:bg-primary/10 cursor-pointer"
+                        >
+                          Select files
+                        </label>
+                        <Input
+                          id="bc-documents"
+                          type="file"
+                          accept="application/pdf,image/png,image/jpeg"
+                          className="hidden"
+                          multiple
+                          onChange={handleDocumentUpload}
+                        />
+                      </div>
+                    </div>
+                    {documentFiles.length > 0 && (
+                      <ul className="space-y-2">
+                        {documentFiles.map((file, index) => (
+                          <li
+                            key={`${file.name}-${index}`}
+                            className="flex items-center justify-between rounded-xl border border-border bg-background px-3 py-2 text-sm"
+                          >
+                            <div className="flex items-center gap-3">
+                              <FileText className="h-4 w-4 text-primary" />
+                              <div className="flex flex-col">
+                                <span className="font-medium text-foreground">{file.name}</span>
+                                <span className="text-xs text-muted-foreground">{(file.size / (1024 * 1024)).toFixed(2)} MB</span>
+                              </div>
+                            </div>
+                            <button
+                              type="button"
+                              onClick={() => handleRemoveDocument(index)}
+                              className="rounded-full p-1 text-muted-foreground hover:text-destructive hover:bg-destructive/10"
+                              aria-label="Remove document"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </button>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+
+                  <div className="space-y-3">
+                    <div className="flex items-start gap-2 rounded-xl bg-amber-500/10 p-3 text-xs text-amber-700 dark:text-amber-200 border border-amber-500/20">
+                      <AlertCircle className="mt-0.5 h-4 w-4" />
+                      <p>
+                        Once submitted, our compliance team reviews your information within 24 hours. You will receive an email once the background check is complete.
+                      </p>
+                    </div>
+                    <Button
+                      type="submit"
+                      className="w-full lg:w-auto lg:px-8 h-12 bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl"
+                      disabled={isSubmittingBackground}
+                    >
+                      {isSubmittingBackground ? (
+                        <span className="inline-flex items-center gap-2">
+                          <LogoLoader size="sm" variant="white" />
+                          Submitting...
+                        </span>
+                      ) : backgroundStatus === 'submitted' ? (
+                        'Submitted for review'
+                      ) : (
+                        'Submit for verification'
+                      )}
+                    </Button>
+                  </div>
+                </form>
+              )}
             </Card>
           </div>
         )}

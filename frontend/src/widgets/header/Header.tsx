@@ -1,4 +1,4 @@
-import { Menu, User, Home, Building2, Wrench, MessageCircle, Bell, Calendar, Heart } from 'lucide-react'
+import { Menu, User, Home, Building2, Wrench, MessageCircle, Bell, Calendar, Heart, FileText, Briefcase } from 'lucide-react'
 import { Button } from '@/shared/ui/button'
 import LogoSvg from '@/assets/images/logo.svg?react'
 import { cn } from '@/shared/lib/utils/cn'
@@ -28,8 +28,10 @@ export function Header({ onMenuClick, onProfileClick, className }: HeaderProps) 
   const activityItems = [
     { icon: MessageCircle, label: 'Messages', path: ROUTES.MESSAGING, badge: 2 },
     { icon: Bell, label: 'Notifications', path: ROUTES.NOTIFICATIONS, badge: 5 },
-    { icon: Calendar, label: 'Events', path: ROUTES.EVENTS },
+    { icon: Calendar, label: 'Calendar', path: ROUTES.EVENTS },
     { icon: Heart, label: 'Favourites', path: ROUTES.FAVOURITES },
+    { icon: FileText, label: 'My Bookings', path: ROUTES.MY_BOOKINGS },
+    { icon: Briefcase, label: 'My Services', path: ROUTES.MY_SERVICES },
   ]
 
   const isActive = (path: string) => {

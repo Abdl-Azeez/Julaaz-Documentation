@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { Toaster } from 'react-hot-toast'
 import { SplashScreen } from '@/widgets/splash-screen'
@@ -19,8 +19,20 @@ import { EventsPage } from '@/pages/events'
 import { FavouritesPage } from '@/pages/favourites'
 import { AgreementsPage } from '@/pages/tenant/agreements'
 import { PaymentsPage } from '@/pages/tenant/payments'
+import { MyBookingsPage } from '@/pages/my-bookings'
+import { MyServicesPage } from '@/pages/my-services'
 import { ROUTES } from '@/shared/constants/routes'
 import { useThemeStore } from '@/shared/store/theme.store'
+
+function ScrollToTop() {
+  const { pathname } = useLocation()
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
+  }, [pathname])
+
+  return null
+}
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -91,6 +103,7 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
+        <ScrollToTop />
         {showSplash && isMobile ? (
           <SplashScreen onComplete={handleSplashComplete} />
         ) : (
@@ -111,6 +124,8 @@ function App() {
             <Route path={ROUTES.NOTIFICATIONS} element={<NotificationsPage />} />
             <Route path={ROUTES.EVENTS} element={<EventsPage />} />
             <Route path={ROUTES.FAVOURITES} element={<FavouritesPage />} />
+            <Route path={ROUTES.MY_BOOKINGS} element={<MyBookingsPage />} />
+            <Route path={ROUTES.MY_SERVICES} element={<MyServicesPage />} />
             <Route path={ROUTES.AGREEMENTS} element={<AgreementsPage />} />
             <Route path={ROUTES.PAYMENTS} element={<PaymentsPage />} />
             <Route path="*" element={<Navigate to={ROUTES.HOME} replace />} />

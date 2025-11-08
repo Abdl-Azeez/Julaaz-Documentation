@@ -40,15 +40,15 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
   const authenticatedMenuItems: MenuItem[] = [
     { icon: MessageCircle, label: 'Messages', path: ROUTES.MESSAGING, requiresAuth: true },
     { icon: Bell, label: 'Notifications', path: ROUTES.NOTIFICATIONS, requiresAuth: true },
-    { icon: Calendar, label: 'Events', path: ROUTES.EVENTS, requiresAuth: true },
+    { icon: Calendar, label: 'Calendar', path: ROUTES.EVENTS, requiresAuth: true },
     { icon: Heart, label: 'Favorites', path: ROUTES.FAVOURITES, requiresAuth: true },
+    { icon: FileText, label: 'My Bookings', path: ROUTES.MY_BOOKINGS, requiresAuth: true },
+    { icon: Briefcase, label: 'My Services', path: ROUTES.MY_SERVICES, requiresAuth: true },
   ]
 
   const tenantMenuItems: MenuItem[] = [
     { icon: Receipt, label: 'Agreements', path: ROUTES.AGREEMENTS, requiresAuth: true, roles: ['tenant'] },
     { icon: CreditCard, label: 'Payments', path: ROUTES.PAYMENTS, requiresAuth: true, roles: ['tenant'] },
-    { icon: FileText, label: 'My Bookings', path: ROUTES.MY_BOOKINGS, requiresAuth: true, roles: ['tenant'] },
-    { icon: Briefcase, label: 'My Services', path: ROUTES.SERVICE_BOOKINGS, requiresAuth: true, roles: ['tenant'] },
   ]
 
   const landlordMenuItems: MenuItem[] = [

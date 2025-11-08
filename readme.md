@@ -204,6 +204,20 @@ JulaazNG/
 - 🔄 Basic booking
 - 🔄 Payment integration
 
+#### ✅ Tenant Frontend Milestone (November 2025)
+- **Experience polished for mobile & desktop** with creative animations, responsive layouts, and theme-aware styling.
+- **Navigation:** Unified header/sidebar, tooltips, activity icons, and Auth drawer.
+- **Tenant Core Flows:**
+  - Splash screen, loader, home, properties, property details, and viewing scheduler.
+  - My Bookings dashboard with status timelines and landlord contact.
+  - My Services dashboard with provider details, timelines, and reviews.
+  - Agreements & Payments workspaces with modals, loaders, and summaries.
+  - Messaging, notifications, events (calendar), favourites, profile, and settings pages.
+- **Auth:** Login/signup flow with OTP verification, dynamic email/phone handling, and background check integration.
+- **Themes:** Six Nigerian-inspired palettes with footer/icon fixes and persistence.
+- **Documentation:** PRD updated with tenant booking/service flows and viewing enhancements.
+- **Next Focus:** Landlord experience (listing management, earnings, approvals) in the upcoming sprint.
+
 ### Phase 2: Enhanced (Months 4-6)
 - Service marketplace
 - Artisan network

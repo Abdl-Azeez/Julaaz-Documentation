@@ -193,50 +193,50 @@ export function PaymentsPage() {
 
           {/* Stats */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-            <Card className="p-4 lg:p-6 bg-gradient-to-br from-amber-500/20 to-amber-600/10 border-amber-500/30">
-              <div className="flex items-start gap-3">
-                <div className="p-2 rounded-lg bg-amber-500/20">
+            <Card className="p-4 lg:p-6 min-h-[130px] bg-gradient-to-br from-amber-500/20 to-amber-600/10 border-amber-500/30">
+              <div className="flex h-full flex-col justify-between gap-2">
+                <div className="p-2 rounded-lg bg-amber-500/20 w-fit">
                   <Clock className="h-5 w-5 text-amber-600" />
                 </div>
-                <div>
-                  <p className="text-2xl lg:text-3xl font-bold text-foreground">{formatCurrency(totalDue)}</p>
+                <div className="space-y-1">
                   <p className="text-xs lg:text-sm text-foreground/80">Total Due</p>
+                  <p className="text-lg sm:text-xl lg:text-2xl font-bold text-foreground break-words">{formatCurrency(totalDue)}</p>
                 </div>
               </div>
             </Card>
 
-            <Card className="p-4 lg:p-6 bg-gradient-to-br from-primary/20 to-primary/10 border-primary/30">
-              <div className="flex items-start gap-3">
-                <div className="p-2 rounded-lg bg-primary/20">
+            <Card className="p-4 lg:p-6 min-h-[130px] bg-gradient-to-br from-primary/20 to-primary/10 border-primary/30">
+              <div className="flex h-full flex-col justify-between gap-2">
+                <div className="p-2 rounded-lg bg-primary/20 w-fit">
                   <CheckCircle2 className="h-5 w-5 text-primary" />
                 </div>
-                <div>
-                  <p className="text-2xl lg:text-3xl font-bold text-foreground">{formatCurrency(totalPaid)}</p>
+                <div className="space-y-1">
                   <p className="text-xs lg:text-sm text-foreground/80">Total Paid</p>
+                  <p className="text-lg sm:text-xl lg:text-2xl font-bold text-foreground break-words">{formatCurrency(totalPaid)}</p>
                 </div>
               </div>
             </Card>
 
-            <Card className="p-4 lg:p-6 bg-surface border-border/50">
-              <div className="flex items-start gap-3">
-                <div className="p-2 rounded-lg bg-primary/10">
+            <Card className="p-4 lg:p-6 min-h-[130px] bg-surface border-border/50">
+              <div className="flex h-full flex-col justify-between gap-2">
+                <div className="p-2 rounded-lg bg-primary/10 w-fit">
                   <Receipt className="h-5 w-5 text-primary" />
                 </div>
-                <div>
-                  <p className="text-2xl lg:text-3xl font-bold text-foreground">{payments.length}</p>
+                <div className="space-y-1">
                   <p className="text-xs lg:text-sm text-muted-foreground">Transactions</p>
+                  <p className="text-lg sm:text-xl lg:text-2xl font-bold text-foreground">{payments.length}</p>
                 </div>
               </div>
             </Card>
 
-            <Card className="p-4 lg:p-6 bg-surface border-border/50">
-              <div className="flex items-start gap-3">
-                <div className="p-2 rounded-lg bg-amber-500/10">
+            <Card className="p-4 lg:p-6 min-h-[130px] bg-surface border-border/50">
+              <div className="flex h-full flex-col justify-between gap-2">
+                <div className="p-2 rounded-lg bg-amber-500/10 w-fit">
                   <DollarSign className="h-5 w-5 text-amber-600" />
                 </div>
-                <div>
-                  <p className="text-2xl lg:text-3xl font-bold text-foreground">{pendingPayments.length}</p>
+                <div className="space-y-1">
                   <p className="text-xs lg:text-sm text-muted-foreground">Pending</p>
+                  <p className="text-lg sm:text-xl lg:text-2xl font-bold text-foreground">{pendingPayments.length}</p>
                 </div>
               </div>
             </Card>

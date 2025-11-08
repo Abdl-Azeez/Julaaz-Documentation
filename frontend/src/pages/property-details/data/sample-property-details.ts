@@ -1,4 +1,11 @@
-import type { PropertyDetail, MoveInItem, PropertyOwner } from '@/entities/property/model/types'
+import type {
+  PropertyDetail,
+  MoveInItem,
+  PropertyOwner,
+  LongTermOffering,
+  ShortletOffering,
+  RentalCategory
+} from '@/entities/property/model/types'
 import { sampleProperties } from '@/pages/home/data/sample-properties'
 
 const defaultAmenities = [
@@ -16,6 +23,141 @@ const defaultHighlights = [
   'Ensuite bedrooms with built-in wardrobes',
   'Private balcony overlooking the city skyline'
 ]
+
+const defaultShortletServices = [
+  'Superfast fibre Wi-Fi',
+  '24/7 Power & Security',
+  'Dedicated concierge support',
+  'Housekeeping twice weekly'
+]
+
+const defaultShortletFacilities = [
+  'Fully equipped gourmet kitchen',
+  'Smart TV with streaming apps',
+  'Washer & dryer in unit',
+  'Dedicated workspace with ergonomic chair'
+]
+
+const defaultShortletHouseRules = [
+  'No parties or loud music after 10 PM',
+  'No smoking inside the apartment',
+  'Valid government ID required for all guests at check-in'
+]
+
+const longTermOverrides: Record<string, Partial<LongTermOffering>> = {
+  '5': {
+    minimumTermMonths: 24,
+    paymentPlan: ['12 months upfront', 'Quarterly instalments (subject to approval)'],
+    notes: 'Penthouse units attract a 2-month caution fee and concierge retainer.'
+  },
+  '6': {
+    utilitiesIncluded: ['Estate security', 'Waste disposal', 'Water supply', 'Community gym membership'],
+    paymentPlan: ['12 months upfront', 'Bi-annual instalment (subject to approval)']
+  }
+}
+
+const shortletOverrides: Record<string, Partial<ShortletOffering>> = {
+  '1': {
+    headline: 'Ikoyi skyline shortlet with concierge',
+    maxGuests: 4,
+    servicesIncluded: [
+      'Superfast fibre Wi-Fi',
+      'Daily housekeeping',
+      '24/7 Concierge & security',
+      'Continental breakfast starter pack'
+    ],
+    facilities: [
+      'Chef-ready kitchen with premium cookware',
+      'In-unit washer & dryer',
+      'Smart home automation',
+      'Private balcony with city view'
+    ],
+    cleaningFee: 25000,
+    securityDeposit: 120000
+  },
+  '3': {
+    headline: 'Creative loft shortlet in Yaba tech district',
+    maxGuests: 3,
+    servicesIncluded: [
+      'Unlimited fibre internet',
+      'Bi-weekly housekeeping',
+      'Dedicated concierge on demand',
+      'Welcome snack basket'
+    ],
+    facilities: [
+      'Convertible workspace & podcast corner',
+      'Rooftop lounge access',
+      'Smart TV + Netflix + Prime',
+      'Espresso machine'
+    ],
+    houseRules: [
+      'No parties or events (quiet hours after 9 PM)',
+      'No smoking inside',
+      'Coworking passes available on request'
+    ]
+  },
+  '5': {
+    headline: 'Lekki Phase 1 penthouse shortlet',
+    maxGuests: 5,
+    servicesIncluded: [
+      'Dedicated concierge & security',
+      'Daily housekeeping',
+      'On-demand private chef (charge applies)',
+      'Fast fibre Wi-Fi + DSTV Premium'
+    ],
+    facilities: [
+      'Private rooftop lounge',
+      'Cinema room access',
+      'In-house gym & spa',
+      'Smart lighting & sound system'
+    ],
+    cleaningFee: 35000,
+    securityDeposit: 150000
+  },
+  '8': {
+    headline: 'Waterfront serviced apartment shortlet',
+    maxGuests: 4,
+    servicesIncluded: [
+      'Dedicated concierge',
+      'Daily housekeeping',
+      'Lagos lagoon cruise discount',
+      'Secure parking for 2 vehicles'
+    ],
+    facilities: [
+      'Infinity pool & waterfront lounge',
+      'Kayak & board rental (on-site)',
+      'Fully equipped kitchen',
+      'Smart TV with Netflix + DSTV'
+    ],
+    checkInWindow: '1:00 PM – 8:00 PM',
+    checkOutTime: '12:00 PM',
+    cleaningFee: 30000,
+    securityDeposit: 130000
+  },
+  '10': {
+    headline: 'Boutique shortlet at Palmgrove Court',
+    maxGuests: 2,
+    servicesIncluded: [
+      'Daily housekeeping',
+      '24/7 security & concierge',
+      'High-speed internet',
+      'Welcome breakfast basket'
+    ],
+    facilities: [
+      'Compact chef-ready kitchen',
+      'Reading nook & workspace',
+      'Smart TV with streaming',
+      'Washer & dryer combo'
+    ],
+    houseRules: [
+      'No parties or overnight guests beyond reservation',
+      'No pets allowed',
+      'Quiet hours between 9 PM and 7 AM'
+    ],
+    cleaningFee: 15000,
+    securityDeposit: 60000
+  }
+}
 
 const buildMoveInBreakdown = (annualRent: number): MoveInItem[] => {
   const cautionFee = Math.round(annualRent * 0.1)
@@ -198,9 +340,106 @@ export const samplePropertyDetails: Record<string, PropertyDetail> = samplePrope
   const transactionType = meta.transactionType ?? 'Rent'
   const propertyType = meta.propertyType ?? 'Modern Apartment'
   const neighbourhood = meta.neighbourhood ?? 'Lekki'
+  const rentalCategories = (property.rentalCategories ?? []) as RentalCategory[]
+  const hasLongTerm = rentalCategories.includes('long_term')
+  const hasShortlet = rentalCategories.includes('shortlet')
+
+  let longTermOffering: LongTermOffering | undefined
+  if (hasLongTerm) {
+    const annualRent = property.annualRent ?? property.price
+    longTermOffering = {
+      annualRent,
+      monthlyRent: Math.round((property.monthlyRent ?? annualRent / 12)),
+      minimumTermMonths: 12,
+      furnished: meta.isFurnished ?? true,
+      utilitiesIncluded: ['Estate security', 'Waste disposal', 'Water supply'],
+      paymentPlan: ['12 months upfront', '6 + 6 instalment (subject to approval)'],
+      notes: meta.furnishingNotes
+    }
+
+    if (longTermOverrides[property.id]) {
+      longTermOffering = {
+        ...longTermOffering,
+        ...longTermOverrides[property.id]
+      }
+    }
+  }
+
+  let shortletOffering: ShortletOffering | undefined
+  if (hasShortlet) {
+    const nightlyRate = property.nightlyRate ?? 85000
+    shortletOffering = {
+      isAvailable: true,
+      headline: `${property.name} serviced shortlet`,
+      nightlyRate,
+      weekendRate: Math.round(nightlyRate * 1.15),
+      weeklyRate: property.weeklyRate ?? Math.round(nightlyRate * 6),
+      monthlyRate: property.weeklyRate ? Math.round(property.weeklyRate * 4) : undefined,
+      minimumStayNights: property.minimumStayNights ?? 2,
+      maximumStayNights: property.maximumStayNights,
+      maxGuests: 4,
+      servicesIncluded: defaultShortletServices,
+      facilities: defaultShortletFacilities,
+      houseRules: defaultShortletHouseRules,
+      checkInWindow: '2:00 PM – 8:00 PM',
+      checkOutTime: '11:00 AM',
+      cleaningFee: 15000,
+      securityDeposit: 80000
+    }
+
+    if (shortletOverrides[property.id]) {
+      shortletOffering = {
+        ...shortletOffering,
+        ...shortletOverrides[property.id]
+      }
+    }
+  }
+
+  const description =
+    meta.description ??
+    `Discover ${property.name}, a thoughtfully designed ${propertyType.toLowerCase()} in ${neighbourhood} with ${property.bedrooms} bedrooms and contemporary finishes${
+      hasShortlet ? ', now available for flexible short stays and annual leases alike.' : '.'
+    }`
+
+  const highlights = [...(meta.highlights ?? defaultHighlights)]
+  if (hasShortlet) {
+    highlights.push('Ready for flexible short stays with concierge support')
+  }
+
+  const amenities = [...(meta.amenities ?? defaultAmenities)]
+  if (hasShortlet) {
+    amenities.push(
+      'Fully furnished & serviced interiors',
+      'Daily cleaning available on request',
+      'High-speed fibre internet and streaming',
+      'Smart home climate and lighting controls'
+    )
+  }
+  const uniqueAmenities = Array.from(new Set(amenities))
+
+  const isFurnished = hasShortlet ? true : meta.isFurnished ?? true
+  const furnishingNotes = meta.furnishingNotes ?? (hasShortlet ? 'Fully furnished serviced apartment' : 'Furnished')
+
+  const moveInBreakdown = hasLongTerm
+    ? meta.moveInBreakdown ?? buildMoveInBreakdown(longTermOffering?.annualRent ?? property.price)
+    : []
+
+  const locationDescription = meta.locationDescription
+    ? meta.locationDescription
+    : `Located in ${neighbourhood}, ${meta.state ?? 'Lagos'}, close to essential services and lifestyle destinations${
+        hasShortlet ? ', with concierge for stays of 2 nights or more.' : '.'
+      }`
 
   acc[property.id] = {
     ...property,
+    price: longTermOffering?.annualRent ?? shortletOffering?.nightlyRate ?? property.price,
+    annualRent: longTermOffering?.annualRent ?? property.annualRent,
+    monthlyRent: longTermOffering?.monthlyRent ?? property.monthlyRent,
+    nightlyRate: shortletOffering?.nightlyRate ?? property.nightlyRate,
+    weeklyRate: shortletOffering?.weeklyRate ?? property.weeklyRate,
+    minimumStayNights: shortletOffering?.minimumStayNights ?? property.minimumStayNights,
+    maximumStayNights: shortletOffering?.maximumStayNights ?? property.maximumStayNights,
+    rentalCategories,
     transactionType,
     propertyType,
     address: meta.address ?? 'Plot 12 Admiralty Way',
@@ -208,19 +447,18 @@ export const samplePropertyDetails: Record<string, PropertyDetail> = samplePrope
     state: meta.state ?? 'Lagos',
     country: meta.country ?? 'Nigeria',
     neighbourhood,
-    description:
-      meta.description ??
-      `Discover ${property.name}, a thoughtfully designed ${propertyType.toLowerCase()} in ${neighbourhood} with ${property.bedrooms} bedrooms and contemporary finishes.`,
-    highlights: meta.highlights ?? defaultHighlights,
-    amenities: meta.amenities ?? defaultAmenities,
-    isFurnished: meta.isFurnished ?? true,
-    furnishingNotes: meta.furnishingNotes ?? 'Furnished',
-    moveInBreakdown: meta.moveInBreakdown ?? buildMoveInBreakdown(property.price),
+    description,
+    highlights,
+    amenities: uniqueAmenities,
+    isFurnished,
+    furnishingNotes,
+    moveInBreakdown,
     owner,
-    locationDescription:
-      meta.locationDescription ?? `Located in ${neighbourhood}, ${meta.state ?? 'Lagos'}, close to essential services and lifestyle destinations.`,
+    locationDescription,
     mapUrl: meta.mapUrl,
-    breadcrumb: meta.breadcrumb ?? ['Home', transactionType, property.name]
+    breadcrumb: meta.breadcrumb ?? ['Home', transactionType, property.name],
+    longTermOffering,
+    shortletOffering
   }
 
   return acc

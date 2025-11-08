@@ -1,3 +1,34 @@
+export type RentalCategory = 'long_term' | 'shortlet'
+
+export interface ShortletOffering {
+  isAvailable: boolean
+  headline: string
+  nightlyRate: number
+  weekendRate?: number
+  weeklyRate?: number
+  monthlyRate?: number
+  minimumStayNights: number
+  maximumStayNights?: number
+  maxGuests?: number
+  servicesIncluded: string[]
+  facilities: string[]
+  houseRules: string[]
+  checkInWindow: string
+  checkOutTime: string
+  cleaningFee?: number
+  securityDeposit?: number
+}
+
+export interface LongTermOffering {
+  annualRent: number
+  monthlyRent?: number
+  minimumTermMonths: number
+  furnished: boolean
+  utilitiesIncluded: string[]
+  paymentPlan: string[]
+  notes?: string
+}
+
 export interface Property {
   id: string
   name: string
@@ -7,9 +38,16 @@ export interface Property {
   bedrooms: number
   bathrooms: number
   parking: number
-  price: number // in Naira
+  price: number // legacy pricing reference (annual rent by default)
   location?: string
   ownerId?: string
+  rentalCategories: RentalCategory[]
+  annualRent?: number
+  monthlyRent?: number
+  nightlyRate?: number
+  weeklyRate?: number
+  minimumStayNights?: number
+  maximumStayNights?: number
 }
 
 export interface PropertyCardProps {
@@ -53,5 +91,7 @@ export interface PropertyDetail extends Property {
   locationDescription: string
   mapUrl?: string
   breadcrumb: string[]
+  longTermOffering?: LongTermOffering
+  shortletOffering?: ShortletOffering
 }
 

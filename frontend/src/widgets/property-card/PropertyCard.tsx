@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Bed, Bath, Car, Share2, ChevronLeft, ChevronRight } from 'lucide-react'
+import { Bed, Bath, Car, Share2, ChevronLeft, ChevronRight, Calendar, Moon } from 'lucide-react'
 import { Card } from '@/shared/ui/card'
 import { Button } from '@/shared/ui/button'
 import type { PropertyCardProps } from '@/entities/property/model/types'
@@ -10,11 +10,20 @@ export function PropertyCard({ property, onRequestViewing, onShare, onSelect, la
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
   
   const formatPrice = (price: number) => {
+    if (!price) return '₦0'
     if (price >= 1000000) {
       return `₦${(price / 1000000).toFixed(1)}M`
     }
     return `₦${(price / 1000).toFixed(1)}K`
   }
+
+  const hasLongTerm = property.rentalCategories?.includes('long_term')
+  const hasShortlet = property.rentalCategories?.includes('shortlet')
+  const annualPrice = property.annualRent ?? (hasLongTerm ? property.price : undefined)
+  const nightlyRate = property.nightlyRate ?? (hasShortlet && property.price && !hasLongTerm ? property.price : undefined)
+
+  const annualLabel = annualPrice ? `${formatPrice(annualPrice)}/yr` : undefined
+  const nightlyLabel = nightlyRate ? `${formatPrice(nightlyRate)}/night` : undefined
 
   const handlePrevImage = (e: React.MouseEvent) => {
     e.stopPropagation()
@@ -57,6 +66,48 @@ export function PropertyCard({ property, onRequestViewing, onShare, onSelect, la
           loading="lazy"
         />
         
+        {/* Creative Rental Type Badges - Top Right Corner */}
+        {(hasLongTerm || hasShortlet) && (
+          <div className="absolute top-3 right-3 flex flex-col gap-1.5 z-10">
+            {hasLongTerm && (
+              <div className="group/badge relative">
+                {/* Animated Glow Effect */}
+                <div className="absolute inset-0 bg-primary/40 rounded-lg blur-md opacity-0 group-hover/badge:opacity-100 transition-opacity duration-300" />
+                
+                {/* Badge Content */}
+                <div className={`relative flex items-center rounded-lg bg-background/95 backdrop-blur-md border border-primary/30 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 ${
+                  isRowLayout ? 'gap-1.5 px-2.5 py-1.5' : 'gap-1.5 px-2.5 py-1.5 md:gap-1.5 md:px-2.5 md:py-1.5'
+                }`}>
+                  <Calendar className={`text-primary ${isRowLayout ? 'h-3.5 w-3.5' : 'h-4 w-4 md:h-3.5 md:w-3.5'}`} />
+                  <span className={`font-bold text-primary uppercase tracking-wider ${
+                    isRowLayout ? 'text-[10px]' : 'hidden md:inline text-[10px]'
+                  }`}>
+                    Annual
+                  </span>
+                </div>
+              </div>
+            )}
+            {hasShortlet && (
+              <div className="group/badge relative">
+                {/* Animated Glow Effect */}
+                <div className="absolute inset-0 bg-emerald-500/40 rounded-lg blur-md opacity-0 group-hover/badge:opacity-100 transition-opacity duration-300" />
+                
+                {/* Badge Content */}
+                <div className={`relative flex items-center rounded-lg bg-background/95 backdrop-blur-md border border-emerald-500/30 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 ${
+                  isRowLayout ? 'gap-1.5 px-2.5 py-1.5' : 'gap-1.5 px-2.5 py-1.5 md:gap-1.5 md:px-2.5 md:py-1.5'
+                }`}>
+                  <Moon className={`text-emerald-600 dark:text-emerald-400 ${isRowLayout ? 'h-3.5 w-3.5' : 'h-4 w-4 md:h-3.5 md:w-3.5'}`} />
+                  <span className={`font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider ${
+                    isRowLayout ? 'text-[10px]' : 'hidden md:inline text-[10px]'
+                  }`}>
+                    Shortlet
+                  </span>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
         {/* Navigation Arrows - Only show if multiple images */}
         {hasMultipleImages && (
           <>
@@ -107,33 +158,44 @@ export function PropertyCard({ property, onRequestViewing, onShare, onSelect, la
         
         {isRowLayout ? (
           // List view: amenities and price on same row
-          <div className="flex items-center justify-between gap-2">
-            <div className="flex items-center text-xs text-muted-foreground gap-1.5 flex-wrap">
-              <span className="flex items-center gap-1">
-                <HouseIcon className="h-4 w-4" />
-                <span className="whitespace-nowrap">
-                  {property.area} sqft
+          <div className="flex flex-col gap-2">
+            <div className="flex items-center justify-between gap-2">
+              <div className="flex items-center text-xs text-muted-foreground gap-1.5 flex-wrap">
+                <span className="flex items-center gap-1">
+                  <HouseIcon className="h-4 w-4" />
+                  <span className="whitespace-nowrap">
+                    {property.area} sqft
+                  </span>
                 </span>
-              </span>
-              <span>|</span>
-              <span className="flex items-center gap-1">
-                <Bed className="h-4 w-4" />
-                {property.bedrooms}
-              </span>
-              <span>|</span>
-              <span className="flex items-center gap-1">
-                <Bath className="h-4 w-4" />
-                {property.bathrooms}
-              </span>
-              <span>|</span>
-              <span className="flex items-center gap-1">
-                <Car className="h-4 w-4" />
-                {property.parking}
-              </span>
+                <span>|</span>
+                <span className="flex items-center gap-1">
+                  <Bed className="h-4 w-4" />
+                  {property.bedrooms}
+                </span>
+                <span>|</span>
+                <span className="flex items-center gap-1">
+                  <Bath className="h-4 w-4" />
+                  {property.bathrooms}
+                </span>
+                <span>|</span>
+                <span className="flex items-center gap-1">
+                  <Car className="h-4 w-4" />
+                  {property.parking}
+                </span>
+              </div>
+              <div className="flex flex-col items-end">
+                {annualLabel && (
+                  <p className="text-xl font-bold text-foreground whitespace-nowrap">
+                    {annualLabel}
+                  </p>
+                )}
+                {nightlyLabel && (
+                  <p className="text-xs font-semibold text-primary whitespace-nowrap">
+                    {hasLongTerm ? `Shortlet from ${nightlyLabel}` : nightlyLabel}
+                  </p>
+                )}
+              </div>
             </div>
-            <p className="text-xl font-bold text-foreground whitespace-nowrap">
-              {formatPrice(property.price)}
-            </p>
           </div>
         ) : (
           // Grid view: compact for mobile
@@ -159,9 +221,16 @@ export function PropertyCard({ property, onRequestViewing, onShare, onSelect, la
                 {property.parking}
               </span>
             </div>
-            <p className="text-lg font-bold text-foreground text-center">
-              {formatPrice(property.price)}
-            </p>
+            {annualLabel && (
+              <p className="text-lg font-bold text-foreground text-center">
+                {annualLabel}
+              </p>
+            )}
+            {nightlyLabel && (
+              <p className="text-[11px] font-semibold text-primary text-center">
+                {hasLongTerm ? `Shortlet from ${nightlyLabel}` : nightlyLabel}
+              </p>
+            )}
           </>
         )}
         

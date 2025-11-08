@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { LayoutGrid, List } from 'lucide-react'
+import { LayoutGrid, List, ShieldCheck, ConciergeBell, Sparkles } from 'lucide-react'
 import { Header } from '@/widgets/header'
 import { Footer } from '@/widgets/footer'
 import { SearchBar } from '@/widgets/search-bar'
@@ -12,6 +12,7 @@ import { useNavigate } from 'react-router-dom'
 import { useAuthStore } from '@/shared/store/auth.store'
 import { Button } from '@/shared/ui/button'
 import { cn } from '@/shared/lib/utils/cn'
+import { Card } from '@/shared/ui/card'
 
 type LayoutType = 'grid' | 'row'
 
@@ -74,16 +75,136 @@ export function HomePage() {
           }} />
           <div className="container mx-auto px-4 lg:px-6 xl:px-8 py-8 md:py-12 lg:py-16 xl:py-20 max-w-7xl relative">
             <div className="max-w-5xl mx-auto">
-              {/* Mobile Hero */}
-              <div className="text-center lg:hidden mb-8">
-                <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-                  Find Your Next Home
-                </h1>
-                <p className="text-base md:text-lg text-muted-foreground mb-6">
-                  The best place to find rentals and services in Nigeria
-                </p>
-                <div className="max-w-2xl mx-auto">
-                  <SearchBar onSearch={handleSearch} onFilterClick={() => console.log('Filter clicked')} />
+              {/* Mobile Hero - Creative Design */}
+              <div className="lg:hidden mb-10">
+                {/* Animated Background Blobs */}
+                <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                  <div className="absolute top-0 -left-4 w-72 h-72 bg-primary/20 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob" />
+                  <div className="absolute top-0 -right-4 w-72 h-72 bg-accent/20 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob animation-delay-2000" />
+                  <div className="absolute -bottom-8 left-20 w-72 h-72 bg-primary/10 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob animation-delay-4000" />
+                </div>
+
+                {/* Hero Content */}
+                <div className="relative z-10">
+                  {/* Floating Badge */}
+                  <div className="flex justify-center mb-6 animate-float">
+                    <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-primary/20 via-primary/10 to-accent/20 backdrop-blur-xl border border-primary/30 shadow-lg">
+                      <span className="relative flex h-2 w-2">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+                      </span>
+                      <span className="text-xs font-semibold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+                        🏠 Nigeria's #1 Property Platform
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Title with Gradient */}
+                  <h1 className="text-center mb-4 animate-fade-in-up">
+                    <span className="block text-4xl font-black bg-gradient-to-r from-foreground via-primary to-foreground bg-clip-text text-transparent mb-2">
+                      Live the Julaaz
+                    </span>
+                    <span className="block text-4xl font-black bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent animate-gradient-x">
+                      Lifestyle
+                    </span>
+                  </h1>
+
+                  <p className="text-center text-base text-muted-foreground leading-relaxed mb-8 px-4 animate-fade-in-up animation-delay-200">
+                    Serviced shortlets, annual leases, and trusted home services built for Nigerians.
+                  </p>
+
+                  {/* Feature Cards with Glassmorphism */}
+                  <div className="space-y-3 px-2 mb-8">
+                    {[
+                      {
+                        icon: ShieldCheck,
+                        title: 'Verified rentals',
+                        desc: 'Flexible shortlets and annual leases vetted by Julaaz agents before they go live.',
+                        gradient: 'from-primary/20 to-primary/5',
+                        delay: '300',
+                      },
+                      {
+                        icon: ConciergeBell,
+                        title: 'On-demand services',
+                        desc: 'Book cleaners, movers, and artisans in minutes with transparent pricing.',
+                        gradient: 'from-accent/20 to-accent/5',
+                        delay: '400',
+                      },
+                      {
+                        icon: Sparkles,
+                        title: 'Fully furnished comfort',
+                        desc: 'Arrive to stocked kitchens, fibre internet, and concierge support for every stay.',
+                        gradient: 'from-primary/15 to-accent/10',
+                        delay: '500',
+                      },
+                    ].map((feature, idx) => (
+                      <div
+                        key={idx}
+                        className={`group relative overflow-hidden animate-fade-in-up animation-delay-${feature.delay}`}
+                      >
+                        {/* Hover Gradient Background */}
+                        <div className={`absolute inset-0 bg-gradient-to-r ${feature.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
+                        
+                        {/* Card Content */}
+                        <div className="relative flex items-start gap-3 p-4 rounded-2xl bg-surface/60 backdrop-blur-xl border border-border/50 shadow-lg hover:shadow-2xl hover:scale-[1.02] transition-all duration-300">
+                          {/* Icon with Animated Ring */}
+                          <div className="relative shrink-0">
+                            <div className="absolute inset-0 bg-primary/20 rounded-full animate-ping-slow" />
+                            <div className="relative h-11 w-11 rounded-full bg-gradient-to-br from-primary/30 to-accent/20 flex items-center justify-center backdrop-blur-sm border border-primary/30 shadow-inner">
+                              <feature.icon className="h-5 w-5 text-primary drop-shadow-lg" />
+                            </div>
+                          </div>
+                          
+                          {/* Text Content */}
+                          <div className="flex-1 space-y-1">
+                            <h3 className="text-sm font-bold text-foreground group-hover:text-primary transition-colors">
+                              {feature.title}
+                            </h3>
+                            <p className="text-xs text-muted-foreground leading-relaxed">
+                              {feature.desc}
+                            </p>
+                          </div>
+
+                          {/* Shine Effect */}
+                          <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* CTA Buttons with 3D Effect */}
+                  <div className="flex flex-col gap-3 px-4 animate-fade-in-up animation-delay-600">
+                    <button
+                      onClick={() => navigate(ROUTES.PROPERTIES)}
+                      className="group relative h-14 rounded-2xl bg-gradient-to-r from-primary to-accent overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
+                    >
+                      {/* Animated Background */}
+                      <div className="absolute inset-0 bg-gradient-to-r from-accent to-primary opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                      
+                      {/* Shimmer Effect */}
+                      <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/30 to-transparent" />
+                      
+                      {/* Button Content */}
+                      <span className="relative flex items-center justify-center gap-2 text-base font-bold text-white">
+                        <span>Browse homes</span>
+                        <span className="group-hover:translate-x-1 transition-transform duration-300">→</span>
+                      </span>
+                    </button>
+
+                    <button
+                      onClick={() => navigate(ROUTES.SERVICES)}
+                      className="group relative h-14 rounded-2xl bg-surface/80 backdrop-blur-xl border-2 border-primary/30 overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
+                    >
+                      {/* Hover Background */}
+                      <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-accent/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                      
+                      {/* Button Content */}
+                      <span className="relative flex items-center justify-center gap-2 text-base font-bold text-primary">
+                        <Sparkles className="h-4 w-4 group-hover:rotate-12 transition-transform duration-300" />
+                        <span>Explore services</span>
+                      </span>
+                    </button>
+                  </div>
                 </div>
               </div>
 
@@ -141,6 +262,45 @@ export function HomePage() {
                 </div>
               </div>
             </div>
+          </div>
+        </section>
+
+        {/* Julaaz Experience Snapshot */}
+        <section className="container mx-auto px-4 lg:px-6 xl:px-8 py-8 md:py-10 max-w-6xl">
+          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+            <Card className="p-5 rounded-2xl border border-border/60 bg-surface shadow-sm">
+              <div className="space-y-2">
+                <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
+                  Shortlet & annual stays
+                </div>
+                <h3 className="text-lg font-semibold text-foreground">Stay on your terms</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  From serviced shortlets to long-term family homes, every listing is inspected and furnished with essentials before you move in.
+                </p>
+              </div>
+            </Card>
+            <Card className="p-5 rounded-2xl border border-border/60 bg-surface shadow-sm">
+              <div className="space-y-2">
+                <div className="inline-flex items-center gap-2 rounded-full bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-600 dark:text-emerald-300">
+                  Home services
+                </div>
+                <h3 className="text-lg font-semibold text-foreground">Book trusted experts</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  Schedule cleaners, movers, plumbers, and artisans with transparent pricing, live tracking, and secure payments built in.
+                </p>
+              </div>
+            </Card>
+            <Card className="p-5 rounded-2xl border border-border/60 bg-surface shadow-sm md:col-span-2 xl:col-span-1">
+              <div className="space-y-2">
+                <div className="inline-flex items-center gap-2 rounded-full bg-accent/10 px-3 py-1 text-xs font-semibold text-primary">
+                  Tenant support
+                </div>
+                <h3 className="text-lg font-semibold text-foreground">Background checks & support</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  Submit your verification once and reuse it across bookings. Our support team coordinates move-ins, deposits, and concierge requests.
+                </p>
+              </div>
+            </Card>
           </div>
         </section>
 

@@ -77,6 +77,20 @@ export function EventsPage() {
     }
   }
 
+  const handleEventClick = (event: Event) => {
+    // Navigate to appropriate page based on event type
+    if (event.type === 'viewing' && event.relatedTo?.type === 'property') {
+      // Navigate to My Bookings page (property bookings)
+      navigate(ROUTES.MY_BOOKINGS)
+    } else if (event.type === 'service' && event.relatedTo?.type === 'service') {
+      // Navigate to My Services page
+      navigate(ROUTES.MY_SERVICES)
+    } else if (event.type === 'payment') {
+      // Navigate to Payments page
+      navigate(ROUTES.PAYMENTS)
+    }
+  }
+
   const filteredEvents = sampleEvents.filter(event => {
     if (filter === 'upcoming') return !isPast(event.startDate) && event.status !== 'cancelled'
     if (filter === 'past') return isPast(event.startDate) || event.status === 'completed' || event.status === 'cancelled'
@@ -210,7 +224,8 @@ export function EventsPage() {
                           initial={{ opacity: 0, x: -20 }}
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ delay: (groupIndex * 0.1) + (index * 0.05) }}
-                          className={`p-4 lg:p-6 rounded-xl border-2 transition-all hover:shadow-md ${
+                          onClick={() => handleEventClick(event)}
+                          className={`p-4 lg:p-6 rounded-xl border-2 transition-all hover:shadow-md cursor-pointer ${
                             isPastEvent 
                               ? 'bg-surface/50 border-border/50 opacity-75' 
                               : 'bg-surface border-border hover:border-primary/20'

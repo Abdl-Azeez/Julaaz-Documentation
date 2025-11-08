@@ -24,6 +24,14 @@ JulaazNG is a mobile-first web application that serves as Nigeria's premier prop
 - Property Listings: 1,000+ verified properties within 3 months
 - Service Provider Network: 200+ verified providers
 
+### 1.5 Status Update — November 2025
+- **Tenant Frontend Experience:** Complete end-to-end UI/UX for tenants across splash, onboarding, authentication (login/signup/OTP), home, properties, property details, viewing scheduler, favourites, messaging, notifications, calendar, profile, settings, agreements, and payments.
+- **Booking & Services Dashboards:** My Bookings and My Services pages deliver status-driven timelines, provider/landlord contact actions, and modal details for rental and service engagements.
+- **Shortlet & Viewing Enhancements:** Property cards highlight annual vs. shortlet offerings; viewing flow captures move-in, budget, tenancy duration, and seeds messaging threads.
+- **Themes & Responsiveness:** Six Nigerian-inspired themes with improved icon/footer visibility, desktop layouts, hover states, loaders, and tooltips for an elevated experience.
+- **Documentation:** Booking management and service management flows captured in Sections 8.3.5 & 8.3.6 alongside updated PRD descriptions, ensuring stakeholder alignment.
+- **Next Milestone:** Landlord workspace (property publishing, approvals, earnings, tenant screening) scheduled for the upcoming sprint.
+
 ---
 
 ## 2. Product Objectives & Strategy
@@ -1178,7 +1186,24 @@ graph TD
     O --> R[Alternative Properties]
 ```
 
-#### 8.3.2 Booking Management
+> **Update – November 2025:** During the viewing scheduling stage tenants now complete an enhanced intake form. When a property supports multiple rental modes the user explicitly selects either **Annual lease** or **Serviced shortlet**. The form collects:
+>
+> - Preferred move-in / check-in date (must be ≥24 hours in the future)
+> - Desired tenancy duration (6, 12, 18 or 24 months) for long-term stays
+> - Planned shortlet stay length (in nights) for serviced bookings
+> - Minimum budget (monthly for long-term, per-night for shortlet) with guidance that final pricing is subject to landlord approval
+> - Optional notes that are shared with the landlord and Julaaz concierge team
+>
+> After submission the platform automatically opens a group conversation between the tenant, property owner, and Julaaz support summarising the selected slots and preferences.
+
+#### 8.3.2 Shortlet Booking Flow (New)
+
+- Shortlet-ready listings expose fully furnished amenities, included concierge services, and house rules directly on the property detail page.
+- The booking form enforces minimum stay thresholds, allows up to three preferred viewing slots, and captures nightly budget expectations.
+- System messages highlight check-in/check-out windows, cleaning fees, and security deposits so owners can approve quickly.
+- Approved shortlet bookings reuse the same agreement and payment infrastructure while flagging the stay as `booking.type = 'short_let'` for downstream processing.
+
+#### 8.3.3 Booking Management
 
 ```typescript
 // Booking Interface
@@ -1254,6 +1279,110 @@ interface Booking {
   cancellationReason?: string;
 }
 ```
+
+#### 8.3.4 Tenant Agreements & Payment Workspace (Updated November 2025)
+
+- **Agreements Hub:** Tenants see all lease documents grouped by status (pending signature, active, expired, terminated) with quick stats and property thumbnails.
+- **In-browser review:** Opening an agreement launches a modal with full terms, landlord details, and highlights. Pending agreements prompt the user to upload a handwritten e-signature (PNG/JPG ≤5 MB). Successful uploads transition the agreement to "submitted" while awaiting admin verification.
+- **Audit trail:** Each agreement records timestamps for signature events and stores generated PDFs accessible via secure download links.
+- **Payment Console:** A dedicated payments page surfaces total due vs. total paid, pending invoices, and historical receipts. Supported methods include cards, direct bank transfer, USSD, and the Julaaz wallet.
+- **Smart breakdown:** The pay modal recalculates processing fees (1.88%) in real time, shows included items (rent, insurance, legal fees, deposits), and confirms PCI DSS compliant processing via Paystack & Flutterwave.
+- **Receipts & actions:** Completed payments expose downloadable receipts, references, and the payment method used for future support tickets.
+
+#### 8.3.5 Background Check & Verification Flow (New)
+
+- **Profile integration:** The profile page embeds a background-check card. Unverified users are prompted to submit additional details before accessing premium actions.
+- **Prefilled data:** Personal fields (name, email, phone, nationality) are pre-populated from signup. Users supply monthly income, occupation, employer/business, employment length, and financial commitments.
+- **Document capture:** Tenants upload required files (valid ID, proof of income, employment letter/contract) with a 10 MB cap per file. Files accept PDF, JPG, and PNG.
+- **Submission lifecycle:** Upon submission status transitions to `submitted`, triggering compliance review. Automatic timeouts simulate asynchronous verification; once approved the profile gains a verified badge and the background card switches to a "Verification complete" state.
+- **Reusability:** Verified tenants can reuse their cleared background check for subsequent bookings without re-uploading documents unless data changes.
+
+
+#### 8.3.6 My Bookings - Property Booking Management (Updated November 2025)
+
+**Purpose:** A dedicated dashboard for tracking all property rental applications and bookings through their complete lifecycle, distinct from the Calendar/Events page which shows time-based appointments.
+
+**Key Features:**
+- **Status-based tracking:** Bookings are organized by status (Active, Pending, Completed) rather than chronologically
+- **Comprehensive view:** Shows all property bookings including long-term rentals and shortlets
+- **Status indicators:** 14 distinct statuses from `pending` through `active` to `completed`/`rejected`
+- **Quick stats:** Dashboard cards showing total, active, pending, and completed bookings
+- **Detailed timeline:** Each booking displays a complete status timeline with timestamps and notes
+- **Property information:** Full property details including images, location, bedrooms, bathrooms, and pricing
+- **Landlord contact:** Direct messaging integration with property owners
+- **Application details:** View submitted application including move-in date, tenancy duration, budget, and notes
+- **Document tracking:** Monitor status of uploaded documents (ID, proof of income, etc.)
+- **Mobile-first design:** Optimized card-based layout for mobile with enhanced desktop view
+- **Desktop enhancements:** Split-screen layout with property image, expanded details, and inline actions
+
+**Status Flow:**
+1. `pending` → Viewing request submitted
+2. `viewing_scheduled` → Property viewing scheduled
+3. `viewing_completed` → Viewing completed
+4. `application_submitted` → Application submitted
+5. `documents_pending` → Additional documents required
+6. `under_review` → Landlord reviewing application
+7. `approved` → Application approved
+8. `agreement_sent` → Rental agreement sent
+9. `payment_pending` → Payment required
+10. `payment_completed` → Payment completed
+11. `confirmed` → Booking confirmed
+12. `active` → Tenancy started
+13. `completed` → Tenancy ended
+14. `cancelled`/`rejected` → Booking cancelled or rejected
+
+**Navigation:**
+- Accessible from main activity menu (after Messages, Notifications, Calendar, Favourites)
+- Calendar events for property viewings link to My Bookings page
+- Property detail pages link to booking status via "Request Viewing" button
+
+#### 8.3.7 My Services - Service Booking Management (Updated November 2025)
+
+**Purpose:** A dedicated dashboard for tracking all service bookings (cleaning, moving, maintenance, etc.) separate from property rentals.
+
+**Key Features:**
+- **Service-specific tracking:** Manages cleaning, moving, plumbing, electrical, painting, fumigation, and other home services
+- **Status-based organization:** Filter by Upcoming, Completed, or Cancelled services
+- **Quick stats:** Dashboard showing total, upcoming, completed, and cancelled service bookings
+- **Provider information:** Full provider details including ratings, completed jobs, and contact information
+- **Schedule details:** Clear display of service date, time, and duration
+- **Location tracking:** Service address with optional property association
+- **Payment status:** Track payment status (pending, completed, refunded)
+- **Service timeline:** Complete booking lifecycle from request to completion
+- **Review system:** Rate and review completed services (1-5 stars with written feedback)
+- **Photo documentation:** Before/after photos for completed services
+- **Mobile-first design:** Service card layout optimized for mobile viewing
+- **Desktop enhancements:** Expanded service cards with provider details and inline actions
+
+**Status Flow:**
+1. `pending` → Service booking requested
+2. `confirmed` → Provider confirmed booking
+3. `in_progress` → Service currently being performed
+4. `completed` → Service completed successfully
+5. `cancelled` → Booking cancelled by user or provider
+6. `rescheduled` → Service rescheduled to new date/time
+
+**Service Types:**
+- **Cleaning:** Deep cleaning, regular cleaning, move-in/move-out cleaning
+- **Moving:** Full-service moving with packing and transportation
+- **Maintenance:** General repairs and maintenance
+- **Plumbing:** Pipe repairs, installations, leak fixes
+- **Electrical:** Wiring, installations, repairs
+- **Painting:** Interior/exterior painting
+- **Carpentry:** Furniture assembly, custom woodwork
+- **Fumigation:** Pest control and fumigation services
+
+**Navigation:**
+- Accessible from main activity menu (alongside My Bookings)
+- Calendar events for service appointments link to My Services page
+- Services page links to booking status via service booking flow
+
+**Distinction from Calendar/Events:**
+- **Calendar/Events:** Time-based view of all appointments (viewings, services, payments) grouped by date (Today, Tomorrow, Upcoming). Renamed from "Events" to "Calendar" for clarity.
+- **My Bookings:** Status-based tracking of property rental applications and bookings
+- **My Services:** Status-based tracking of home service bookings
+- **Integration:** Clicking on a viewing event in Calendar navigates to My Bookings; clicking on a service event navigates to My Services; clicking on a payment event navigates to Payments page.
+
 
 ### 8.4 Service Provider Network
 

@@ -2,7 +2,7 @@ import { Children, ReactNode, useMemo, useState } from 'react'
 import { Header } from '@/widgets/header'
 import { Sidebar } from '@/widgets/sidebar'
 import { Footer } from '@/widgets/footer'
-import { AuthDrawer } from '@/widgets/auth-drawer'
+import { AuthDialog } from '@/widgets/auth-dialog'
 import { useAuthStore } from '@/shared/store/auth.store'
 import { useNavigate } from 'react-router-dom'
 import { ROUTES } from '@/shared/constants/routes'
@@ -96,7 +96,7 @@ export function InfoPageTemplate({ title, subtitle, badge, children }: InfoPageT
       </main>
 
       <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
-      <AuthDrawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen} />
+      <AuthDialog open={isDrawerOpen} onOpenChange={setIsDrawerOpen} />
       <Footer />
     </div>
   )

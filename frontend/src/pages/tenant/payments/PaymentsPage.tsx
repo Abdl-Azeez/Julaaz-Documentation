@@ -17,7 +17,7 @@ import {
 import { format, differenceInDays, isPast } from 'date-fns'
 import { Header } from '@/widgets/header'
 import { Sidebar } from '@/widgets/sidebar'
-import { AuthDrawer } from '@/widgets/auth-drawer'
+import { AuthDialog } from '@/widgets/auth-dialog'
 import { Footer } from '@/widgets/footer'
 import { Button } from '@/shared/ui/button'
 import { Card } from '@/shared/ui/card'
@@ -596,7 +596,7 @@ export function PaymentsPage() {
       )}
 
       <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
-      <AuthDrawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen} />
+      <AuthDialog open={isDrawerOpen} onOpenChange={setIsDrawerOpen} />
       <Footer />
     </div>
   )

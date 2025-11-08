@@ -6,7 +6,7 @@ import { LogoLoader } from '@/widgets/logo-loader'
 import { Header } from '@/widgets/header'
 import { Footer } from '@/widgets/footer'
 import { Sidebar } from '@/widgets/sidebar'
-import { AuthDrawer } from '@/widgets/auth-drawer'
+import { AuthDialog } from '@/widgets/auth-dialog'
 import LogoSvg from '@/assets/images/logo.svg?react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { ROUTES } from '@/shared/constants/routes'
@@ -184,7 +184,7 @@ export function ServicesPage() {
                 <div className="absolute -bottom-28 -left-28 h-72 w-72 rounded-full bg-accent/20 blur-3xl" />
                 <div className="relative z-10 space-y-6">
                   <div className="flex items-center justify-between">
-                    <LogoSvg className="h-10 w-auto text-primary" />
+                    <LogoSvg className="h-40 w-40 md:h-44 md:w-44 text-primary" />
                     <span className="text-xs font-medium tracking-wide text-muted-foreground uppercase">Service Desk</span>
                   </div>
                   <div className="rounded-2xl border border-border/50 bg-background/80 p-4 shadow-inner">
@@ -413,7 +413,7 @@ export function ServicesPage() {
 
       <Footer />
       <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
-      <AuthDrawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen} />
+      <AuthDialog open={isDrawerOpen} onOpenChange={setIsDrawerOpen} />
     </div>
   )
 }

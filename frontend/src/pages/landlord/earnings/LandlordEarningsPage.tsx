@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react'
 import { Header } from '@/widgets/header'
 import { Sidebar } from '@/widgets/sidebar'
 import { Footer } from '@/widgets/footer'
-import { AuthDrawer } from '@/widgets/auth-drawer'
+import { AuthDialog } from '@/widgets/auth-dialog'
 import { useAuthStore } from '@/shared/store/auth.store'
 import { LandlordNav } from '@/widgets/landlord-nav'
 import { earningsSummary, earningSnapshots } from '../data/sample-earnings'
@@ -264,7 +264,7 @@ export function LandlordEarningsPage() {
 
       <LandlordNav />
       <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
-      <AuthDrawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen} />
+      <AuthDialog open={isDrawerOpen} onOpenChange={setIsDrawerOpen} />
       <Footer />
     </div>
     <Sheet open={!!selectedEarning} onOpenChange={(open) => !open && setSelectedEarning(null)}>

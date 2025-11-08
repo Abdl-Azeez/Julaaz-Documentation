@@ -4,7 +4,7 @@ import { Send, ArrowLeft, ChevronLeft, ChevronRight, Plus, X } from 'lucide-reac
 import { Header } from '@/widgets/header'
 import { Footer } from '@/widgets/footer'
 import { Sidebar } from '@/widgets/sidebar'
-import { AuthDrawer } from '@/widgets/auth-drawer'
+import { AuthDialog } from '@/widgets/auth-dialog'
 import { useAuthStore } from '@/shared/store/auth.store'
 import { Button } from '@/shared/ui/button'
 import { Card } from '@/shared/ui/card'
@@ -137,7 +137,7 @@ export function PropertyViewingPage() {
         </main>
         <Footer />
         <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
-        <AuthDrawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen} />
+        <AuthDialog open={isDrawerOpen} onOpenChange={setIsDrawerOpen} />
       </div>
     )
   }
@@ -659,7 +659,7 @@ export function PropertyViewingPage() {
 
       <Footer />
       <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
-      <AuthDrawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen} />
+      <AuthDialog open={isDrawerOpen} onOpenChange={setIsDrawerOpen} />
     </div>
   )
 }

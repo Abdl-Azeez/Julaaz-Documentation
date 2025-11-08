@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { Header } from '@/widgets/header'
 import { Sidebar } from '@/widgets/sidebar'
 import { Footer } from '@/widgets/footer'
-import { AuthDrawer } from '@/widgets/auth-drawer'
+import { AuthDialog } from '@/widgets/auth-dialog'
 import { useAuthStore } from '@/shared/store/auth.store'
 import { ROUTES } from '@/shared/constants/routes'
 import { LandlordNav } from '@/widgets/landlord-nav'
@@ -699,7 +699,7 @@ export function LandlordPropertyCreatePage() {
 
       <LandlordNav />
       <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
-      <AuthDrawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen} />
+      <AuthDialog open={isDrawerOpen} onOpenChange={setIsDrawerOpen} />
       <Footer />
     </div>
   )

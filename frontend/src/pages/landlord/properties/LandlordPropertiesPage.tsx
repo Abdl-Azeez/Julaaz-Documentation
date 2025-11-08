@@ -3,7 +3,7 @@ import { Plus, MoreVertical, Clock, Sparkles, TrendingUp, Building2, FileText, S
 import { Header } from '@/widgets/header'
 import { Sidebar } from '@/widgets/sidebar'
 import { Footer } from '@/widgets/footer'
-import { AuthDrawer } from '@/widgets/auth-drawer'
+import { AuthDialog } from '@/widgets/auth-dialog'
 import { useAuthStore } from '@/shared/store/auth.store'
 import { useState } from 'react'
 import { LandlordNav } from '@/widgets/landlord-nav'
@@ -287,7 +287,7 @@ export function LandlordPropertiesPage() {
 
       <LandlordNav />
       <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
-      <AuthDrawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen} />
+      <AuthDialog open={isDrawerOpen} onOpenChange={setIsDrawerOpen} />
       <Footer />
     </div>
   )

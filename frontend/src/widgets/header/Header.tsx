@@ -1,4 +1,5 @@
-import { Menu, User, Home, Building2, Wrench, MessageCircle, Bell, Calendar, Heart, FileText, Briefcase } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import { Menu, User, Home, Building2, Wrench, MessageCircle, Bell, Calendar, Heart, FileText, Briefcase, CreditCard } from 'lucide-react'
 import { Button } from '@/shared/ui/button'
 import LogoSvg from '@/assets/images/logo.svg?react'
 import { cn } from '@/shared/lib/utils/cn'
@@ -18,13 +19,50 @@ export function Header({ onMenuClick, onProfileClick, className }: HeaderProps) 
   const navigate = useNavigate()
   const location = useLocation()
   const { isAuthenticated, user } = useAuthStore()
+  const [isVisible, setIsVisible] = useState(true)
+  const [lastScrollY, setLastScrollY] = useState(0)
 
   const hideTenantFeatures = user?.role === 'landlord' || location.pathname.includes('/landlord')
+  const isLandlord = user?.role === 'landlord'
 
+  // Auto-hide header on scroll (mobile only)
+  useEffect(() => {
+    const controlHeader = () => {
+      const currentScrollY = window.scrollY
+      
+      // Only apply on mobile (below lg breakpoint)
+      if (window.innerWidth >= 1024) {
+        setIsVisible(true)
+        return
+      }
+
+      // Show header when scrolling up or at the top
+      if (currentScrollY < lastScrollY || currentScrollY < 10) {
+        setIsVisible(true)
+      } 
+      // Hide header when scrolling down (but not if we're near the top)
+      else if (currentScrollY > lastScrollY && currentScrollY > 100) {
+        setIsVisible(false)
+      }
+
+      setLastScrollY(currentScrollY)
+    }
+
+    window.addEventListener('scroll', controlHeader)
+    return () => window.removeEventListener('scroll', controlHeader)
+  }, [lastScrollY])
+
+  // Build navigation items based on user role
   const navItems = [
     { icon: Home, label: 'Home', path: ROUTES.HOME },
-    // Hide tenant 'Properties' page for landlords or while within landlord area
+    // Tenant navigation
     ...(!hideTenantFeatures ? [{ icon: Building2, label: 'Properties', path: ROUTES.PROPERTIES }] : []),
+    // Landlord navigation
+    ...(isLandlord ? [
+      { icon: Building2, label: 'My Properties', path: ROUTES.LANDLORD_PROPERTIES },
+      { icon: FileText, label: 'Applications', path: ROUTES.LANDLORD_APPLICATIONS },
+      { icon: CreditCard, label: 'Earnings', path: ROUTES.LANDLORD_EARNINGS },
+    ] : []),
     { icon: Wrench, label: 'Services', path: ROUTES.SERVICES },
   ]
 
@@ -51,7 +89,11 @@ export function Header({ onMenuClick, onProfileClick, className }: HeaderProps) 
 
   return (
     <TooltipProvider>
-      <header className={cn('sticky top-0 z-50 w-full border-b bg-surface/95 backdrop-blur-sm shadow-sm', className)}>
+      <header className={cn(
+        'sticky top-0 z-50 w-full border-b bg-surface/95 backdrop-blur-sm shadow-sm transition-transform duration-300',
+        !isVisible && 'lg:translate-y-0 -translate-y-full',
+        className
+      )}>
         <div className="container mx-auto px-4 lg:px-6 xl:px-8 h-16 md:h-20 flex items-center justify-between max-w-7xl">
         {/* Mobile Menu Button */}
         <Button
@@ -70,7 +112,7 @@ export function Header({ onMenuClick, onProfileClick, className }: HeaderProps) 
             onClick={() => navigate(ROUTES.HOME)} 
             className="cursor-pointer hover:opacity-80 transition-opacity"
           >
-            <LogoSvg className="h-14 md:h-18 lg:h-20 w-auto" />
+            <LogoSvg className="h-32 w-32 md:h-40 md:w-40 lg:h-44 lg:w-44" />
           </button>
         </div>
 

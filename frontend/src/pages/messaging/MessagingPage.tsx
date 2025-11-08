@@ -9,7 +9,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/shared/ui/avatar'
 import { Badge } from '@/shared/ui/badge'
 import { Header } from '@/widgets/header'
 import { Sidebar } from '@/widgets/sidebar'
-import { AuthDrawer } from '@/widgets/auth-drawer'
+import { AuthDialog } from '@/widgets/auth-dialog'
 import { LogoLoader } from '@/widgets/logo-loader'
 import { useAuthStore } from '@/shared/store/auth.store'
 import { ROUTES } from '@/shared/constants/routes'
@@ -229,7 +229,7 @@ export function MessagingPage() {
         </div>
         
         <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
-        <AuthDrawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen} />
+        <AuthDialog open={isDrawerOpen} onOpenChange={setIsDrawerOpen} />
       </div>
     )
   }
@@ -499,7 +499,7 @@ export function MessagingPage() {
       </div>
       
       <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
-      <AuthDrawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen} />
+      <AuthDialog open={isDrawerOpen} onOpenChange={setIsDrawerOpen} />
     </div>
   )
 }

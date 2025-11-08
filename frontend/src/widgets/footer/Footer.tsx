@@ -25,7 +25,7 @@ export function Footer({ className }: FooterProps) {
                     {/* Logo and Tagline - Left */}
                     <div className="flex flex-col space-y-3 lg:space-y-4">
                         <div className="text-primary">
-                            <LogoSvg className="h-24 lg:h-32 xl:h-36 w-auto" />
+                            <LogoSvg className="h-40 w-40 md:h-44 md:w-44 lg:h-48 lg:w-48 xl:h-52 xl:w-52" />
                         </div>
                         <p className="text-sm lg:text-base text-footer-foreground/70">Find Your Next Space Fast</p>
                     </div>

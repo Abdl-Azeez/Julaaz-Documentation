@@ -14,7 +14,7 @@ import {
 } from '@/shared/ui/select'
 import { Header } from '@/widgets/header'
 import { Sidebar } from '@/widgets/sidebar'
-import { AuthDrawer } from '@/widgets/auth-drawer'
+import { AuthDialog } from '@/widgets/auth-dialog'
 import { useAuthStore } from '@/shared/store/auth.store'
 import { useNavigate } from 'react-router-dom'
 import { ROUTES } from '@/shared/constants/routes'
@@ -811,7 +811,7 @@ export function ProfilePage() {
       </div>
       
       <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
-      <AuthDrawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen} />
+      <AuthDialog open={isDrawerOpen} onOpenChange={setIsDrawerOpen} />
     </div>
   )
 }

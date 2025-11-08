@@ -20,7 +20,7 @@ import { Card } from '@/shared/ui/card'
 import { Avatar, AvatarFallback } from '@/shared/ui/avatar'
 import { Footer } from '@/widgets/footer'
 import { Sidebar } from '@/widgets/sidebar'
-import { AuthDrawer } from '@/widgets/auth-drawer'
+import { AuthDialog } from '@/widgets/auth-dialog'
 import { Header } from '@/widgets/header'
 import { useAuthStore } from '@/shared/store/auth.store'
 import { useFavouritesStore } from '@/shared/store/favourites.store'
@@ -259,7 +259,7 @@ export function PropertyDetailsPage() {
         </main>
         <Footer />
         <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
-        <AuthDrawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen} />
+        <AuthDialog open={isDrawerOpen} onOpenChange={setIsDrawerOpen} />
       </div>
     )
   }
@@ -824,7 +824,7 @@ export function PropertyDetailsPage() {
 
       <Footer />
       <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
-      <AuthDrawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen} />
+      <AuthDialog open={isDrawerOpen} onOpenChange={setIsDrawerOpen} />
     </div>
   )
 }

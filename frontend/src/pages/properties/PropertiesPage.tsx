@@ -4,7 +4,7 @@ import { Header } from '@/widgets/header'
 import { Footer } from '@/widgets/footer'
 import { SearchBar } from '@/widgets/search-bar'
 import { PropertyCard } from '@/widgets/property-card'
-import { AuthDrawer } from '@/widgets/auth-drawer'
+import { AuthDialog } from '@/widgets/auth-dialog'
 import { Sidebar } from '@/widgets/sidebar'
 import { Button } from '@/shared/ui/button'
 import { Card } from '@/shared/ui/card'
@@ -368,7 +368,7 @@ export function PropertiesPage() {
 
       <Footer />
       <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
-      <AuthDrawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen} />
+      <AuthDialog open={isDrawerOpen} onOpenChange={setIsDrawerOpen} />
     </div>
   )
 }

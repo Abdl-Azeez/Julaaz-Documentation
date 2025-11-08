@@ -6,8 +6,21 @@ import { Input } from '@/shared/ui/input'
 import { Label } from '@/shared/ui/label'
 import { LoginBanner } from '@/widgets/login-banner'
 import { ROUTES } from '@/shared/constants/routes'
+import { Card } from '@/shared/ui/card'
+import LogoSvg from '@/assets/images/logo.svg?react'
 
 export function LoginPage() {
+  const [isDesktop, setIsDesktop] = useState(false)
+
+  // Detect screen size
+  useEffect(() => {
+    const checkDesktop = () => {
+      setIsDesktop(window.innerWidth >= 768)
+    }
+    checkDesktop()
+    window.addEventListener('resize', checkDesktop)
+    return () => window.removeEventListener('resize', checkDesktop)
+  }, [])
   const [searchParams] = useSearchParams()
   const navigate = useNavigate()
   const role = searchParams.get('role') || 'tenant'
@@ -82,6 +95,110 @@ export function LoginPage() {
     return 'Enter your email or phone number'
   }
 
+  // Desktop Modal Layout
+  if (isDesktop) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-accent/5 flex items-center justify-center p-6">
+        <Card className="w-full max-w-md p-8 shadow-2xl">
+          <div className="flex justify-center mb-6">
+            <LogoSvg className="h-40 w-40 md:h-44 md:w-44 text-primary" />
+          </div>
+          
+          <div className="space-y-6">
+            <h1 className="text-2xl font-bold text-foreground text-center">
+              Login to your Account
+            </h1>
+
+          {/* User Type Selection */}
+          <div className="space-y-3">
+            <Label className="text-sm font-semibold text-foreground">Select User Type</Label>
+            <RadioGroup
+              value={userType}
+              onValueChange={(value) => setUserType(value as 'tenant' | 'landlord')}
+              className="flex gap-4"
+            >
+              <div className="flex items-center space-x-2 flex-1">
+                <RadioGroupItem value="tenant" id="tenant" />
+                <Label htmlFor="tenant" className="font-normal cursor-pointer">
+                  Tenant
+                </Label>
+              </div>
+              <div className="flex items-center space-x-2 flex-1">
+                <RadioGroupItem value="landlord" id="landlord" />
+                <Label htmlFor="landlord" className="font-normal cursor-pointer">
+                  Landlord
+                </Label>
+              </div>
+            </RadioGroup>
+          </div>
+
+          {/* Email/Phone Input */}
+          <div className="space-y-2">
+            <Label htmlFor="login-input" className="text-sm font-semibold text-foreground">
+              {getFieldLabel()}
+            </Label>
+            {loginMethod === 'phone' ? (
+              <div className="flex gap-2">
+                <div className="flex items-center gap-2 px-3 border border-input rounded-lg bg-background">
+                  <span className="text-2xl">🇳🇬</span>
+                  <span className="text-sm font-medium">+234</span>
+                </div>
+              <Input
+                id="login-input"
+                type="tel"
+                placeholder={getPlaceholder()}
+                value={inputValue}
+                onChange={handleInputChange}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') handleContinue()
+                }}
+                className={`flex-1 ${error ? 'border-destructive' : ''}`}
+              />
+              </div>
+            ) : (
+              <Input
+                id="login-input"
+                type={loginMethod === 'email' ? 'email' : 'text'}
+                placeholder={getPlaceholder()}
+                value={inputValue}
+                onChange={handleInputChange}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') handleContinue()
+                }}
+                className={`w-full ${error ? 'border-destructive' : ''}`}
+              />
+            )}
+            {error && (
+              <p className="text-xs text-destructive">{error}</p>
+            )}
+          </div>
+
+          {/* Login Button */}
+          <Button
+            className="w-full h-12 bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg"
+            onClick={handleContinue}
+          >
+            Continue
+          </Button>
+
+          {/* Terms and Privacy */}
+          <p className="text-xs text-center text-muted-foreground">
+            By continuing you agree to the{' '}
+            <a href="#" className="font-bold underline">
+              Terms of Use
+            </a>{' '}
+            and{' '}
+            <a href="#" className="font-bold underline">
+              Privacy Policy
+            </a>
+          </p>
+          </div>
+        </Card>
+      </div>
+    )
+  }
+
+  // Mobile Drawer Layout
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <LoginBanner />

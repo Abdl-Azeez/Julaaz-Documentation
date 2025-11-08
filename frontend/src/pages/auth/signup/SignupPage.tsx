@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useSearchParams, useNavigate } from 'react-router-dom'
 import { RadioGroup, RadioGroupItem } from '@/shared/ui/radio-group'
 import { Button } from '@/shared/ui/button'
@@ -13,8 +13,21 @@ import {
 } from '@/shared/ui/select'
 import { LoginBanner } from '@/widgets/login-banner'
 import { ROUTES } from '@/shared/constants/routes'
+import { Card } from '@/shared/ui/card'
+import LogoSvg from '@/assets/images/logo.svg?react'
 
 export function SignupPage() {
+  const [isDesktop, setIsDesktop] = useState(false)
+
+  // Detect screen size
+  useEffect(() => {
+    const checkDesktop = () => {
+      setIsDesktop(window.innerWidth >= 768)
+    }
+    checkDesktop()
+    window.addEventListener('resize', checkDesktop)
+    return () => window.removeEventListener('resize', checkDesktop)
+  }, [])
   const [searchParams] = useSearchParams()
   const navigate = useNavigate()
   const role = searchParams.get('role') || 'tenant'
@@ -112,16 +125,9 @@ export function SignupPage() {
     }
   }
 
-  return (
-    <div className="min-h-screen bg-background flex flex-col">
-      <LoginBanner />
-      
-      <div className="flex-1 bg-surface rounded-t-[24px] -mt-6 relative z-10 px-6 py-8">
-        <div className="space-y-6">
-          <h1 className="text-2xl font-bold text-foreground text-center">
-            Create your Account
-          </h1>
-
+  // Render form fields (shared between mobile and desktop)
+  const renderFormFields = () => (
+    <>
           {/* User Type Selection */}
           <div className="space-y-3">
             <Label className="text-sm font-semibold text-foreground">Select User Type</Label>
@@ -372,9 +378,42 @@ export function SignupPage() {
               Privacy Policy
             </a>
           </p>
+    </>
+  )
+
+  // Desktop Modal Layout
+  if (isDesktop) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-accent/5 flex items-center justify-center p-6">
+        <Card className="w-full max-w-md p-8 shadow-2xl max-h-[90vh] overflow-y-auto">
+          <div className="flex justify-center mb-6">
+            <LogoSvg className="h-40 w-40 md:h-44 md:w-44 text-primary" />
+          </div>
+          
+          <div className="space-y-6">
+            <h1 className="text-2xl font-bold text-foreground text-center">
+              Create your Account
+            </h1>
+            {renderFormFields()}
+          </div>
+        </Card>
+      </div>
+    )
+  }
+
+  // Mobile Drawer Layout
+  return (
+    <div className="min-h-screen bg-background flex flex-col">
+      <LoginBanner />
+      
+      <div className="flex-1 bg-surface rounded-t-[24px] -mt-6 relative z-10 px-6 py-8">
+        <div className="space-y-6">
+          <h1 className="text-2xl font-bold text-foreground text-center">
+            Create your Account
+          </h1>
+          {renderFormFields()}
         </div>
       </div>
     </div>
   )
 }
-

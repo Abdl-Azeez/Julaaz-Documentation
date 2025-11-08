@@ -13,7 +13,7 @@ import {
 } from '@/shared/ui/select'
 import { Header } from '@/widgets/header'
 import { Sidebar } from '@/widgets/sidebar'
-import { AuthDrawer } from '@/widgets/auth-drawer'
+import { AuthDialog } from '@/widgets/auth-dialog'
 import { useNavigate } from 'react-router-dom'
 import { useAuthStore } from '@/shared/store/auth.store'
 import { useThemeStore, themes } from '@/shared/store/theme.store'
@@ -414,7 +414,7 @@ export function SettingsPage() {
       </div>
       
       <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
-      <AuthDrawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen} />
+      <AuthDialog open={isDrawerOpen} onOpenChange={setIsDrawerOpen} />
     </div>
   )
 }

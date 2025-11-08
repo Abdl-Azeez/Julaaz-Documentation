@@ -7,7 +7,7 @@ import { Badge } from '@/shared/ui/badge'
 import { cn } from '@/shared/lib/utils/cn'
 import { Header } from '@/widgets/header'
 import { Sidebar } from '@/widgets/sidebar'
-import { AuthDrawer } from '@/widgets/auth-drawer'
+import { AuthDialog } from '@/widgets/auth-dialog'
 import {
   CalendarCheck,
   MessageCircle,
@@ -308,7 +308,7 @@ export function NotificationsPage() {
       </main>
       
       <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
-      <AuthDrawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen} />
+      <AuthDialog open={isDrawerOpen} onOpenChange={setIsDrawerOpen} />
     </div>
   )
 }

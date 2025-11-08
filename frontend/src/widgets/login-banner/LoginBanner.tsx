@@ -50,7 +50,7 @@ export function LoginBanner({ showBackButton = true }: LoginBannerProps) {
       
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
         <div className="text-primary">
-          <LogoSvg className="h-20 w-auto drop-shadow-lg" />
+          <LogoSvg className="h-40 w-40 md:h-44 md:w-44 lg:h-48 lg:w-48 drop-shadow-lg" />
         </div>
       </div>
     </div>

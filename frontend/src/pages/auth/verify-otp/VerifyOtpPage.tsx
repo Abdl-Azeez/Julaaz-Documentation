@@ -6,8 +6,11 @@ import { Label } from '@/shared/ui/label'
 import { LoginBanner } from '@/widgets/login-banner'
 import { ROUTES } from '@/shared/constants/routes'
 import { useAuthStore } from '@/shared/store/auth.store'
+import { Card } from '@/shared/ui/card'
+import LogoSvg from '@/assets/images/logo.svg?react'
 
 export function VerifyOtpPage() {
+  const [isDesktop, setIsDesktop] = useState(false)
   const [searchParams] = useSearchParams()
   const navigate = useNavigate()
   const { login } = useAuthStore()
@@ -21,6 +24,16 @@ export function VerifyOtpPage() {
   const [timer, setTimer] = useState(60)
   const [canResend, setCanResend] = useState(false)
   const inputRefs = useRef<(HTMLInputElement | null)[]>([])
+
+  // Detect screen size
+  useEffect(() => {
+    const checkDesktop = () => {
+      setIsDesktop(window.innerWidth >= 768)
+    }
+    checkDesktop()
+    window.addEventListener('resize', checkDesktop)
+    return () => window.removeEventListener('resize', checkDesktop)
+  }, [])
 
   useEffect(() => {
     // Focus first input on mount
@@ -117,6 +130,94 @@ export function VerifyOtpPage() {
     // In real app, trigger API call to resend OTP
   }
 
+  // Desktop Modal Layout
+  if (isDesktop) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-accent/5 flex items-center justify-center p-6">
+        <Card className="w-full max-w-md p-8 shadow-2xl">
+          <div className="flex justify-center mb-6">
+            <LogoSvg className="h-40 w-40 md:h-44 md:w-44 text-primary" />
+          </div>
+          
+          <div className="space-y-6">
+            <div className="text-center space-y-2">
+              <h1 className="text-2xl font-bold text-foreground">
+                Verify Your Email
+              </h1>
+              <p className="text-sm text-muted-foreground">
+                We've sent a 6-digit verification code to
+              </p>
+              <p className="text-sm font-semibold text-foreground">{email}</p>
+            </div>
+
+            {/* OTP Input Fields */}
+            <div className="space-y-2">
+              <Label className="text-sm font-semibold text-foreground text-center block">
+                Enter Verification Code
+              </Label>
+              <div className="flex justify-center gap-2" onPaste={handlePaste}>
+                {otp.map((digit, index) => (
+                  <Input
+                    key={index}
+                    ref={(el) => (inputRefs.current[index] = el)}
+                    type="text"
+                    inputMode="numeric"
+                    maxLength={1}
+                    value={digit}
+                    onChange={(e) => handleOtpChange(index, e.target.value)}
+                    onKeyDown={(e) => handleKeyDown(index, e)}
+                    className="w-12 h-14 text-center text-xl font-semibold"
+                  />
+                ))}
+              </div>
+              {error && (
+                <p className="text-xs text-destructive text-center">{error}</p>
+              )}
+            </div>
+
+            {/* Resend Code */}
+            <div className="text-center space-y-2">
+              {!canResend ? (
+                <p className="text-sm text-muted-foreground">
+                  Resend code in {timer}s
+                </p>
+              ) : (
+                <Button
+                  variant="link"
+                  className="text-primary"
+                  onClick={handleResend}
+                >
+                  Resend Code
+                </Button>
+              )}
+            </div>
+
+            {/* Verify Button */}
+            <Button
+              className="w-full h-12 bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg"
+              onClick={handleVerify}
+              disabled={isVerifying || otp.join('').length !== 6}
+            >
+              {isVerifying ? 'Verifying...' : 'Verify Email'}
+            </Button>
+
+            {/* Change Email Link */}
+            <div className="text-center">
+              <Button
+                variant="link"
+                className="text-sm text-muted-foreground"
+                onClick={() => navigate(ROUTES.SIGNUP)}
+              >
+                Change email address
+              </Button>
+            </div>
+          </div>
+        </Card>
+      </div>
+    )
+  }
+
+  // Mobile Drawer Layout
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <LoginBanner />

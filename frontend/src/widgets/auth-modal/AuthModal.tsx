@@ -1,43 +1,42 @@
 import { useState } from 'react'
 import { ChevronRight, Globe } from 'lucide-react'
 import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-} from '@/shared/ui/sheet'
+  Dialog,
+  DialogContent,
+  DialogHeader,
+} from '@/shared/ui/dialog'
 import { Button } from '@/shared/ui/button'
 import { cn } from '@/shared/lib/utils/cn'
 import LogoSvg from '@/assets/images/logo.svg?react'
 import { ROUTES } from '@/shared/constants/routes'
 import { useNavigate } from 'react-router-dom'
 
-interface AuthDrawerProps {
+interface AuthModalProps {
   open: boolean
   onOpenChange: (open: boolean) => void
 }
 
-export function AuthDrawer({ open, onOpenChange }: AuthDrawerProps) {
+export function AuthModal({ open, onOpenChange }: AuthModalProps) {
   const navigate = useNavigate()
   const [selectedRole, setSelectedRole] = useState<'landlord' | 'tenant' | null>(null)
   const [language, setLanguage] = useState('en')
 
-
   return (
-    <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent side="bottom" className="w-full h-[50vh] rounded-t-[20px] sm:rounded-t-[24px] overflow-y-auto">
-        <SheetHeader>
-          <div className="flex justify-center -mt-6">
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <div className="flex justify-center">
             <LogoSvg className="h-40 w-40 md:h-44 md:w-44 text-primary" />
           </div>
-        </SheetHeader>
+        </DialogHeader>
 
-        <div className="space-y-6 -mt-6">
+        <div className="space-y-6 mt-4">
           {/* Role Selection */}
           <div className="space-y-3">
             <Button
               variant="outline"
               className={cn(
-                'w-full h-16 justify-center bg-surface hover:bg-primary/80 rounded-xl text-lg',
+                'w-full h-14 justify-center bg-surface hover:bg-primary/80 rounded-xl text-base',
                 selectedRole === 'landlord' && 'border-primary border-2'
               )}
               onClick={() => setSelectedRole('landlord')}
@@ -49,7 +48,7 @@ export function AuthDrawer({ open, onOpenChange }: AuthDrawerProps) {
             <Button
               variant="outline"
               className={cn(
-                'w-full h-16 justify-center bg-surface hover:bg-primary/80 rounded-xl text-lg',
+                'w-full h-14 justify-center bg-surface hover:bg-primary/80 rounded-xl text-base',
                 selectedRole === 'tenant' && 'border-primary border-2'
               )}
               onClick={() => setSelectedRole('tenant')}
@@ -63,7 +62,7 @@ export function AuthDrawer({ open, onOpenChange }: AuthDrawerProps) {
           {/* Language Selection */}
           <Button
             variant="outline"
-            className="w-full h-16 justify-between bg-surface hover:bg-primary/80 rounded-xl text-lg"
+            className="w-full h-14 justify-between bg-surface hover:bg-primary/80 rounded-xl text-base"
             onClick={() => {
               // Handle language selection
               const languages = ['en', 'yo', 'ha', 'ig']
@@ -82,7 +81,7 @@ export function AuthDrawer({ open, onOpenChange }: AuthDrawerProps) {
           {/* Login and Signup Buttons */}
           <div className="space-y-3">
             <Button
-              className="w-full h-16 bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl text-lg"
+              className="w-full h-14 bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl text-base font-semibold"
               onClick={() => {
                 if (selectedRole) {
                   navigate(`${ROUTES.LOGIN}?role=${selectedRole}`, {
@@ -97,7 +96,7 @@ export function AuthDrawer({ open, onOpenChange }: AuthDrawerProps) {
             </Button>
             <Button
               variant="outline"
-              className="w-full h-16 bg-surface hover:bg-primary/80 rounded-xl text-lg border-primary"
+              className="w-full h-14 bg-surface hover:bg-primary/80 rounded-xl text-base border-primary font-semibold"
               onClick={() => {
                 if (selectedRole) {
                   navigate(`${ROUTES.SIGNUP}?role=${selectedRole}`, {
@@ -112,8 +111,8 @@ export function AuthDrawer({ open, onOpenChange }: AuthDrawerProps) {
             </Button>
           </div>
         </div>
-      </SheetContent>
-    </Sheet>
+      </DialogContent>
+    </Dialog>
   )
 }
 

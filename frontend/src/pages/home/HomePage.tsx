@@ -4,7 +4,7 @@ import { Header } from '@/widgets/header'
 import { Footer } from '@/widgets/footer'
 import { SearchBar } from '@/widgets/search-bar'
 import { PropertyCard } from '@/widgets/property-card'
-import { AuthDrawer } from '@/widgets/auth-drawer'
+import { AuthDialog } from '@/widgets/auth-dialog'
 import { Sidebar } from '@/widgets/sidebar'
 import { sampleProperties } from './data/sample-properties'
 import { ROUTES } from '@/shared/constants/routes'
@@ -19,7 +19,7 @@ type LayoutType = 'grid' | 'row'
 export function HomePage() {
   const navigate = useNavigate()
   const { isAuthenticated } = useAuthStore()
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+  const [isAuthOpen, setIsAuthOpen] = useState(false)
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
   const [layout, setLayout] = useState<LayoutType>('grid')
 
@@ -54,8 +54,8 @@ export function HomePage() {
       // Navigate to profile if logged in
       navigate(ROUTES.PROFILE)
     } else {
-      // Open drawer if not logged in
-      setIsDrawerOpen(true)
+      // Open auth dialog (automatically shows modal on desktop, drawer on mobile)
+      setIsAuthOpen(true)
     }
   }
 
@@ -398,7 +398,7 @@ export function HomePage() {
 
       <Footer />
       <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
-      <AuthDrawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen} />
+      <AuthDialog open={isAuthOpen} onOpenChange={setIsAuthOpen} />
     </div>
   )
 }

@@ -1,4 +1,4 @@
-import { X, Home, Building2, MessageCircle, Bell, Calendar, User, LogOut, Settings, Heart, FileText, Briefcase, Wrench, Zap, Droplet, Sparkles, Paintbrush, Clock } from 'lucide-react'
+import { X, Home, Building2, MessageCircle, Bell, Calendar, User, LogOut, Settings, Heart, FileText, Briefcase, Wrench, Zap, Droplet, Sparkles, Paintbrush, Clock, Receipt, CreditCard } from 'lucide-react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useAuthStore } from '@/shared/store/auth.store'
 import { ROUTES } from '@/shared/constants/routes'
@@ -45,6 +45,8 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
   ]
 
   const tenantMenuItems: MenuItem[] = [
+    { icon: Receipt, label: 'Agreements', path: ROUTES.AGREEMENTS, requiresAuth: true, roles: ['tenant'] },
+    { icon: CreditCard, label: 'Payments', path: ROUTES.PAYMENTS, requiresAuth: true, roles: ['tenant'] },
     { icon: FileText, label: 'My Bookings', path: ROUTES.MY_BOOKINGS, requiresAuth: true, roles: ['tenant'] },
     { icon: Briefcase, label: 'My Services', path: ROUTES.SERVICE_BOOKINGS, requiresAuth: true, roles: ['tenant'] },
   ]

@@ -17,6 +17,8 @@ import { MessagingPage } from '@/pages/messaging'
 import { NotificationsPage } from '@/pages/notifications'
 import { EventsPage } from '@/pages/events'
 import { FavouritesPage } from '@/pages/favourites'
+import { AgreementsPage } from '@/pages/tenant/agreements'
+import { PaymentsPage } from '@/pages/tenant/payments'
 import { ROUTES } from '@/shared/constants/routes'
 import { useThemeStore } from '@/shared/store/theme.store'
 
@@ -109,6 +111,8 @@ function App() {
             <Route path={ROUTES.NOTIFICATIONS} element={<NotificationsPage />} />
             <Route path={ROUTES.EVENTS} element={<EventsPage />} />
             <Route path={ROUTES.FAVOURITES} element={<FavouritesPage />} />
+            <Route path={ROUTES.AGREEMENTS} element={<AgreementsPage />} />
+            <Route path={ROUTES.PAYMENTS} element={<PaymentsPage />} />
             <Route path="*" element={<Navigate to={ROUTES.HOME} replace />} />
           </Routes>
         )}

@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import {
   ArrowLeft,
@@ -12,6 +12,7 @@ import {
   ChevronLeft,
   ChevronRight
 } from 'lucide-react'
+import { AnimatePresence, motion } from 'framer-motion'
 import HouseIcon from '@/assets/icons/house.svg?react'
 import { Button } from '@/shared/ui/button'
 import { Badge } from '@/shared/ui/badge'
@@ -43,6 +44,14 @@ const formatHashCurrency = (value: number) =>
 const totalMoveIn = (items: MoveInItem[]) =>
   items.reduce((sum, item) => sum + item.amount, 0)
 
+const HEART_BURST_PARTICLES = [
+  { x: -14, y: -12, scale: 0.95, rotate: -18, delay: 0 },
+  { x: 16, y: -14, scale: 0.9, rotate: 16, delay: 0.03 },
+  { x: -8, y: -24, scale: 0.8, rotate: -6, delay: 0.06 },
+  { x: 10, y: -28, scale: 0.75, rotate: 8, delay: 0.09 },
+  { x: 0, y: -20, scale: 0.65, rotate: 0, delay: 0.12 }
+]
+
 export function PropertyDetailsPage() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
@@ -64,10 +73,102 @@ export function PropertyDetailsPage() {
   }, [property])
 
   const [activeImageIndex, setActiveImageIndex] = useState(0)
+  const [burstId, setBurstId] = useState<number | null>(null)
+  const burstTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  useEffect(() => {
+    setActiveImageIndex(0)
+  }, [galleryImages.length])
+
+  useEffect(() => {
+    return () => {
+      if (burstTimeoutRef.current) {
+        clearTimeout(burstTimeoutRef.current)
+      }
+    }
+  }, [])
 
   const isFavourite = Boolean(id && favouritePropertyIds.includes(id))
   const heroImage = galleryImages[activeImageIndex]
   const hasMultipleImages = galleryImages.length > 1
+
+  const triggerBurst = () => {
+    if (burstTimeoutRef.current) {
+      clearTimeout(burstTimeoutRef.current)
+    }
+    const newId = Date.now()
+    setBurstId(newId)
+    burstTimeoutRef.current = setTimeout(() => {
+      setBurstId((current) => (current === newId ? null : current))
+    }, 650)
+  }
+
+  const handleFavouriteToggle = () => {
+    if (!property) return
+    const wasFavourite = isFavourite
+    toggleFavourite(property.id)
+    if (!wasFavourite) {
+      triggerBurst()
+    }
+  }
+
+  const renderFavouriteIcon = () => (
+    <div className="relative flex items-center justify-center">
+      <motion.span
+        key={isFavourite ? 'favourite' : 'unfavourite'}
+        initial={{ scale: 0.9, rotate: 0 }}
+        animate={
+          isFavourite
+            ? { scale: [1, 1.25, 1], rotate: [0, -12, 0] }
+            : { scale: 1, rotate: 0 }
+        }
+        transition={{ duration: 0.45, ease: 'easeOut' }}
+        className={cn('flex items-center justify-center', isFavourite ? 'text-primary' : 'text-foreground')}
+      >
+        <Heart className="h-5 w-5" fill={isFavourite ? 'currentColor' : 'none'} />
+      </motion.span>
+      <AnimatePresence>
+        {burstId && isFavourite && (
+          <motion.span
+            key={burstId}
+            className="absolute inset-0 pointer-events-none"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <motion.span
+              className="absolute left-1/2 top-1/2 h-10 w-10 -translate-x-1/2 -translate-y-1/2 rounded-full border border-primary/30"
+              initial={{ opacity: 0.5, scale: 0.3 }}
+              animate={{ opacity: 0, scale: 1.8 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.6, ease: 'easeOut' }}
+            />
+            {HEART_BURST_PARTICLES.map((particle, index) => (
+              <motion.span
+                key={index}
+                className={cn(
+                  'absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2',
+                  index % 2 === 0 ? 'text-primary' : 'text-primary/70'
+                )}
+                initial={{ opacity: 0, scale: 0, x: 0, y: 0, rotate: 0 }}
+                animate={{
+                  opacity: [0.9, 0],
+                  scale: [0, particle.scale],
+                  x: particle.x,
+                  y: particle.y,
+                  rotate: particle.rotate,
+                }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.55, delay: particle.delay, ease: 'easeOut' }}
+              >
+                <Heart className="h-3 w-3" fill="currentColor" />
+              </motion.span>
+            ))}
+          </motion.span>
+        )}
+      </AnimatePresence>
+    </div>
+  )
 
   const handlePrevImage = () => {
     setActiveImageIndex((prev) => (prev === 0 ? galleryImages.length - 1 : prev - 1))
@@ -211,7 +312,7 @@ export function PropertyDetailsPage() {
                 <ChevronRight className="h-5 w-5" />
               </button>
 
-              <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2 px-3 py-2 rounded-full bg-background/80 backdrop-blur-sm shadow-lg">
+              <div className="absolute bottom-3 left-1/2 -translate-x-1/2 hidden sm:flex gap-2 px-3 py-2 rounded-full bg-background/80 backdrop-blur-sm shadow-lg">
                 {galleryImages.map((image, index) => (
                   <button
                     key={`${image}-${index}`}
@@ -251,13 +352,13 @@ export function PropertyDetailsPage() {
                 variant="ghost"
                 size="icon"
                 className={cn(
-                  'h-10 w-10 rounded-full bg-background shadow-lg transition-colors',
+                  'relative h-10 w-10 rounded-full bg-background shadow-lg transition-colors overflow-visible',
                   isFavourite ? 'text-primary hover:text-primary' : 'text-foreground hover:text-primary/80'
                 )}
-                onClick={() => toggleFavourite(property.id)}
+                onClick={handleFavouriteToggle}
                 aria-label={isFavourite ? 'Remove from favourites' : 'Save to favourites'}
               >
-                <Heart className="h-5 w-5" fill={isFavourite ? 'currentColor' : 'none'} />
+                {renderFavouriteIcon()}
               </Button>
             </div>
           </div>
@@ -343,13 +444,13 @@ export function PropertyDetailsPage() {
                     variant="ghost"
                     size="icon"
                     className={cn(
-                      'h-11 w-11 rounded-full bg-icon-bg transition-colors',
+                      'relative h-11 w-11 rounded-full bg-icon-bg transition-colors overflow-visible',
                       isFavourite ? 'text-primary hover:text-primary' : 'text-foreground hover:text-primary'
                     )}
-                    onClick={() => toggleFavourite(property.id)}
+                    onClick={handleFavouriteToggle}
                     aria-label={isFavourite ? 'Remove from favourites' : 'Save to favourites'}
                   >
-                    <Heart className="h-5 w-5" fill={isFavourite ? 'currentColor' : 'none'} />
+                    {renderFavouriteIcon()}
                   </Button>
                 </div>
               </div>

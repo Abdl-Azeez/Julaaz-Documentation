@@ -1,0 +1,2 @@
+export { AgreementsPage } from './AgreementsPage'
+

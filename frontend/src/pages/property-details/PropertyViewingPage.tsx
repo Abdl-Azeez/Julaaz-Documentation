@@ -1,6 +1,6 @@
-import { FormEvent, useState } from 'react'
+import { FormEvent, useMemo, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { CalendarDays, Clock, Send, ArrowLeft } from 'lucide-react'
+import { Send, ArrowLeft, ChevronLeft, ChevronRight, Plus, X } from 'lucide-react'
 import { Header } from '@/widgets/header'
 import { Footer } from '@/widgets/footer'
 import { Sidebar } from '@/widgets/sidebar'
@@ -8,28 +8,85 @@ import { AuthDrawer } from '@/widgets/auth-drawer'
 import { useAuthStore } from '@/shared/store/auth.store'
 import { Button } from '@/shared/ui/button'
 import { Card } from '@/shared/ui/card'
-import { Input } from '@/shared/ui/input'
 import { samplePropertyDetails } from './data/sample-property-details'
-import { format } from 'date-fns'
+import {
+  addDays,
+  addMonths,
+  differenceInHours,
+  eachDayOfInterval,
+  endOfMonth,
+  endOfWeek,
+  format,
+  isAfter,
+  isSameDay,
+  isSameMonth,
+  startOfDay,
+  startOfMonth,
+  startOfWeek
+} from 'date-fns'
 import { ROUTES } from '@/shared/constants/routes'
 import { Badge } from '@/shared/ui/badge'
 import { cn } from '@/shared/lib/utils/cn'
 import toast from 'react-hot-toast'
+import { useMessagingStore } from '@/shared/store/messaging.store'
 
-const viewingSlots = ['09:00 AM', '11:00 AM', '01:00 PM', '03:00 PM', '05:00 PM']
+const TIME_OPTIONS = [
+  '09:00 AM',
+  '10:00 AM',
+  '11:00 AM',
+  '12:00 PM',
+  '01:00 PM',
+  '02:00 PM',
+  '03:00 PM',
+  '04:00 PM',
+  '05:00 PM',
+  '06:00 PM'
+]
+
+const MAX_PREFERRED_SLOTS = 3
+const MIN_LEAD_HOURS = 24
+
+interface PreferredSlot {
+  id: string
+  dateTime: Date
+  timeLabel: string
+  displayLabel: string
+}
+
+const generateId = (prefix: string) => {
+  if (typeof crypto !== 'undefined' && 'randomUUID' in crypto) {
+    return `${prefix}_${crypto.randomUUID()}`
+  }
+  return `${prefix}_${Date.now()}_${Math.random().toString(16).slice(2)}`
+}
 
 export function PropertyViewingPage() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
-  const { isAuthenticated } = useAuthStore()
+  const { user, isAuthenticated } = useAuthStore()
+  const createViewingConversation = useMessagingStore((state) => state.createViewingConversation)
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
-  const [selectedDate, setSelectedDate] = useState<string>(() => format(new Date(), 'yyyy-MM-dd'))
-  const [selectedSlot, setSelectedSlot] = useState<string>(viewingSlots[0])
+  const initialDate = startOfDay(addDays(new Date(), 1))
+  const [currentMonth, setCurrentMonth] = useState<Date>(startOfMonth(initialDate))
+  const [selectedDate, setSelectedDate] = useState<Date>(initialDate)
+  const [selectedTime, setSelectedTime] = useState<string>(TIME_OPTIONS[0])
+  const [preferredSlots, setPreferredSlots] = useState<PreferredSlot[]>([])
+  const [slotError, setSlotError] = useState<string | null>(null)
   const [note, setNote] = useState<string>('')
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const property = id ? samplePropertyDetails[id] : undefined
+
+  const earliestSelectableDay = startOfDay(addDays(new Date(), 1))
+
+  const calendarDays = useMemo(() => {
+    const start = startOfWeek(startOfMonth(currentMonth), { weekStartsOn: 0 })
+    const end = endOfWeek(endOfMonth(currentMonth), { weekStartsOn: 0 })
+    return eachDayOfInterval({ start, end })
+  }, [currentMonth])
+
+  const isDisabledDay = (day: Date) => isAfter(earliestSelectableDay, day)
 
   const handleMenuClick = () => setIsSidebarOpen(true)
 
@@ -61,6 +118,74 @@ export function PropertyViewingPage() {
     )
   }
 
+  const handleMonthNavigation = (direction: 'prev' | 'next') => {
+    setCurrentMonth((prev) => addMonths(prev, direction === 'prev' ? -1 : 1))
+  }
+
+  const handleDateSelect = (day: Date) => {
+    if (isDisabledDay(day)) return
+    setSelectedDate(day)
+    setSlotError(null)
+  }
+
+  const createSlotDateTime = (day: Date, timeLabel: string) => {
+    const [time, period] = timeLabel.split(' ')
+    const [hourStr, minuteStr] = time.split(':')
+    let hour = Number(hourStr)
+    const minute = Number(minuteStr)
+    if (period === 'PM' && hour !== 12) {
+      hour += 12
+    }
+    if (period === 'AM' && hour === 12) {
+      hour = 0
+    }
+    return new Date(day.getFullYear(), day.getMonth(), day.getDate(), hour, minute, 0, 0)
+  }
+
+  const handleTimeSelect = (time: string) => {
+    setSelectedTime(time)
+    setSlotError(null)
+  }
+
+  const handleRemoveSlot = (slotId: string) => {
+    setPreferredSlots((prev) => prev.filter((slot) => slot.id !== slotId))
+  }
+
+  const handleAddPreferredSlot = () => {
+    const slotDateTime = createSlotDateTime(selectedDate, selectedTime)
+
+    if (preferredSlots.length >= MAX_PREFERRED_SLOTS) {
+      setSlotError(`You can select up to ${MAX_PREFERRED_SLOTS} viewing slots.`)
+      return
+    }
+
+    if (differenceInHours(slotDateTime, new Date()) < MIN_LEAD_HOURS) {
+      setSlotError('Please choose a slot that is at least 24 hours from now.')
+      return
+    }
+
+    if (slotDateTime.getHours() < 9 || slotDateTime.getHours() > 18) {
+      setSlotError('Viewing times are available between 9:00 AM and 6:00 PM.')
+      return
+    }
+
+    const exists = preferredSlots.some((slot) => slot.dateTime.getTime() === slotDateTime.getTime())
+    if (exists) {
+      setSlotError('You already added this slot. Please choose a different time.')
+      return
+    }
+
+    const newSlot: PreferredSlot = {
+      id: generateId('slot'),
+      dateTime: slotDateTime,
+      timeLabel: selectedTime,
+      displayLabel: format(slotDateTime, 'EEE, MMM d • h:mm a')
+    }
+
+    setPreferredSlots((prev) => [...prev, newSlot].sort((a, b) => a.dateTime.getTime() - b.dateTime.getTime()))
+    setSlotError(null)
+  }
+
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
 
@@ -70,12 +195,35 @@ export function PropertyViewingPage() {
       return
     }
 
+    if (preferredSlots.length === 0) {
+      setSlotError('Please add at least one preferred viewing slot before continuing.')
+      toast.error('Add at least one preferred slot to continue')
+      return
+    }
+
     setIsSubmitting(true)
-    setTimeout(() => {
+    try {
+      const { conversationId } = createViewingConversation({
+        propertyId: property.id,
+        propertyName: property.name,
+        propertyImage: property.image,
+        ownerName: property.owner.name,
+        ownerPhone: property.owner.phone,
+        slots: preferredSlots.map((slot) => ({ date: slot.dateTime, label: slot.displayLabel })),
+        tenant: {
+          id: user?.id ?? 'guest',
+          name: user?.name,
+          phone: user?.phone,
+          email: user?.email,
+        },
+        note: note.trim() ? note.trim() : undefined,
+      })
+
+      toast.success('Viewing request sent! We created a group chat to coordinate details.')
+      navigate(ROUTES.MESSAGING_CHAT(conversationId))
+    } finally {
       setIsSubmitting(false)
-      toast.success('Viewing request sent! Our team will contact you shortly.')
-      navigate(ROUTES.PROPERTIES)
-    }, 1200)
+    }
   }
 
   return (
@@ -130,48 +278,148 @@ export function PropertyViewingPage() {
           </Card>
 
           <form onSubmit={handleSubmit} className="space-y-6">
-            <Card className="p-5 rounded-2xl border border-border bg-surface space-y-5">
-              <div>
-                <h2 className="text-lg font-semibold text-foreground mb-1">Select preferred date</h2>
+            <Card className="p-5 rounded-2xl border border-border bg-surface space-y-6">
+              <div className="flex flex-col gap-1">
+                <h2 className="text-lg font-semibold text-foreground">Select preferred viewing slots</h2>
                 <p className="text-sm text-muted-foreground">
-                  Choose a date and time that works best for you. We&apos;ll confirm availability shortly.
+                  Choose up to three viewing times. We recommend picking alternatives so the landlord can confirm the most convenient option.
                 </p>
               </div>
 
-              <div className="space-y-4">
-                <label className="block text-sm font-medium text-foreground">Date</label>
-                <div className="flex items-center gap-3 rounded-xl border border-border bg-background px-3 py-2.5">
-                  <CalendarDays className="h-5 w-5 text-primary" />
-                  <Input
-                    type="date"
-                    value={selectedDate}
-                    onChange={(event) => setSelectedDate(event.target.value)}
-                    className="border-0 bg-transparent px-0 text-sm text-foreground"
-                    required
-                  />
+              <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_260px]">
+                <div className="rounded-3xl border border-border/60 bg-background/80 p-4 shadow-sm">
+                  <div className="flex items-center justify-between mb-4">
+                    <button
+                      type="button"
+                      className="h-9 w-9 rounded-full border border-border text-foreground hover:border-primary/60 hover:text-primary transition-colors"
+                      onClick={() => handleMonthNavigation('prev')}
+                    >
+                      <ChevronLeft className="h-4 w-4 mx-auto" />
+                    </button>
+                    <div className="text-sm font-semibold text-foreground">
+                      {format(currentMonth, 'MMMM yyyy')}
+                    </div>
+                    <button
+                      type="button"
+                      className="h-9 w-9 rounded-full border border-border text-foreground hover:border-primary/60 hover:text-primary transition-colors"
+                      onClick={() => handleMonthNavigation('next')}
+                    >
+                      <ChevronRight className="h-4 w-4 mx-auto" />
+                    </button>
+                  </div>
+
+                  <div className="grid grid-cols-7 gap-1 text-center text-xs font-medium text-muted-foreground uppercase">
+                    {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
+                      <span key={day}>{day}</span>
+                    ))}
+                  </div>
+
+                  <div className="mt-2 grid grid-cols-7 gap-1.5">
+                    {calendarDays.map((day) => {
+                      const outsideMonth = !isSameMonth(day, currentMonth)
+                      const disabled = isDisabledDay(day)
+                      const isSelected = isSameDay(day, selectedDate)
+                      return (
+                        <button
+                          type="button"
+                          key={day.toISOString()}
+                          onClick={() => handleDateSelect(day)}
+                          disabled={disabled}
+                          className={cn(
+                            'flex h-10 w-10 items-center justify-center rounded-full text-sm font-medium transition-colors',
+                            outsideMonth && 'text-muted-foreground/40',
+                            disabled && 'opacity-40 cursor-not-allowed',
+                            isSelected ? 'bg-primary text-primary-foreground shadow-sm' : 'hover:bg-primary/10 hover:text-primary'
+                          )}
+                        >
+                          {format(day, 'd')}
+                        </button>
+                      )
+                    })}
+                  </div>
                 </div>
 
-                <label className="block text-sm font-medium text-foreground">Time slot</label>
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                  {viewingSlots.map((slot) => {
-                    const isSelected = selectedSlot === slot
-                    return (
-                      <button
-                        type="button"
-                        key={slot}
-                        onClick={() => setSelectedSlot(slot)}
-                        className={cn(
-                          'flex items-center justify-center gap-2 rounded-xl border px-3 py-2 text-sm transition-all',
-                          isSelected
-                            ? 'border-primary bg-primary/10 text-primary shadow-sm'
-                            : 'border-border bg-background text-foreground hover:border-primary/40'
-                        )}
-                      >
-                        <Clock className="h-4 w-4" />
-                        {slot}
-                      </button>
-                    )
-                  })}
+                <div className="space-y-4">
+                  <div className="rounded-3xl border border-border/60 bg-background/80 p-4 shadow-sm flex flex-col gap-4">
+                    <div>
+                      <p className="text-sm font-semibold text-foreground">Selected date</p>
+                      <p className="text-sm text-muted-foreground">{format(selectedDate, 'EEEE, MMMM d')}</p>
+                    </div>
+                    <div>
+                      <div className="flex items-center justify-between mb-3">
+                        <span className="text-sm font-medium text-foreground">Select time</span>
+                        <span className="text-xs text-muted-foreground">9:00 AM – 6:00 PM</span>
+                      </div>
+                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                        {TIME_OPTIONS.map((slot) => {
+                          const active = selectedTime === slot
+                          return (
+                            <button
+                              type="button"
+                              key={slot}
+                              onClick={() => handleTimeSelect(slot)}
+                              className={cn(
+                                'rounded-xl border px-3 py-2 text-sm font-medium transition-colors',
+                                active
+                                  ? 'border-primary bg-primary/10 text-primary shadow-sm'
+                                  : 'border-border bg-background text-foreground hover:border-primary/40'
+                              )}
+                            >
+                              {slot}
+                            </button>
+                          )
+                        })}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                    <p className="text-xs text-muted-foreground">
+                      Earliest viewing is 24 hours from now. Add up to three alternatives so everyone can coordinate quickly.
+                    </p>
+                    <Button
+                      type="button"
+                      onClick={handleAddPreferredSlot}
+                      className="rounded-xl px-4"
+                      disabled={preferredSlots.length >= MAX_PREFERRED_SLOTS}
+                    >
+                      <span className="inline-flex items-center gap-2 text-sm font-medium">
+                        <Plus className="h-4 w-4" />
+                        Add preferred slot
+                      </span>
+                    </Button>
+                  </div>
+
+                  {slotError && <p className="text-xs text-destructive">{slotError}</p>}
+
+                  {preferredSlots.length > 0 && (
+                    <div className="space-y-3">
+                      <p className="text-sm font-semibold text-foreground">Preferred slots</p>
+                      <div className="space-y-2">
+                        {preferredSlots.map((slot) => (
+                          <div
+                            key={slot.id}
+                            className="flex items-center justify-between rounded-2xl border border-border bg-background px-4 py-3 text-sm"
+                          >
+                            <div>
+                              <p className="font-medium text-foreground">{slot.displayLabel}</p>
+                              <p className="text-xs text-muted-foreground">Shared with the owner and Julaaz support.</p>
+                            </div>
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="icon"
+                              className="h-8 w-8 text-muted-foreground hover:text-destructive"
+                              onClick={() => handleRemoveSlot(slot.id)}
+                              aria-label="Remove slot"
+                            >
+                              <X className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </Card>

@@ -60,6 +60,10 @@ export const ROUTES = {
   EVENTS: '/events',
   FAVOURITES: '/favourites',
   
+  // Tenant routes
+  AGREEMENTS: '/tenant/agreements',
+  PAYMENTS: '/tenant/payments',
+  
   // Profile routes
   PROFILE: '/profile',
   SETTINGS: '/profile/settings',

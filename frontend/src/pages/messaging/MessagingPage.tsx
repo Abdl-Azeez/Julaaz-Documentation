@@ -11,21 +11,35 @@ import { Header } from '@/widgets/header'
 import { Sidebar } from '@/widgets/sidebar'
 import { AuthDrawer } from '@/widgets/auth-drawer'
 import { LogoLoader } from '@/widgets/logo-loader'
-import { sampleConversations, sampleMessages } from './data/sample-conversations'
 import { useAuthStore } from '@/shared/store/auth.store'
 import { ROUTES } from '@/shared/constants/routes'
 import { formatDistanceToNow } from 'date-fns'
+import { useMessagingStore } from '@/shared/store/messaging.store'
+import type { Message } from '@/shared/types/activity.types'
 
 export function MessagingPage() {
   const navigate = useNavigate()
   const { conversationId } = useParams()
   const { user, isAuthenticated } = useAuthStore()
+  const conversations = useMessagingStore((state) => state.conversations)
+  const messagesByConversation = useMessagingStore((state) => state.messages)
+  const appendMessage = useMessagingStore((state) => state.addMessage)
   const [searchQuery, setSearchQuery] = useState('')
   const [messageInput, setMessageInput] = useState('')
   const [isDesktop, setIsDesktop] = useState(false)
   const [isSending, setIsSending] = useState(false)
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
+
+  const createMessageId = React.useCallback(
+    (prefix: string) => {
+      if (typeof crypto !== 'undefined' && 'randomUUID' in crypto) {
+        return `${prefix}_${crypto.randomUUID()}`
+      }
+      return `${prefix}_${Date.now()}_${Math.random().toString(16).slice(2)}`
+    },
+    []
+  )
   
   // Check if desktop on mount and resize
   React.useEffect(() => {
@@ -38,15 +52,14 @@ export function MessagingPage() {
   }, [])
   
   const selectedConversation = conversationId 
-    ? sampleConversations.find(c => c.id === conversationId)
+    ? conversations.find(c => c.id === conversationId)
     : null
   
-  const messages = conversationId ? (sampleMessages[conversationId] || []) : []
+  const conversationMessages = conversationId ? (messagesByConversation[conversationId] || []) : []
   
-  const filteredConversations = sampleConversations.filter(conv => {
-    const participant = conv.participantDetails?.[0]
-    if (!participant) return false
-    return participant.name.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredConversations = conversations.filter(conv => {
+    const label = conv.participantDetails?.[0]?.name ?? 'Conversation'
+    return label.toLowerCase().includes(searchQuery.toLowerCase())
   })
   
   // Auto-select first conversation on desktop if none selected
@@ -57,17 +70,26 @@ export function MessagingPage() {
   }, [isDesktop, conversationId, filteredConversations.length, navigate])
 
   const handleSendMessage = async () => {
-    if (!messageInput.trim() || !conversationId || isSending) return
-    
+    const trimmed = messageInput.trim()
+    if (!trimmed || !conversationId || isSending) return
+
     setIsSending(true)
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 800))
-      // In real app, this would send message via API/WebSocket
-      console.log('Sending message:', messageInput)
+      const senderId = user?.id ?? 'guest'
+      const fallbackRecipient = selectedConversation?.participants.find((participant) => participant !== senderId) ?? 'group'
+      const message: Message = {
+        id: createMessageId('msg'),
+        conversationId,
+        senderId,
+        recipientId: fallbackRecipient,
+        type: 'text',
+        content: trimmed,
+        status: 'sent',
+        createdAt: new Date()
+      }
+
+      appendMessage(conversationId, message)
       setMessageInput('')
-    } catch (error) {
-      console.error('Failed to send message:', error)
     } finally {
       setIsSending(false)
     }
@@ -372,7 +394,7 @@ export function MessagingPage() {
         <main className="flex-1 overflow-y-auto bg-background">
           <div className="px-4 lg:px-8 xl:px-12 py-6 lg:py-8 space-y-4 max-w-4xl mx-auto">
           <AnimatePresence>
-            {messages.map((message, index) => {
+            {conversationMessages.map((message, index) => {
               const isOwnMessage = message.senderId === user?.id
               
               return (

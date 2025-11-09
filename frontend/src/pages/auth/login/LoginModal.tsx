@@ -155,6 +155,9 @@ export function LoginModal() {
               <Label htmlFor="modal-login-input" className="text-sm font-semibold text-foreground">
                 {getFieldLabel()}
               </Label>
+              <p className="text-xs text-muted-foreground">
+                You can sign in with your registered email address or mobile number.
+              </p>
               {loginMethod === 'phone' ? (
                 <div className="flex gap-2">
                   <div className="flex items-center gap-2 px-3 border border-input rounded-lg bg-background">

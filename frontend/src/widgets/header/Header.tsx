@@ -102,10 +102,10 @@ export function Header({ onMenuClick, onProfileClick, className }: HeaderProps) 
   const buildNavItems = (role?: RoleType | null, includeLandlordNav = false): NavigationItem[] => {
     if (role === 'landlord' || includeLandlordNav) {
       return [
-        { icon: Home, label: 'Home', path: ROUTES.HOME },
-        { icon: Building2, label: 'My Properties', path: ROUTES.LANDLORD_PROPERTIES },
-        { icon: FileText, label: 'Applications', path: ROUTES.LANDLORD_APPLICATIONS },
-        { icon: CreditCard, label: 'Earnings', path: ROUTES.LANDLORD_EARNINGS },
+    { icon: Home, label: 'Home', path: ROUTES.HOME },
+      { icon: Building2, label: 'My Properties', path: ROUTES.LANDLORD_PROPERTIES },
+      { icon: FileText, label: 'Applications', path: ROUTES.LANDLORD_APPLICATIONS },
+      { icon: CreditCard, label: 'Earnings', path: ROUTES.LANDLORD_EARNINGS },
       ]
     }
 
@@ -128,14 +128,14 @@ export function Header({ onMenuClick, onProfileClick, className }: HeaderProps) 
     return [
       { icon: Home, label: 'Home', path: ROUTES.HOME },
       { icon: Building2, label: 'Properties', path: ROUTES.PROPERTIES },
-      { icon: Wrench, label: 'Services', path: ROUTES.SERVICES },
-    ]
+    { icon: Wrench, label: 'Services', path: ROUTES.SERVICES },
+  ]
   }
 
   const buildActivityItems = (role?: RoleType | null): ActivityItem[] => {
     const base: ActivityItem[] = [
-      { icon: MessageCircle, label: 'Messages', path: ROUTES.MESSAGING, badge: 2 },
-      { icon: Bell, label: 'Notifications', path: ROUTES.NOTIFICATIONS, badge: 5 },
+    { icon: MessageCircle, label: 'Messages', path: ROUTES.MESSAGING, badge: 2 },
+    { icon: Bell, label: 'Notifications', path: ROUTES.NOTIFICATIONS, badge: 5 },
     ]
 
     if (role === 'landlord') {
@@ -157,11 +157,11 @@ export function Header({ onMenuClick, onProfileClick, className }: HeaderProps) 
     if (role === 'tenant') {
       return [
         ...base,
-        { icon: Calendar, label: 'Calendar', path: ROUTES.EVENTS },
-        { icon: Heart, label: 'Favourites', path: ROUTES.FAVOURITES },
-        { icon: FileText, label: 'My Bookings', path: ROUTES.MY_BOOKINGS },
-        { icon: Briefcase, label: 'My Services', path: ROUTES.MY_SERVICES },
-      ]
+    { icon: Calendar, label: 'Calendar', path: ROUTES.EVENTS },
+    { icon: Heart, label: 'Favourites', path: ROUTES.FAVOURITES },
+    { icon: FileText, label: 'My Bookings', path: ROUTES.MY_BOOKINGS },
+    { icon: Briefcase, label: 'My Services', path: ROUTES.MY_SERVICES },
+  ]
     }
 
     return base
@@ -423,51 +423,51 @@ export function Header({ onMenuClick, onProfileClick, className }: HeaderProps) 
                     })()
                   ) : (
                     // Multiple items - show as dropdown
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button
-                          variant={
-                            activityItems
-                              .slice(2)
-                              .some((item) => isActive(item.path))
-                              ? 'default'
-                              : 'ghost'
-                          }
-                          size="icon"
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      variant={
+                        activityItems
+                          .slice(2)
+                          .some((item) => isActive(item.path))
+                          ? 'default'
+                          : 'ghost'
+                      }
+                      size="icon"
+                      className={cn(
+                        'hidden lg:flex bg-icon-bg hover:bg-primary/10 hover:text-primary transition-colors',
+                        activityItems.slice(2).some((item) => isActive(item.path)) &&
+                          'bg-primary/10 text-primary'
+                      )}
+                      aria-label="Workspace menu"
+                    >
+                      <LayoutGrid className="h-5 w-5" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-48">
+                    {activityItems.slice(2).map((item) => {
+                      const isActiveItem = isActive(item.path)
+                      return (
+                        <DropdownMenuItem
+                          key={item.path}
+                          onClick={() => navigate(item.path)}
                           className={cn(
-                            'hidden lg:flex bg-icon-bg hover:bg-primary/10 hover:text-primary transition-colors',
-                            activityItems.slice(2).some((item) => isActive(item.path)) &&
-                              'bg-primary/10 text-primary'
+                            'cursor-pointer',
+                            isActiveItem && 'bg-primary/10 text-primary'
                           )}
-                          aria-label="Workspace menu"
                         >
-                          <LayoutGrid className="h-5 w-5" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end" className="w-48">
-                        {activityItems.slice(2).map((item) => {
-                          const isActiveItem = isActive(item.path)
-                          return (
-                            <DropdownMenuItem
-                              key={item.path}
-                              onClick={() => navigate(item.path)}
-                              className={cn(
-                                'cursor-pointer',
-                                isActiveItem && 'bg-primary/10 text-primary'
-                              )}
-                            >
-                              <item.icon className="h-4 w-4 mr-2" />
-                              {item.label}
-                              {item.badge && (
-                                <Badge className="ml-auto h-5 w-5 flex items-center justify-center p-0 text-xs">
-                                  {item.badge}
-                                </Badge>
-                              )}
-                            </DropdownMenuItem>
-                          )
-                        })}
-                      </DropdownMenuContent>
-                    </DropdownMenu>
+                          <item.icon className="h-4 w-4 mr-2" />
+                          {item.label}
+                          {item.badge && (
+                            <Badge className="ml-auto h-5 w-5 flex items-center justify-center p-0 text-xs">
+                              {item.badge}
+                            </Badge>
+                          )}
+                        </DropdownMenuItem>
+                      )
+                    })}
+                  </DropdownMenuContent>
+                </DropdownMenu>
                   )}
                 </>
               )}

@@ -254,37 +254,37 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
 
           {/* Quick Services Chips */}
           {!isHandyman && (
-            <div className="sidebar__section">
-              <h3 className="sidebar__section-title">Quick Services</h3>
-              <div className="grid grid-cols-2 gap-2 px-2">
-                {quickServices.map((service) => (
-                  <button
-                    key={service.id}
-                    onClick={() => handleQuickServiceClick(service)}
-                    className="sidebar__quick-service"
-                  >
-                    <div className="flex items-center gap-2 mb-1">
-                      <service.icon className="h-4 w-4 text-primary" />
-                      <span className="text-xs font-semibold text-foreground">{service.name}</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-[10px] text-muted-foreground">
-                        From ₦{(service.priceFrom / 1000).toFixed(0)}K
+          <div className="sidebar__section">
+            <h3 className="sidebar__section-title">Quick Services</h3>
+            <div className="grid grid-cols-2 gap-2 px-2">
+              {quickServices.map((service) => (
+                <button
+                  key={service.id}
+                  onClick={() => handleQuickServiceClick(service)}
+                  className="sidebar__quick-service"
+                >
+                  <div className="flex items-center gap-2 mb-1">
+                    <service.icon className="h-4 w-4 text-primary" />
+                    <span className="text-xs font-semibold text-foreground">{service.name}</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] text-muted-foreground">
+                      From ₦{(service.priceFrom / 1000).toFixed(0)}K
+                    </span>
+                    {service.badge && (
+                      <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-primary/10 text-primary font-medium">
+                        {service.badge}
                       </span>
-                      {service.badge && (
-                        <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-primary/10 text-primary font-medium">
-                          {service.badge}
-                        </span>
-                      )}
-                    </div>
-                    <div className="flex items-center gap-1 mt-1">
-                      <Clock className="h-3 w-3 text-muted-foreground" />
-                      <span className="text-[10px] text-muted-foreground">{service.responseTime}</span>
-                    </div>
-                  </button>
-                ))}
-              </div>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-1 mt-1">
+                    <Clock className="h-3 w-3 text-muted-foreground" />
+                    <span className="text-[10px] text-muted-foreground">{service.responseTime}</span>
+                  </div>
+                </button>
+              ))}
             </div>
+          </div>
           )}
 
           {/* Authenticated Items */}

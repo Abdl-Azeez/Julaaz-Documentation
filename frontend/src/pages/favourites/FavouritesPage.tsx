@@ -155,22 +155,22 @@ export function FavouritesPage() {
           {/* Filter Tabs */}
           <div className="flex gap-2 lg:gap-3 overflow-x-auto pb-2">
             {availableFilters.map(({ label, value }) => (
-              <Button
+            <Button
                 key={value}
                 variant={effectiveFilter === value ? 'default' : 'ghost'}
-                size="sm"
+              size="sm"
                 onClick={() => setFilter(value)}
-                className={cn(
+              className={cn(
                   'rounded-full shrink-0 lg:px-6 transition-colors',
                   effectiveFilter !== value &&
                     'text-foreground border border-border hover:border-primary/50 hover:text-primary hover:bg-primary/10'
-                )}
-              >
+              )}
+            >
                 {label}{' '}
                 {value === 'all'
                   ? `(${visibleFavourites.length})`
                   : `(${favouritesByType[value]?.length || 0})`}
-              </Button>
+            </Button>
             ))}
           </div>
         </div>

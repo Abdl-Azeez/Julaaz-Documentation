@@ -56,9 +56,9 @@ export function AuthModal({ open, onOpenChange }: AuthModalProps) {
               className="w-full h-14 bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl text-base font-semibold"
               onClick={() => {
                 navigate(ROUTES.LOGIN, {
-                  state: baseState,
-                })
-                onOpenChange(false)
+                    state: baseState,
+                  })
+                  onOpenChange(false)
               }}
             >
               Login
@@ -68,9 +68,9 @@ export function AuthModal({ open, onOpenChange }: AuthModalProps) {
               className="w-full h-14 bg-surface hover:bg-primary/80 rounded-xl text-base border-primary font-semibold"
               onClick={() => {
                 navigate(ROUTES.SIGNUP, {
-                  state: baseState,
-                })
-                onOpenChange(false)
+                    state: baseState,
+                  })
+                  onOpenChange(false)
               }}
             >
               Sign Up

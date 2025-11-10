@@ -89,7 +89,7 @@ function AppRoutes({ showSplash, isMobile, onSplashComplete }: AppRoutesProps) {
         <Route
           path={ROUTES.PROPERTIES}
           element={
-            <RoleGuard allowedRoles={['tenant']} redirectTo={ROUTES.HOME}>
+            <RoleGuard disallowedRoles={['landlord']} allowUnauthenticated redirectTo={ROUTES.HOME}>
               <PropertiesPage />
             </RoleGuard>
           }
@@ -97,7 +97,7 @@ function AppRoutes({ showSplash, isMobile, onSplashComplete }: AppRoutesProps) {
         <Route
           path="/properties/:id"
           element={
-            <RoleGuard allowedRoles={['tenant']} redirectTo={ROUTES.HOME}>
+            <RoleGuard allowUnauthenticated redirectTo={ROUTES.HOME}>
               <PropertyDetailsPage />
             </RoleGuard>
           }

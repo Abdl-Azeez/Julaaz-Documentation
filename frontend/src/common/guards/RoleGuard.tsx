@@ -5,23 +5,43 @@ import { ROUTES } from '@/shared/constants/routes'
 import toast from 'react-hot-toast'
 
 interface RoleGuardProps {
-  children: React.ReactNode
-  allowedRoles: RoleType[]
-  redirectTo?: string
+  readonly children: React.ReactNode
+  readonly allowedRoles?: RoleType[]
+  readonly disallowedRoles?: RoleType[]
+  readonly redirectTo?: string
+  readonly allowUnauthenticated?: boolean
 }
 
-export function RoleGuard({ children, allowedRoles, redirectTo }: RoleGuardProps) {
+export function RoleGuard({
+  children,
+  allowedRoles,
+  disallowedRoles,
+  redirectTo,
+  allowUnauthenticated = false,
+}: RoleGuardProps) {
   const navigate = useNavigate()
   const { activeRole } = useRoleStore()
 
+  const isBlocked =
+    (disallowedRoles && activeRole && disallowedRoles.includes(activeRole)) ||
+    (allowedRoles && activeRole && !allowedRoles.includes(activeRole))
+
   useEffect(() => {
-    if (activeRole && !allowedRoles.includes(activeRole)) {
+    if (isBlocked) {
       toast.error(`This page is not accessible in ${activeRole} mode`)
       navigate(redirectTo ?? ROUTES.HOME, { replace: true })
     }
-  }, [activeRole, allowedRoles, navigate, redirectTo])
+  }, [activeRole, disallowedRoles, allowedRoles, isBlocked, navigate, redirectTo])
 
-  if (!activeRole || !allowedRoles.includes(activeRole)) {
+  if (!activeRole) {
+    return allowUnauthenticated ? <>{children}</> : null
+  }
+
+  if (isBlocked) {
+    return null
+  }
+
+  if (allowedRoles && !allowedRoles.includes(activeRole)) {
     return null
   }
 

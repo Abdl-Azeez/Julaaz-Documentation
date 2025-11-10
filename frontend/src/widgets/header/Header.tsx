@@ -58,6 +58,13 @@ export function Header({ onMenuClick, onProfileClick, className }: HeaderProps) 
   const [lastScrollY, setLastScrollY] = useState(0)
   const [isLandlordMenuOpen, setLandlordMenuOpen] = useState(false)
 
+  const isLandlordRoute = location.pathname.includes('/landlord')
+  const effectiveRole: RoleType | null = isAuthenticated
+    ? activeRole ?? null
+    : isLandlordRoute
+    ? 'landlord'
+    : null
+
   const formatRoleLabel = (role?: string | null) =>
     role
       ? role
@@ -94,8 +101,8 @@ export function Header({ onMenuClick, onProfileClick, className }: HeaderProps) 
     return () => window.removeEventListener('scroll', controlHeader)
   }, [lastScrollY])
 
-  const buildNavItems = (role?: RoleType | null): NavigationItem[] => {
-    if (role === 'landlord') {
+  const buildNavItems = (role?: RoleType | null, includeLandlordNav = false): NavigationItem[] => {
+    if (role === 'landlord' || includeLandlordNav) {
       return [
     { icon: Home, label: 'Home', path: ROUTES.HOME },
       { icon: Building2, label: 'My Properties', path: ROUTES.LANDLORD_PROPERTIES },
@@ -145,8 +152,8 @@ export function Header({ onMenuClick, onProfileClick, className }: HeaderProps) 
     return base
   }
 
-  const navItems = buildNavItems(activeRole)
-  const activityItems = buildActivityItems(activeRole)
+  const navItems = buildNavItems(effectiveRole, !isAuthenticated && isLandlordRoute)
+  const activityItems = buildActivityItems(effectiveRole)
 
   const isActive = (path: string) => {
     if (path === ROUTES.HOME) {
@@ -186,7 +193,7 @@ export function Header({ onMenuClick, onProfileClick, className }: HeaderProps) 
 
         {/* Desktop Navigation - Main (Compact with Dropdown for Landlord) */}
         <nav className="hidden lg:flex items-center gap-2 flex-1 justify-end pr-5 max-w-3xl">
-          {activeRole === 'landlord' ? (
+          {isAuthenticated && effectiveRole === 'landlord' ? (
             <>
               {/* Home */}
               <Button
@@ -203,6 +210,21 @@ export function Header({ onMenuClick, onProfileClick, className }: HeaderProps) 
                 <span className="hidden xl:inline">Home</span>
               </Button>
 
+              {/* Services */}
+              <Button
+                variant={isActive(ROUTES.SERVICES) ? 'default' : 'ghost'}
+                className={cn(
+                  'h-10 px-4 rounded-xl font-medium transition-all focus-visible:ring-0 focus-visible:ring-offset-0 focus:outline-none',
+                  isActive(ROUTES.SERVICES)
+                    ? 'bg-primary text-primary-foreground shadow-md'
+                    : 'hover:bg-primary/10 hover:text-primary'
+                )}
+                onClick={() => navigate(ROUTES.SERVICES)}
+              >
+                <Wrench className="h-4 w-4 lg:mr-2" />
+                <span className="hidden xl:inline">Services</span>
+                </Button>
+                
               {/* Landlord Menu Dropdown */}
               <DropdownMenu open={isLandlordMenuOpen} onOpenChange={setLandlordMenuOpen}>
                 <DropdownMenuTrigger asChild>
@@ -272,20 +294,6 @@ export function Header({ onMenuClick, onProfileClick, className }: HeaderProps) 
                 </DropdownMenuContent>
               </DropdownMenu>
 
-              {/* Services */}
-              <Button
-                variant={isActive(ROUTES.SERVICES) ? 'default' : 'ghost'}
-                className={cn(
-                  'h-10 px-4 rounded-xl font-medium transition-all focus-visible:ring-0 focus-visible:ring-offset-0 focus:outline-none',
-                  isActive(ROUTES.SERVICES)
-                    ? 'bg-primary text-primary-foreground shadow-md'
-                    : 'hover:bg-primary/10 hover:text-primary'
-                )}
-                onClick={() => navigate(ROUTES.SERVICES)}
-              >
-                <Wrench className="h-4 w-4 lg:mr-2" />
-                <span className="hidden xl:inline">Services</span>
-              </Button>
             </>
           ) : (
             // Tenant/Other roles - simple nav

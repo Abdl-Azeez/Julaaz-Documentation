@@ -119,7 +119,7 @@ export function PasswordModal() {
         admin: ROUTES.HOME,
         handyman: ROUTES.MY_SERVICES,
         homerunner: ROUTES.MY_SERVICES,
-      }
+    }
       const targetRoute = roleToRoute[active] ?? ROUTES.HOME
       
       if (backgroundLocation) {
@@ -131,12 +131,12 @@ export function PasswordModal() {
       }
     } else {
       openRoleSwitcher()
-      if (backgroundLocation) {
-        navigate(backgroundLocation.pathname + backgroundLocation.search + backgroundLocation.hash, {
-          replace: true,
-        })
-      } else {
-        navigate(ROUTES.HOME)
+    if (backgroundLocation) {
+      navigate(backgroundLocation.pathname + backgroundLocation.search + backgroundLocation.hash, {
+        replace: true,
+      })
+    } else {
+      navigate(ROUTES.HOME)
       }
     }
   }

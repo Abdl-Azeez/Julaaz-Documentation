@@ -23,6 +23,7 @@ import { Sidebar } from '@/widgets/sidebar'
 import { AuthDialog } from '@/widgets/auth-dialog'
 import { Header } from '@/widgets/header'
 import { useAuthStore } from '@/shared/store/auth.store'
+import { useRoleStore } from '@/shared/store/role.store'
 import { useFavouritesStore } from '@/shared/store/favourites.store'
 import { samplePropertyDetails } from './data/sample-property-details'
 import { cn } from '@/shared/lib/utils/cn'
@@ -50,6 +51,8 @@ export function PropertyDetailsPage() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
   const { isAuthenticated } = useAuthStore()
+  const { activeRole } = useRoleStore()
+  const [isAuthModalOpen, setAuthModalOpen] = useState(false)
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
 
@@ -270,8 +273,18 @@ export function PropertyDetailsPage() {
   const longTermOffering = property.longTermOffering
   const shortletOffering = property.shortletOffering
   const moveInTotal = hasLongTerm ? totalMoveIn(property.moveInBreakdown) : 0
+  const isLandlordRole = activeRole === 'landlord'
 
   const handleRequestViewing = () => {
+    if (!isAuthenticated) {
+      if (window.innerWidth < 1024) {
+        setIsDrawerOpen(true)
+      } else {
+        setAuthModalOpen(true)
+      }
+      return
+    }
+
     navigate(ROUTES.PROPERTY_BOOKING(property.id))
   }
 
@@ -744,12 +757,14 @@ export function PropertyDetailsPage() {
                     <p className="text-sm text-muted-foreground">{property.propertyType}</p>
                   </div>
                 </div>
-                <Button
-                  className="rounded-xl w-full sm:w-auto sm:self-start"
-                  onClick={handleRequestViewing}
-                >
-                  Request Viewing
-                </Button>
+                {!isLandlordRole && (
+                  <Button
+                    className="rounded-xl w-full sm:w-auto sm:self-start"
+                    onClick={handleRequestViewing}
+                  >
+                    Request Viewing
+                  </Button>
+                )}
               </div>
             </Card>
           </section>
@@ -824,7 +839,13 @@ export function PropertyDetailsPage() {
 
       <Footer />
       <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
-      <AuthDialog open={isDrawerOpen} onOpenChange={setIsDrawerOpen} />
+        <AuthDialog
+          open={isDrawerOpen || isAuthModalOpen}
+          onOpenChange={(open) => {
+            setIsDrawerOpen(open)
+            setAuthModalOpen(open)
+          }}
+        />
     </div>
   )
 }

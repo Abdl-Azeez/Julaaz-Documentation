@@ -80,7 +80,7 @@ export function PasswordPage() {
         phone: sampleUser.phone,
         role: preferredRole,
         roles: sampleUser.roles.map((r) => r.type),
-        isVerified: true,
+      isVerified: true,
       },
       `${sampleUser.id}-token`
     )
@@ -113,7 +113,7 @@ export function PasswordPage() {
       navigate(roleToRoute[active] ?? ROUTES.HOME)
     } else {
       openRoleSwitcher()
-      navigate(ROUTES.HOME)
+    navigate(ROUTES.HOME)
     }
   }
 

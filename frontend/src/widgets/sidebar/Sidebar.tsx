@@ -38,8 +38,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
 
   const publicMenuItems: MenuItem[] = [
     { icon: Home, label: 'Home', path: ROUTES.HOME },
-    // Hide tenant 'Properties' menu for landlords
-    ...(!hideTenantFeatures ? [{ icon: Building2, label: 'Properties', path: ROUTES.PROPERTIES }] : []),
+    ...(hideTenantFeatures ? [] : [{ icon: Building2, label: 'Properties', path: ROUTES.PROPERTIES }]),
     { icon: Wrench, label: 'Services', path: ROUTES.SERVICES },
   ]
 
@@ -167,14 +166,15 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
 
   const shouldShowItem = (item: MenuItem) => {
     if (item.requiresAuth && !isAuthenticated) return false
-    if (item.roles && activeRole && !item.roles.includes(activeRole as any)) return false
+    if (item.roles && activeRole && !item.roles.includes(activeRole)) return false
     return true
   }
 
   return (
     <>
       {/* Backdrop */}
-      <div
+      <button
+        type="button"
         className={cn(
           'fixed inset-0 bg-foreground/40 backdrop-blur-sm z-40 transition-opacity duration-300',
           isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
@@ -183,8 +183,6 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
         onKeyDown={(e) => {
           if (e.key === 'Escape') onClose()
         }}
-        role="button"
-        tabIndex={0}
         aria-label="Close sidebar"
       />
 

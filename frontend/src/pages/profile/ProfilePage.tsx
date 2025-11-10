@@ -34,9 +34,9 @@ export function ProfilePage() {
   
   // Profile data
   const [profileData, setProfileData] = useState({
-    name: user?.name || 'Abdulraheem Abdulsalam',
-    email: user?.email || 'abdulraheemabdulsalam@gmail.com',
-    phone: user?.phone || '+2347010087586',
+    name: user?.name || '',
+    email: user?.email || '',
+    phone: user?.phone || '',
     dateOfBirth: '2001-07-14',
     gender: 'male',
     nationality: 'Nigerian',
@@ -45,6 +45,26 @@ export function ProfilePage() {
   })
 
   const [editData, setEditData] = useState({ ...profileData })
+
+  // Sync profile data when user changes
+  useEffect(() => {
+    if (user) {
+      setProfileData((prev) => ({
+        ...prev,
+        name: user.name || prev.name,
+        email: user.email || prev.email,
+        phone: user.phone || prev.phone,
+        isVerified: user.isVerified ?? prev.isVerified,
+      }))
+      setEditData((prev) => ({
+        ...prev,
+        name: user.name || prev.name,
+        email: user.email || prev.email,
+        phone: user.phone || prev.phone,
+        isVerified: user.isVerified ?? prev.isVerified,
+      }))
+    }
+  }, [user])
 
   const [backgroundStatus, setBackgroundStatus] = useState<'not_started' | 'submitted' | 'verified'>(
     profileData.isVerified ? 'verified' : 'not_started'
@@ -58,6 +78,22 @@ export function ProfilePage() {
   })
   const [documentFiles, setDocumentFiles] = useState<File[]>([])
   const [isSubmittingBackground, setIsSubmittingBackground] = useState(false)
+
+  useEffect(() => {
+    if (user) {
+      setProfileData((prev) => ({
+        ...prev,
+        name: user.name ?? prev.name,
+        email: user.email ?? prev.email,
+        phone: user.phone ?? prev.phone,
+        isVerified: user.isVerified ?? prev.isVerified,
+      }))
+    }
+  }, [user])
+
+  useEffect(() => {
+    setEditData({ ...profileData })
+  }, [profileData])
 
   useEffect(() => {
     if (profileData.isVerified) {

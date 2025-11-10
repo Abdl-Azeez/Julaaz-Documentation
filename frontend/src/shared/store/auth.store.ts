@@ -1,13 +1,15 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
+import type { RoleType } from './role.store'
 
 export interface User {
   id: string
   name?: string
   email?: string
   phone?: string
-  role?: 'tenant' | 'landlord' | 'service_provider' | 'artisan' | 'property_manager' | 'admin'
+  role?: 'tenant' | 'landlord' | 'service_provider' | 'artisan' | 'property_manager' | 'admin' | 'handyman' | 'homerunner'
   isVerified?: boolean
+  roles?: RoleType[]
 }
 
 interface AuthState {

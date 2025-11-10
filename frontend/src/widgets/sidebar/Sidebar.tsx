@@ -1,6 +1,7 @@
 import { X, Home, Building2, MessageCircle, Bell, Calendar, User, LogOut, Settings, Heart, FileText, Briefcase, Wrench, Zap, Droplet, Sparkles, Paintbrush, Clock, Receipt, CreditCard } from 'lucide-react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useAuthStore } from '@/shared/store/auth.store'
+import { useRoleStore, type RoleType } from '@/shared/store/role.store'
 import { ROUTES } from '@/shared/constants/routes'
 import { cn } from '@/shared/lib/utils/cn'
 import { trackServiceEvent } from '@/shared/lib/analytics/service-analytics'
@@ -16,13 +17,14 @@ interface MenuItem {
   label: string
   path: string
   requiresAuth?: boolean
-  roles?: ('tenant' | 'landlord' | 'artisan')[]
+  roles?: RoleType[]
 }
 
 export function Sidebar({ isOpen, onClose }: SidebarProps) {
   const navigate = useNavigate()
   const location = useLocation()
-  const { isAuthenticated, user } = useAuthStore()
+  const { isAuthenticated } = useAuthStore()
+  const { activeRole } = useRoleStore()
 
   const isActive = (path: string) => {
     if (path === ROUTES.HOME) {
@@ -31,7 +33,8 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
     return location.pathname.startsWith(path)
   }
 
-  const hideTenantFeatures = user?.role === 'landlord' || location.pathname.includes('/landlord')
+  const hideTenantFeatures =
+    activeRole === 'landlord' || location.pathname.includes('/landlord')
 
   const publicMenuItems: MenuItem[] = [
     { icon: Home, label: 'Home', path: ROUTES.HOME },
@@ -56,14 +59,44 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
     : authenticatedMenuItems
 
   const tenantMenuItems: MenuItem[] = [
-    { icon: Receipt, label: 'Agreements', path: ROUTES.AGREEMENTS, requiresAuth: true, roles: ['tenant'] },
-    { icon: CreditCard, label: 'Payments', path: ROUTES.PAYMENTS, requiresAuth: true, roles: ['tenant'] },
+    {
+      icon: Receipt,
+      label: 'Agreements',
+      path: ROUTES.AGREEMENTS,
+      requiresAuth: true,
+      roles: ['tenant'],
+    },
+    {
+      icon: CreditCard,
+      label: 'Payments',
+      path: ROUTES.PAYMENTS,
+      requiresAuth: true,
+      roles: ['tenant'],
+    },
   ]
 
   const landlordMenuItems: MenuItem[] = [
-    { icon: Building2, label: 'My Properties', path: ROUTES.LANDLORD_PROPERTIES, requiresAuth: true, roles: ['landlord'] },
-    { icon: FileText, label: 'Applications', path: ROUTES.LANDLORD_APPLICATIONS, requiresAuth: true, roles: ['landlord'] },
-    { icon: CreditCard, label: 'Earnings', path: ROUTES.LANDLORD_EARNINGS, requiresAuth: true, roles: ['landlord'] },
+    {
+      icon: Building2,
+      label: 'My Properties',
+      path: ROUTES.LANDLORD_PROPERTIES,
+      requiresAuth: true,
+      roles: ['landlord'],
+    },
+    {
+      icon: FileText,
+      label: 'Applications',
+      path: ROUTES.LANDLORD_APPLICATIONS,
+      requiresAuth: true,
+      roles: ['landlord'],
+    },
+    {
+      icon: CreditCard,
+      label: 'Earnings',
+      path: ROUTES.LANDLORD_EARNINGS,
+      requiresAuth: true,
+      roles: ['landlord'],
+    },
   ]
 
   const bottomMenuItems: MenuItem[] = [
@@ -134,7 +167,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
 
   const shouldShowItem = (item: MenuItem) => {
     if (item.requiresAuth && !isAuthenticated) return false
-    if (item.roles && user?.role && !item.roles.includes(user.role as any)) return false
+    if (item.roles && activeRole && !item.roles.includes(activeRole as any)) return false
     return true
   }
 
@@ -253,7 +286,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
               </div>
 
               {/* Role-specific Items */}
-              {user?.role === 'tenant' && tenantMenuItems.some(shouldShowItem) && (
+              {activeRole === 'tenant' && tenantMenuItems.some(shouldShowItem) && (
                 <div className="sidebar__section">
                   <h3 className="sidebar__section-title">Tenant</h3>
                   {tenantMenuItems.filter(shouldShowItem).map((item) => {
@@ -273,7 +306,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                 </div>
               )}
 
-              {user?.role === 'landlord' && landlordMenuItems.some(shouldShowItem) && (
+              {activeRole === 'landlord' && landlordMenuItems.some(shouldShowItem) && (
                 <div className="sidebar__section">
                   <h3 className="sidebar__section-title">Landlord</h3>
                   {landlordMenuItems.filter(shouldShowItem).map((item) => {

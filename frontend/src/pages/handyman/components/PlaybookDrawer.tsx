@@ -1,6 +1,6 @@
 import { ResponsiveDrawer } from './ResponsiveDrawer'
 import { Card } from '@/shared/ui/card'
-import { Badge } from '@/shared/ui/badge'
+// import { Badge } from '@/shared/ui/badge'
 import { Button } from '@/shared/ui/button'
 import { BookOpen, CheckCircle2, Star, Clock, DollarSign, Camera, FileText } from 'lucide-react'
 

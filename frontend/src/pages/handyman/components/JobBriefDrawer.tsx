@@ -2,7 +2,7 @@ import { ResponsiveDrawer } from './ResponsiveDrawer'
 import { Card } from '@/shared/ui/card'
 import { Badge } from '@/shared/ui/badge'
 import { Button } from '@/shared/ui/button'
-import { MapPin, Phone, Calendar, Clock, Wallet, AlertCircle, CheckCircle2 } from 'lucide-react'
+import { MapPin, Calendar, Clock, Wallet, AlertCircle, CheckCircle2 } from 'lucide-react'
 
 interface JobBriefDrawerProps {
   open: boolean
@@ -39,6 +39,8 @@ export function JobBriefDrawer({ open, onOpenChange, jobId, onClaim }: JobBriefD
     onClaim?.()
     onOpenChange(false)
   }
+
+  console.log('jobId', jobId)
 
   return (
     <ResponsiveDrawer open={open} onOpenChange={onOpenChange} title="Job Brief" side="bottom">

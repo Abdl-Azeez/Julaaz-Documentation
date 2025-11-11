@@ -2,7 +2,7 @@ import { ResponsiveDrawer } from './ResponsiveDrawer'
 import { Card } from '@/shared/ui/card'
 import { Badge } from '@/shared/ui/badge'
 import { Button } from '@/shared/ui/button'
-import { MapPin, Phone, Calendar, Clock, User, FileText, CheckCircle2, Circle } from 'lucide-react'
+import { MapPin, Phone, Calendar, Clock, FileText, CheckCircle2, Circle } from 'lucide-react'
 import { cn } from '@/shared/lib/utils/cn'
 
 interface JobSheetDrawerProps {
@@ -39,6 +39,8 @@ const jobSheetData = {
 export function JobSheetDrawer({ open, onOpenChange, jobId }: JobSheetDrawerProps) {
   const completedTasks = jobSheetData.tasks.filter((task) => task.completed).length
   const progress = Math.round((completedTasks / jobSheetData.tasks.length) * 100)
+
+  console.log('jobId', jobId)
 
   return (
     <ResponsiveDrawer open={open} onOpenChange={onOpenChange} title="Job Sheet" side="bottom">

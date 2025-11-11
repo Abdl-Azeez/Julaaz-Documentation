@@ -6,7 +6,7 @@ import { Button } from '@/shared/ui/button'
 import { Input } from '@/shared/ui/input'
 import { Label } from '@/shared/ui/label'
 import { Textarea } from '@/shared/ui/textarea'
-import { Calendar, Clock, MapPin, AlertCircle, CheckCircle2 } from 'lucide-react'
+import { Calendar, MapPin, AlertCircle, CheckCircle2 } from 'lucide-react'
 import toast from 'react-hot-toast'
 
 interface ClaimJobDrawerProps {
@@ -47,6 +47,8 @@ export function ClaimJobDrawer({ open, onOpenChange, jobId }: ClaimJobDrawerProp
     setEstimatedArrival('')
     setNotes('')
   }
+
+console.log('jobId', jobId)
 
   return (
     <ResponsiveDrawer open={open} onOpenChange={onOpenChange} title="Claim Job" side="bottom">

@@ -5,7 +5,7 @@ import { Input } from '@/shared/ui/input'
 import { Label } from '@/shared/ui/label'
 import { LoginBanner } from '@/widgets/login-banner'
 import { ROUTES } from '@/shared/constants/routes'
-import { Card } from '@/shared/ui/card'
+// import { Card } from '@/shared/ui/card'
 import LogoSvg from '@/assets/images/logo.svg?react'
 import { sampleUsers } from '@/shared/data/sample-users'
 import {

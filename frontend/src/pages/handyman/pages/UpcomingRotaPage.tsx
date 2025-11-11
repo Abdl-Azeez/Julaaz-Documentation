@@ -89,6 +89,8 @@ export function UpcomingRotaPage() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
   const [currentWeek, setCurrentWeek] = useState(0)
 
+console.log('currentWeek', currentWeek)
+
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <Header onMenuClick={() => setIsSidebarOpen(true)} className="lg:shadow-sm" />

@@ -302,7 +302,7 @@ export function HandymanJobsPage() {
         title="Advanced Filters"
         side="bottom"
       >
-        <div className="space-y-6 py-4">
+        <div className="space-y-6">
           <div className="space-y-2">
             <Label htmlFor="payout-range" className="text-sm font-semibold">
               Payout Range

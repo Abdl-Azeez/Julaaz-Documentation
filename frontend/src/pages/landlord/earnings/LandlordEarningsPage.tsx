@@ -419,8 +419,11 @@ export function LandlordEarningsPage() {
       <Footer />
     </div>
     <Sheet open={!!selectedEarning} onOpenChange={(open) => !open && setSelectedEarning(null)}>
-      <SheetContent side="bottom" className="w-full h-[65vh] rounded-t-[24px] sm:rounded-t-[30px] overflow-y-auto">
-        <SheetHeader className="space-y-1">
+      <SheetContent 
+        side="bottom" 
+        className="w-full h-[75vh] max-h-[75vh] rounded-t-[24px] sm:rounded-t-[30px] flex flex-col p-0"
+      >
+        <SheetHeader className="px-6 pt-6 pb-4 border-b border-border/60 flex-shrink-0 space-y-1">
           <SheetTitle>Payment Timeline</SheetTitle>
           {selectedEarning && (
             <p className="text-sm text-muted-foreground">
@@ -428,7 +431,7 @@ export function LandlordEarningsPage() {
             </p>
           )}
         </SheetHeader>
-        <div className="mt-6 space-y-5">
+        <div className="flex-1 overflow-y-auto px-6 py-6 space-y-5">
           {selectedEarning && (
             <>
               <div className="flex gap-4">
@@ -478,9 +481,9 @@ export function LandlordEarningsPage() {
             </>
           )}
         </div>
-        <SheetFooter className="mt-6">
+        <SheetFooter className="px-6 pb-6 pt-4 border-t border-border/60 flex-shrink-0">
           <Button
-            className="rounded-2xl bg-primary text-primary-foreground"
+            className="rounded-2xl bg-primary text-primary-foreground w-full"
             onClick={() => {
               if (selectedEarning) {
                 toast.success(`Shared timeline with ${selectedEarning.tenantName}`)

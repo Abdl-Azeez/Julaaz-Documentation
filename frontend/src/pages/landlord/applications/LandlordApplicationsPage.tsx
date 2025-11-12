@@ -406,12 +406,16 @@ export function LandlordApplicationsPage() {
 
       {/* Filter Sheet */}
       <Sheet open={isFilterSheetOpen} onOpenChange={setFilterSheetOpen}>
-        <SheetContent side="bottom" className="w-full h-[60vh] rounded-t-[24px] overflow-y-auto">
-          <SheetHeader className="space-y-1">
+        <SheetContent 
+          side="bottom" 
+          className="w-full h-[60vh] max-h-[60vh] rounded-t-[24px] flex flex-col p-0"
+        >
+          <SheetHeader className="px-6 pt-6 pb-4 border-b border-border/60 flex-shrink-0 space-y-1">
             <SheetTitle>Filter Applications</SheetTitle>
             <p className="text-sm text-muted-foreground">Quickly scope your pipeline.</p>
           </SheetHeader>
-          <div className="mt-6 grid grid-cols-2 gap-3">
+          <div className="flex-1 overflow-y-auto px-6 py-6">
+            <div className="grid grid-cols-2 gap-3">
             {tabs.map((tab) => {
               const active = filter === tab.value
               return (
@@ -432,9 +436,10 @@ export function LandlordApplicationsPage() {
                 </button>
               )
             })}
+            </div>
           </div>
-          <SheetFooter className="mt-6">
-            <Button className="rounded-2xl bg-primary text-primary-foreground" onClick={() => setFilterSheetOpen(false)}>
+          <SheetFooter className="px-6 pb-6 pt-4 border-t border-border/60 flex-shrink-0">
+            <Button className="rounded-2xl bg-primary text-primary-foreground w-full" onClick={() => setFilterSheetOpen(false)}>
               Done
             </Button>
           </SheetFooter>
@@ -443,14 +448,18 @@ export function LandlordApplicationsPage() {
 
       {/* Bulk Actions Sheet */}
       <Sheet open={isBulkSheetOpen} onOpenChange={setBulkSheetOpen}>
-        <SheetContent side="bottom" className="w-full h-[45vh] rounded-t-[24px] overflow-y-auto">
-          <SheetHeader>
+        <SheetContent 
+          side="bottom" 
+          className="w-full h-[45vh] max-h-[45vh] rounded-t-[24px] flex flex-col p-0"
+        >
+          <SheetHeader className="px-6 pt-6 pb-4 border-b border-border/60 flex-shrink-0">
             <SheetTitle>Bulk Actions</SheetTitle>
             <p className="text-sm text-muted-foreground">
               Update all {stats.pending} pending application{stats.pending !== 1 ? 's' : ''} in one tap.
             </p>
           </SheetHeader>
-          <div className="mt-8 space-y-3">
+          <div className="flex-1 overflow-y-auto px-6 py-6">
+            <div className="space-y-3">
             <Button
               className="w-full rounded-2xl bg-primary text-primary-foreground h-12 gap-2"
               onClick={() => handleBulkAction('approve')}
@@ -468,9 +477,10 @@ export function LandlordApplicationsPage() {
               <X className="h-4 w-4" />
               Reject all pending
             </Button>
+            </div>
           </div>
-          <SheetFooter className="mt-6">
-            <Button variant="ghost" className="rounded-2xl" onClick={() => setBulkSheetOpen(false)}>
+          <SheetFooter className="px-6 pb-6 pt-4 border-t border-border/60 flex-shrink-0">
+            <Button variant="ghost" className="rounded-2xl w-full" onClick={() => setBulkSheetOpen(false)}>
               Close
             </Button>
           </SheetFooter>

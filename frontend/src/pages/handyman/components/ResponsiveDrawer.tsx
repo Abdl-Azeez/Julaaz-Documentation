@@ -35,13 +35,21 @@ export function ResponsiveDrawer({
   if (isMobile) {
     return (
       <Sheet open={open} onOpenChange={onOpenChange}>
-        <SheetContent side={side} className={cn('w-full overflow-y-auto', className)}>
+        <SheetContent 
+          side={side} 
+          className={cn(
+            'w-full h-[85vh] max-h-[85vh] flex flex-col p-0',
+            className
+          )}
+        >
           {title && (
-            <SheetHeader>
-              <SheetTitle>{title}</SheetTitle>
+            <SheetHeader className="px-6 pt-6 pb-4 border-b border-border/60 flex-shrink-0">
+              <SheetTitle className="text-lg font-semibold">{title}</SheetTitle>
             </SheetHeader>
           )}
-          {children}
+          <div className="flex-1 overflow-y-auto px-6 pb-6">
+            {children}
+          </div>
         </SheetContent>
       </Sheet>
     )
